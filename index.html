@@ -1378,26 +1378,23 @@
                 description: "Uma medida internacional para avaliar se o peso de uma pessoa está dentro de uma faixa saudável para sua altura. Foi criada como uma ferramenta rápida para triagem em estudos de saúde populacional.",
                 inputs: [
                     { id: 'peso', label: 'Peso', unit: 'kg' },
-                    { id: 'altura', label: 'Altura', unit: 'm' },
+                    { id: 'altura', label: 'Altura', unit: 'cm' },
                 ],
                 calculationFunction: (inputs) => {
                     const peso = parseFloat(inputs.peso.replace(',', '.'));
-                    const altura = parseFloat(inputs.altura.replace(',', '.'));
-                    if(isNaN(peso) || isNaN(altura) || peso <= 0 || altura <= 0) return { result: 'Erro' };
+                    const altura_cm = parseFloat(inputs.altura.replace(',', '.'));
+                    if(isNaN(peso) || isNaN(altura_cm) || peso <= 0 || altura_cm <= 0) return { result: 'Erro' };
 
-                    const imc = peso / (altura * altura);
+                    const altura_m = altura_cm / 100;
+                    const imc = peso / (altura_m * altura_m);
                     
-                    let classificacao = '';
-
                     if (imc < 18.5) {
-                        classificacao = 'Abaixo do peso';
+                        return { result: 'Abaixo do peso' };
                     } else if (imc >= 18.5 && imc <= 24.9) {
-                        classificacao = 'Peso normal';
+                        return { result: 'Peso normal' };
                     } else {
-                        classificacao = 'Acima do peso';
+                        return { result: 'Acima do peso' };
                     }
-                    
-                    return { result: classificacao };
                 }
             },
             {
@@ -1824,7 +1821,7 @@
                 const color = categoryColors[category] || 'from-gray-500 to-gray-600';
                 const icon = categoryIcons[category] || 'ph-question';
                 const button = document.createElement('button');
-                button.className = `p-4 sm:p-6 rounded-2xl text-white text-lg sm:text-xl font-bold shadow-lg transition-transform transform hover:scale-105 bg-gradient-to-br ${color}`;
+                button.className = `p-4 sm:p-6 rounded-2xl text-gray-900 dark:text-white text-lg sm:text-xl font-bold shadow-lg transition-transform transform hover:scale-105 bg-gradient-to-br ${color}`;
                 button.dataset.category = category;
                 button.innerHTML = `
                     <div class="flex flex-col items-center justify-center h-full">
@@ -2046,25 +2043,11 @@
                     inputValues[input.id] = document.getElementById(input.id).value;
                 });
                 
-                // Show loading state for AI
-                if (formula.id === 'ia-solver') {
-                    document.getElementById('results-final').textContent = 'Pensando...';
-                    document.getElementById('calculator-steps-container').classList.add('hidden');
-                    document.getElementById('calculator-results').classList.remove('hidden');
-                }
-
                 const result = await formula.calculationFunction(inputValues);
                 
                 const finalResultEl = document.getElementById('results-final');
                 
-                if (formula.id === 'imc' || formula.id === 'molar-mass') {
-                     // IMC does not use numbers, so it's handled differently
-                     // Molar mass returns text with numbers but is not a standard calculation.
-                     // The user request was specific to IMC, so let's check it directly.
-                     finalResultEl.textContent = result.result;
-                } else {
-                     finalResultEl.textContent = result.result;
-                }
+                finalResultEl.textContent = result.result;
                 
                 document.getElementById('calculator-results').classList.remove('hidden');
 
