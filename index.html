@@ -1,0 +1,1568 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pequena Ajuda</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- KaTeX for LaTeX Math Rendering -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css" xintegrity="sha384-n8MVd4RsNIU0KOVEMeaPoAbJNdFBsSLMJiTsvpgJV+a1xRRiF78kBOAOkex4IILw" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js" xintegrity="sha384-XjKyOOlGwcjNTAIQHIpgOno0Hl1YQqzUOEleOLALmuqehneUG+vnGctmUb0ZY0l8" crossorigin="anonymous"></script>
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Roboto+Mono&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+        /* Custom scrollbar for better aesthetics */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #f1f1f1;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #888;
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #555;
+        }
+        /* Style for KaTeX rendered formulas */
+        .katex {
+            font-size: 1.1em !important;
+        }
+    </style>
+</head>
+<body class="bg-gray-100 dark:bg-gray-900 text-gray-800 dark:text-gray-200 transition-colors duration-300">
+
+    <div id="app" class="container mx-auto p-4 md:p-8 max-w-4xl">
+        
+        <!-- Header -->
+        <header class="text-center mb-8">
+            <h1 class="text-4xl md:text-5xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-blue-500 to-teal-400">
+                Pequena Ajuda
+            </h1>
+            <p class="mt-2 text-lg text-gray-600 dark:text-gray-400">Sua assistente de estudos, cálculos e conversões</p>
+        </header>
+
+        <!-- Main Menu View -->
+        <main id="main-menu" class="w-full">
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+                <!-- Category buttons will be inserted here by JS -->
+            </div>
+        </main>
+        
+        <!-- Formula List View -->
+        <section id="list-view" class="hidden w-full">
+            <button id="back-to-menu" class="mb-6 bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded-lg shadow-md transition-transform transform hover:scale-105">
+                &larr; Voltar ao Menu
+            </button>
+            <h2 id="list-title" class="text-3xl font-bold mb-6 border-b-2 border-blue-400 pb-2"></h2>
+            <div id="list-content" class="space-y-6">
+                <!-- Content will be inserted here by JS -->
+            </div>
+        </section>
+
+        <!-- Calculator View -->
+        <section id="calculator-view" class="hidden w-full">
+            <button id="back-to-list" class="mb-6 bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded-lg shadow-md transition-transform transform hover:scale-105">
+                &larr; Voltar para a Lista
+            </button>
+            <div class="bg-white dark:bg-gray-800 p-6 rounded-2xl shadow-lg">
+                <h2 id="calculator-title" class="text-2xl md:text-3xl font-bold mb-4 text-gray-900 dark:text-white"></h2>
+                <div id="calculator-formula" class="bg-gray-100 dark:bg-gray-700 p-4 rounded-lg mb-6 text-center text-lg"></div>
+                
+                <div id="calculator-description" class="hidden mt-4 mb-6 text-gray-600 dark:text-gray-400 border-t dark:border-gray-700 pt-4"></div>
+
+                <div id="calculator-inputs" class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
+                    <!-- Input fields will be inserted here by JS -->
+                </div>
+                
+                <button id="calculate-btn" class="w-full bg-green-500 hover:bg-green-600 text-white font-bold py-3 px-4 rounded-lg shadow-lg text-lg transition-transform transform hover:scale-105">
+                    Calcular
+                </button>
+                
+                <div id="calculator-results" class="mt-8 hidden">
+                    <div class="p-4 bg-green-100 dark:bg-green-900/50 border-l-4 border-green-500 rounded-lg">
+                        <h4 class="font-bold text-lg text-gray-900 dark:text-white">Resultado Final:</h4>
+                        <p id="results-final" class="text-lg font-semibold text-green-800 dark:text-green-300 mt-1"></p>
+                    </div>
+                </div>
+            </div>
+        </section>
+        
+    </div>
+
+    <script>
+    document.addEventListener('DOMContentLoaded', () => {
+
+        let exchangeRates = null;
+
+        async function fetchExchangeRates() {
+            if (exchangeRates) return;
+            try {
+                const response = await fetch('https://open.er-api.com/v6/latest/USD');
+                if (!response.ok) throw new Error('Falha na rede');
+                const data = await response.json();
+                if (data.result === 'success') {
+                    exchangeRates = data.rates;
+                    console.log('Taxas de câmbio carregadas com sucesso.');
+                } else {
+                    throw new Error('API retornou um erro');
+                }
+            } catch (error) {
+                console.error('Erro ao buscar taxas de câmbio:', error);
+                exchangeRates = { 'ERROR': 'Não foi possível carregar as taxas' };
+            }
+        }
+
+        fetchExchangeRates();
+
+        const formatNumber = (num, places = 2) => {
+            if (typeof num !== 'number' || isNaN(num)) {
+                return num;
+            }
+             if (num % 1 === 0) {
+                // For integers, format with dots as thousand separators
+                return num.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");
+            } else {
+                // For decimals, format to 'places' decimal places, use comma as decimal separator, and dots for thousands
+                let parts = num.toFixed(places).split('.');
+                parts[0] = parts[0].replace(/\B(?=(\d{3})+(?!\d))/g, ".");
+                return parts.join(',');
+            }
+        };
+        
+        const formatMoney = (num) => {
+             if (typeof num !== 'number' || isNaN(num)) {
+                return num;
+            }
+            return num.toFixed(2).replace('.', ',');
+        }
+
+        const formatExponential = (num) => {
+            if (typeof num !== 'number' || isNaN(num)) {
+                return num;
+            }
+            return num.toExponential(4).replace('.', ',');
+        }
+
+        // --- DATABASE OF FORMULAS & DATA ---
+        const formulas = [
+            // --- CONVERSORES ---
+            {
+                id: 'conversor-comprimento',
+                category: 'Conversores',
+                level: 'Ensino Fundamental',
+                name: 'Conversor de Comprimento',
+                formula_display: 'km \\leftrightarrow m \\leftrightarrow cm \\leftrightarrow mm',
+                inputs: [
+                    { id: 'value', label: 'Valor', unit: '' },
+                    { id: 'from', label: 'De', type: 'select', options: [
+                        { value: 'km', text: 'Quilômetro (km)'},
+                        { value: 'm', text: 'Metro (m)'},
+                        { value: 'cm', text: 'Centímetro (cm)'},
+                        { value: 'mm', text: 'Milímetro (mm)'}
+                    ]},
+                    { id: 'to', label: 'Para', type: 'select', options: [
+                        { value: 'km', text: 'Quilômetro (km)'},
+                        { value: 'm', text: 'Metro (m)'},
+                        { value: 'cm', text: 'Centímetro (cm)'},
+                        { value: 'mm', text: 'Milímetro (mm)'}
+                    ]}
+                ],
+                calculationFunction: (inputs) => {
+                    const value = parseFloat(inputs.value.replace(',', '.'));
+                    if (isNaN(value)) return { result: 'Erro' };
+                    const factors = { km: 1000, m: 1, cm: 0.01, mm: 0.001 };
+                    const valueInMeters = value * factors[inputs.from];
+                    const result = valueInMeters / factors[inputs.to];
+                    return { result: `${formatNumber(result, 4)} ${inputs.to}` };
+                }
+            },
+            {
+                id: 'conversor-tempo',
+                category: 'Conversores',
+                level: 'Ensino Fundamental',
+                name: 'Conversor de Tempo',
+                formula_display: 'Anos \\leftrightarrow Dias \\leftrightarrow Horas...',
+                inputs: [
+                    { id: 'value', label: 'Valor', unit: '' },
+                    { id: 'from', label: 'De', type: 'select', options: [
+                        { value: 'anos', text: 'Anos' },
+                        { value: 'meses', text: 'Meses' },
+                        { value: 'dias', text: 'Dias' },
+                        { value: 'horas', text: 'Horas' },
+                        { value: 'minutos', text: 'Minutos' },
+                        { value: 'segundos', text: 'Segundos' }
+                    ]},
+                    { id: 'to', label: 'Para', type: 'select', options: [
+                        { value: 'anos', text: 'Anos' },
+                        { value: 'meses', text: 'Meses' },
+                        { value: 'dias', text: 'Dias' },
+                        { value: 'horas', text: 'Horas' },
+                        { value: 'minutos', text: 'Minutos' },
+                        { value: 'segundos', text: 'Segundos' }
+                    ]}
+                ],
+                calculationFunction: (inputs) => {
+                    const value = parseFloat(inputs.value.replace(',', '.'));
+                    if (isNaN(value)) return { result: 'Erro' };
+                    // Valores aproximados para conversão
+                    const factors = { anos: 31536000, meses: 2628000, dias: 86400, horas: 3600, minutos: 60, segundos: 1 };
+                    const valueInSeconds = value * factors[inputs.from];
+                    const result = valueInSeconds / factors[inputs.to];
+                    return { result: `${formatNumber(result, 4)} ${inputs.to}` };
+                }
+            },
+            {
+                id: 'conversor-moeda',
+                category: 'Conversores',
+                level: 'Ensino Médio',
+                name: 'Conversor de Moedas',
+                formula_display: 'Câmbio em Tempo Real',
+                inputs: [
+                    { id: 'amount', label: 'Valor', unit: '' },
+                    { id: 'from', label: 'De', type: 'select', options: [] }, // Populado dinamicamente
+                    { id: 'to', label: 'Para', type: 'select', options: [] }  // Populado dinamicamente
+                ],
+                calculationFunction: (inputs) => {
+                    if (!exchangeRates || exchangeRates.ERROR) {
+                        return { result: 'Erro ao carregar taxas de câmbio.' };
+                    }
+                    const amount = parseFloat(inputs.amount.replace(',', '.'));
+                    const fromCurrency = inputs.from;
+                    const toCurrency = inputs.to;
+                    if (isNaN(amount) || !fromCurrency || !toCurrency) return { result: 'Erro nos valores' };
+
+                    const amountInUSD = amount / exchangeRates[fromCurrency];
+                    const convertedAmount = amountInUSD * exchangeRates[toCurrency];
+                    
+                    return { result: `${toCurrency} ${formatMoney(convertedAmount)}` };
+                }
+            },
+            // --- MATEMÁTICA ---
+            {
+                id: 'soma',
+                category: 'Matemática',
+                level: 'Ensino Fundamental',
+                name: 'Soma',
+                formula_display: 'a + b',
+                description: "A operação mais fundamental da aritmética. Foi criada para unificar ou agregar quantidades, sendo a base para todos os outros cálculos complexos.",
+                inputs: [
+                    { id: 'a', label: 'Primeiro número (a)', unit: '' },
+                    { id: 'b', label: 'Segundo número (b)', unit: '' },
+                ],
+                calculationFunction: (inputs) => {
+                    const a = parseFloat(inputs.a.replace(',', '.'));
+                    const b = parseFloat(inputs.b.replace(',', '.'));
+                    if (isNaN(a) || isNaN(b)) return { result: 'Erro' };
+                    const result = a + b;
+                    return { result: `${formatNumber(result)}` };
+                }
+            },
+            {
+                id: 'multiplicacao',
+                category: 'Matemática',
+                level: 'Ensino Fundamental',
+                name: 'Multiplicação',
+                formula_display: 'a \\cdot b',
+                description: "Uma forma eficiente de realizar somas repetidas de um mesmo número. É essencial para cálculos de escala, áreas e proporções.",
+                inputs: [
+                    { id: 'a', label: 'Primeiro número (a)', unit: '' },
+                    { id: 'b', label: 'Segundo número (b)', unit: '' },
+                ],
+                calculationFunction: (inputs) => {
+                    const a = parseFloat(inputs.a.replace(',', '.'));
+                    const b = parseFloat(inputs.b.replace(',', '.'));
+                    if (isNaN(a) || isNaN(b)) return { result: 'Erro' };
+                    const result = a * b;
+                    return { result: `${formatNumber(result)}` };
+                }
+            },
+            {
+                id: 'divisao',
+                category: 'Matemática',
+                level: 'Ensino Fundamental',
+                name: 'Divisão',
+                formula_display: 'a \\div b',
+                description: "A operação de repartir uma quantidade em partes iguais. É fundamental para noções de proporção, frações e para determinar quantas vezes um número cabe em outro.",
+                inputs: [
+                    { id: 'a', label: 'Dividendo (a)', unit: '' },
+                    { id: 'b', label: 'Divisor (b)', unit: '' },
+                ],
+                calculationFunction: (inputs) => {
+                    const a = parseFloat(inputs.a.replace(',', '.'));
+                    const b = parseFloat(inputs.b.replace(',', '.'));
+                    if (isNaN(a) || isNaN(b)) return { result: 'Erro' };
+                    if (b === 0) return { result: 'Divisão por zero' };
+                    const result = a / b;
+                    return { result: `${formatNumber(result)}` };
+                }
+            },
+            {
+                id: 'regra-de-tres',
+                category: 'Matemática',
+                level: 'Ensino Fundamental',
+                name: 'Regra de Três Simples',
+                formula_display: 'a \\cdot x = b \\cdot c',
+                description: "Um método prático para resolver problemas que envolvem grandezas proporcionais. É usado para encontrar um valor desconhecido a partir de outros três, sendo vital para cálculos de porcentagem, conversões e receitas.",
+                inputs: [
+                    { id: 'a', label: 'Valor A está para', unit: '' },
+                    { id: 'b', label: 'Assim como o Valor B', unit: '' },
+                    { id: 'c', label: 'Está para o Valor C', unit: '' },
+                ],
+                calculationFunction: (inputs) => {
+                    const a = parseFloat(inputs.a.replace(',', '.'));
+                    const b = parseFloat(inputs.b.replace(',', '.'));
+                    const c = parseFloat(inputs.c.replace(',', '.'));
+                    if (isNaN(a) || isNaN(b) || isNaN(c) || a === 0) return { result: 'Erro' };
+                    const x = (b * c) / a;
+                    return { result: `x = ${formatNumber(x)}` };
+                }
+            },
+            {
+                id: 'juros-simples',
+                category: 'Matemática',
+                level: 'Ensino Fundamental',
+                name: 'Juros Simples',
+                formula_display: 'J = C \\cdot i \\cdot t',
+                description: "Calcula o rendimento de um capital a uma taxa fixa, sem que os juros rendam sobre si mesmos. É a base para entender transações financeiras simples, como empréstimos de curto prazo.",
+                inputs: [
+                    { id: 'C', label: 'Capital (C)', unit: 'R$' },
+                    { id: 'i', label: 'Taxa de Juros (i)', unit: '% ao mês' },
+                    { id: 't', label: 'Tempo (t)', unit: 'meses' },
+                ],
+                calculationFunction: (inputs) => {
+                    const C = parseFloat(inputs.C.replace(',', '.'));
+                    const i_percent = parseFloat(inputs.i.replace(',', '.'));
+                    const i_decimal = i_percent / 100;
+                    const t = parseFloat(inputs.t.replace(',', '.'));
+                    if (isNaN(C) || isNaN(i_decimal) || isNaN(t)) return { result: 'Erro' };
+                    const J = C * i_decimal * t;
+                    const M = C + J;
+                    return { result: `Juros (J) = R$ ${formatMoney(J)} | Montante (M) = R$ ${formatMoney(M)}` };
+                }
+            },
+            {
+                id: 'soma-fracoes',
+                category: 'Matemática',
+                level: 'Ensino Fundamental',
+                name: 'Soma de Frações',
+                formula_display: '\\frac{a}{b} + \\frac{c}{d} = \\frac{ad+bc}{bd}',
+                description: "Define como somar partes de um todo. É fundamental para trabalhar com números que não são inteiros e resolver problemas de partilha e proporção.",
+                inputs: [
+                    { id: 'a', label: 'Numerador 1 (a)', unit: '' },
+                    { id: 'b', label: 'Denominador 1 (b)', unit: '' },
+                    { id: 'c', label: 'Numerador 2 (c)', unit: '' },
+                    { id: 'd', label: 'Denominador 2 (d)', unit: '' },
+                ],
+                calculationFunction: (inputs) => {
+                    const a = parseInt(inputs.a);
+                    const b = parseInt(inputs.b);
+                    const c = parseInt(inputs.c);
+                    const d = parseInt(inputs.d);
+                    if ([a,b,c,d].some(isNaN) || b === 0 || d === 0) return { result: 'Erro' };
+                    const num = a * d + c * b;
+                    const den = b * d;
+                    return { result: `Resultado = ${num}/${den} ≈ ${formatNumber(num/den)}` };
+                }
+            },
+            {
+                id: 'funcao-modular',
+                category: 'Matemática',
+                level: 'Ensino Fundamental',
+                name: 'Função Modular (Absoluto)',
+                formula_display: '|x|',
+                description: "Calcula o valor de um número sem considerar seu sinal, ou seja, sua distância até o zero. É usada para medir magnitudes, distâncias e erros, onde apenas o valor importa.",
+                inputs: [
+                    { id: 'x', label: 'Número (x)', unit: '' },
+                ],
+                calculationFunction: (inputs) => {
+                    const x = parseFloat(inputs.x.replace(',', '.'));
+                    if (isNaN(x)) return { result: 'Erro' };
+                    return { result: `|${x}| = ${formatNumber(Math.abs(x))}` };
+                }
+            },
+            {
+                id: 'bhaskara',
+                category: 'Matemática',
+                level: 'Ensino Médio',
+                name: 'Equação do 2º Grau (Bhaskara)',
+                formula_display: 'x = \\frac{-b \\pm \\sqrt{b^2 - 4ac}}{2a}',
+                description: "Uma fórmula resolutiva para encontrar as raízes (soluções) de equações do segundo grau. É fundamental para modelar fenômenos como a trajetória de projéteis, otimização de áreas e problemas de física.",
+                inputs: [
+                    { id: 'a', label: 'Valor de a', unit: '' },
+                    { id: 'b', label: 'Valor de b', unit: '' },
+                    { id: 'c', label: 'Valor de c', unit: '' },
+                ],
+                calculationFunction: (inputs) => {
+                    const a = parseFloat(inputs.a.replace(',', '.'));
+                    const b = parseFloat(inputs.b.replace(',', '.'));
+                    const c = parseFloat(inputs.c.replace(',', '.'));
+                    if (isNaN(a) || isNaN(b) || isNaN(c) || a === 0) return { result: 'Erro' };
+                    const delta = (b*b) - (4*a*c);
+                    if (delta < 0) {
+                        return { result: 'Não existem raízes reais.' };
+                    }
+                    const x1 = (-b + Math.sqrt(delta)) / (2 * a);
+                    const x2 = (-b - Math.sqrt(delta)) / (2 * a);
+                    if (delta === 0) {
+                        return { result: `A raiz única é x = ${formatNumber(x1)}` };
+                    }
+                    return { result: `x' = ${formatNumber(x1)} e x'' = ${formatNumber(x2)}` };
+                }
+            },
+            {
+                id: 'arranjo-simples',
+                category: 'Matemática',
+                level: 'Ensino Médio',
+                name: 'Arranjo Simples',
+                formula_display: 'A_{n,p} = \\frac{n!}{(n-p)!}',
+                description: "Calcula o número de maneiras de escolher e ordenar 'p' elementos de um conjunto de 'n' elementos. A ordem importa. É usado em problemas de senhas, pódios de competição e códigos.",
+                inputs: [
+                    { id: 'n', label: 'Nº total de elementos (n)', unit: '' },
+                    { id: 'p', label: 'Nº de elementos por grupo (p)', unit: '' },
+                ],
+                calculationFunction: (inputs) => {
+                    const n = parseInt(inputs.n);
+                    const p = parseInt(inputs.p);
+                    if (isNaN(n) || isNaN(p) || n < p || n < 0 || p < 0) return { result: 'Erro' };
+                    const factorial = (num) => num < 0 ? -1 : (num === 0 ? 1 : num * factorial(num - 1));
+                    const result = factorial(n) / factorial(n - p);
+                    return { result: `A_{${n},${p}} = ${formatNumber(result)}` };
+                }
+            },
+            {
+                id: 'permutacao-simples',
+                category: 'Matemática',
+                level: 'Ensino Médio',
+                name: 'Permutação Simples',
+                formula_display: 'P_n = n!',
+                description: "Calcula o número de maneiras de ordenar todos os 'n' elementos de um conjunto. É fundamental para problemas de anagramas e organização de itens em fila.",
+                inputs: [
+                    { id: 'n', label: 'Nº de elementos (n)', unit: '' },
+                ],
+                calculationFunction: (inputs) => {
+                    const n = parseInt(inputs.n);
+                    if (isNaN(n) || n < 0) return { result: 'Erro' };
+                    const factorial = (num) => {
+                        if (num < 0) return -1;
+                        if (num === 0) return 1;
+                        let res = 1;
+                        for(let i=2; i<=num; i++) res *=i;
+                        return res;
+                    };
+                    return { result: `P_${n} = ${formatNumber(factorial(n))}` };
+                }
+            },
+            {
+                id: 'combinacao-simples',
+                category: 'Matemática',
+                level: 'Ensino Médio',
+                name: 'Combinação Simples',
+                formula_display: 'C_{n,p} = \\frac{n!}{p!(n-p)!}',
+                description: "Calcula o número de maneiras de escolher 'p' elementos de um conjunto de 'n' elementos, onde a ordem não importa. É usado para formar comissões, times e em jogos de loteria.",
+                inputs: [
+                    { id: 'n', label: 'Nº total de elementos (n)', unit: '' },
+                    { id: 'p', label: 'Nº de elementos por grupo (p)', unit: '' },
+                ],
+                calculationFunction: (inputs) => {
+                    const n = parseInt(inputs.n);
+                    const p = parseInt(inputs.p);
+                    if (isNaN(n) || isNaN(p) || n < p || n < 0 || p < 0) return { result: 'Erro' };
+                    const factorial = (num) => {
+                        if (num < 0) return -1;
+                        if (num === 0) return 1;
+                        let res = 1;
+                        for(let i=2; i<=num; i++) res *=i;
+                        return res;
+                    };
+                    const result = factorial(n) / (factorial(p) * factorial(n - p));
+                    return { result: `C_{${n},${p}} = ${formatNumber(result)}` };
+                }
+            },
+            {
+                id: 'binomio-newton',
+                category: 'Matemática',
+                level: 'Ensino Médio',
+                name: 'Coeficiente Binomial',
+                formula_display: '\\binom{n}{k} = C_{n,k}',
+                description: "Calcula os coeficientes da expansão de um binômio $(a+b)^n$. É a mesma fórmula da combinação e é a base do Triângulo de Pascal, sendo crucial em probabilidade e estatística.",
+                inputs: [
+                    { id: 'n', label: 'Linha (n)', unit: '' },
+                    { id: 'k', label: 'Coluna (k)', unit: '' },
+                ],
+                calculationFunction: (inputs) => {
+                    const n = parseInt(inputs.n);
+                    const k = parseInt(inputs.k);
+                    if (isNaN(n) || isNaN(k) || n < k || n < 0 || k < 0) return { result: 'Erro' };
+                    const factorial = (num) => {
+                        if (num < 0) return -1;
+                        if (num === 0) return 1;
+                        let res = 1;
+                        for(let i=2; i<=num; i++) res *=i;
+                        return res;
+                    };
+                    const result = factorial(n) / (factorial(k) * factorial(n - k));
+                    return { result: `\\binom{${n}}{${k}} = ${formatNumber(result)}` };
+                }
+            },
+            {
+                id: 'trigonometria-basica',
+                category: 'Matemática',
+                level: 'Ensino Médio',
+                name: 'Seno, Cosseno e Tangente',
+                formula_display: 'sen(\\theta), cos(\\theta), tan(\\theta)',
+                description: "São as relações fundamentais entre os ângulos e os lados de um triângulo retângulo. Foram criadas para a astronomia, agrimensura e navegação, permitindo calcular distâncias inacessíveis.",
+                inputs: [
+                    { id: 'theta', label: 'Ângulo (θ)', unit: 'graus' },
+                ],
+                calculationFunction: (inputs) => {
+                    const angle = parseFloat(inputs.theta.replace(',', '.'));
+                    if (isNaN(angle)) return { result: 'Erro' };
+                    const rad = angle * (Math.PI / 180);
+                    const sen = Math.sin(rad);
+                    const cos = Math.cos(rad);
+                    const tan = Math.tan(rad);
+                    return { result: `sen(${angle}°) = ${formatNumber(sen)}; cos(${angle}°) = ${formatNumber(cos)}; tan(${angle}°) = ${formatNumber(tan)}` };
+                }
+            },
+            {
+                id: 'seno-soma-arcos',
+                category: 'Matemática',
+                level: 'Ensino Médio',
+                name: 'Seno da Soma de Arcos',
+                formula_display: 'sen(a+b) = sen(a)cos(b) + sen(b)cos(a)',
+                description: "Permite calcular o seno de um ângulo que é a soma de outros dois ângulos conhecidos. É crucial para simplificar expressões trigonométricas e no estudo de ondas e vibrações.",
+                inputs: [
+                    { id: 'a', label: 'Ângulo a', unit: 'graus' },
+                    { id: 'b', label: 'Ângulo b', unit: 'graus' },
+                ],
+                calculationFunction: (inputs) => {
+                    const a = parseFloat(inputs.a.replace(',', '.'));
+                    const b = parseFloat(inputs.b.replace(',', '.'));
+                    if (isNaN(a) || isNaN(b)) return { result: 'Erro' };
+                    const a_rad = a * (Math.PI / 180);
+                    const b_rad = b * (Math.PI / 180);
+                    const result = Math.sin(a_rad) * Math.cos(b_rad) + Math.sin(b_rad) * Math.cos(a_rad);
+                    return { result: `sen(${a+b}°) = ${formatNumber(result)}` };
+                }
+            },
+            {
+                id: 'tangente-soma-arcos',
+                category: 'Matemática',
+                level: 'Ensino Médio',
+                name: 'Tangente da Soma de Arcos',
+                formula_display: 'tan(a+b) = \\frac{tan(a)+tan(b)}{1-tan(a)tan(b)}',
+                description: "Calcula a tangente de um ângulo que é a soma de outros dois. É usada em física, especialmente em óptica e eletromagnetismo, para lidar com ângulos de incidência e refração.",
+                inputs: [
+                    { id: 'a', label: 'Ângulo a', unit: 'graus' },
+                    { id: 'b', label: 'Ângulo b', unit: 'graus' },
+                ],
+                calculationFunction: (inputs) => {
+                    const a = parseFloat(inputs.a.replace(',', '.'));
+                    const b = parseFloat(inputs.b.replace(',', '.'));
+                    if (isNaN(a) || isNaN(b)) return { result: 'Erro' };
+                    const a_rad = a * (Math.PI / 180);
+                    const b_rad = b * (Math.PI / 180);
+                    const tanA = Math.tan(a_rad);
+                    const tanB = Math.tan(b_rad);
+                    const result = (tanA + tanB) / (1 - tanA * tanB);
+                    return { result: `tan(${a+b}°) = ${formatNumber(result)}` };
+                }
+            },
+            {
+                id: 'funcao-afim',
+                category: 'Matemática',
+                level: 'Ensino Médio',
+                name: 'Função Afim (1º Grau)',
+                formula_display: 'y = ax + b',
+                description: "Modela relações de crescimento ou decrescimento linear e constante. É usada para descrever situações como custo de produção, planos de telefonia e movimento com velocidade constante.",
+                inputs: [
+                    { id: 'a', label: 'Coeficiente Angular (a)', unit: '' },
+                    { id: 'x', label: 'Variável (x)', unit: '' },
+                    { id: 'b', label: 'Coeficiente Linear (b)', unit: '' },
+                ],
+                calculationFunction: (inputs) => {
+                    const a = parseFloat(inputs.a.replace(',', '.'));
+                    const x = parseFloat(inputs.x.replace(',', '.'));
+                    const b = parseFloat(inputs.b.replace(',', '.'));
+                    if ([a,x,b].some(isNaN)) return { result: 'Erro' };
+                    const y = a * x + b;
+                    return { result: `y = ${formatNumber(y)}` };
+                }
+            },
+            {
+                id: 'vertice-parabola',
+                category: 'Matemática',
+                level: 'Ensino Médio',
+                name: 'Vértice da Parábola',
+                formula_display: 'X_v = \\frac{-b}{2a}, Y_v = \\frac{-\\Delta}{4a}',
+                description: "Encontra o ponto de máximo ou mínimo de uma função do segundo grau. É crucial para problemas de otimização, como encontrar a altura máxima de um projétil ou o lucro máximo de uma empresa.",
+                inputs: [
+                    { id: 'a', label: 'Valor de a', unit: '' },
+                    { id: 'b', label: 'Valor de b', unit: '' },
+                    { id: 'c', label: 'Valor de c', unit: '' },
+                ],
+                calculationFunction: (inputs) => {
+                    const a = parseFloat(inputs.a.replace(',', '.'));
+                    const b = parseFloat(inputs.b.replace(',', '.'));
+                    const c = parseFloat(inputs.c.replace(',', '.'));
+                    if (isNaN(a) || isNaN(b) || isNaN(c) || a === 0) return { result: 'Erro' };
+                    const delta = (b*b) - (4*a*c);
+                    const xv = -b / (2*a);
+                    const yv = -delta / (4*a);
+                    return { result: `V = (${formatNumber(xv)}, ${formatNumber(yv)})` };
+                }
+            },
+            {
+                id: 'soma-pa',
+                category: 'Matemática',
+                level: 'Ensino Médio',
+                name: 'Soma de uma PA Finita',
+                formula_display: 'S_n = \\frac{(a_1 + a_n)n}{2}',
+                description: "Calcula a soma dos termos de uma Progressão Aritmética. Foi criada, segundo a lenda, por Gauss para somar números de 1 a 100 rapidamente, sendo útil para somar sequências com crescimento constante.",
+                inputs: [
+                    { id: 'a1', label: 'Primeiro termo (a₁)', unit: '' },
+                    { id: 'an', label: 'Último termo (aₙ)', unit: '' },
+                    { id: 'n', label: 'Número de termos (n)', unit: '' },
+                ],
+                calculationFunction: (inputs) => {
+                    const a1 = parseFloat(inputs.a1.replace(',', '.'));
+                    const an = parseFloat(inputs.an.replace(',', '.'));
+                    const n = parseInt(inputs.n);
+                    if ([a1, an, n].some(isNaN) || n <= 0) return { result: 'Erro' };
+                    const sn = ((a1 + an) * n) / 2;
+                    return { result: `Sₙ = ${formatNumber(sn)}` };
+                }
+            },
+            {
+                id: 'soma-pg',
+                category: 'Matemática',
+                level: 'Ensino Médio',
+                name: 'Soma de uma PG Finita',
+                formula_display: 'S_n = \\frac{a_1(q^n - 1)}{q-1}',
+                description: "Calcula a soma dos termos de uma Progressão Geométrica. É fundamental em matemática financeira para calcular juros compostos e o valor de investimentos ao longo do tempo.",
+                inputs: [
+                    { id: 'a1', label: 'Primeiro termo (a₁)', unit: '' },
+                    { id: 'q', label: 'Razão (q)', unit: '' },
+                    { id: 'n', label: 'Número de termos (n)', unit: '' },
+                ],
+                calculationFunction: (inputs) => {
+                    const a1 = parseFloat(inputs.a1.replace(',', '.'));
+                    const q = parseFloat(inputs.q.replace(',', '.'));
+                    const n = parseInt(inputs.n);
+                    if ([a1, q, n].some(isNaN) || n <= 0 || q === 1) return { result: 'Erro' };
+                    const sn = a1 * (Math.pow(q,n) - 1) / (q - 1);
+                    return { result: `Sₙ = ${formatNumber(sn)}` };
+                }
+            },
+            {
+                id: 'funcao-exponencial',
+                category: 'Matemática',
+                level: 'Ensino Médio',
+                name: 'Função Exponencial',
+                formula_display: 'y = a^x',
+                description: "Modela fenômenos de crescimento ou decaimento muito rápidos, como crescimento populacional, juros compostos ou decaimento radioativo.",
+                inputs: [
+                    { id: 'a', label: 'Base (a)', unit: '' },
+                    { id: 'x', label: 'Expoente (x)', unit: '' },
+                ],
+                calculationFunction: (inputs) => {
+                    const a = parseFloat(inputs.a.replace(',', '.'));
+                    const x = parseFloat(inputs.x.replace(',', '.'));
+                    if (isNaN(a) || isNaN(x)) return { result: 'Erro' };
+                    return { result: `y = ${formatNumber(Math.pow(a,x))}` };
+                }
+            },
+            {
+                id: 'logaritmo',
+                category: 'Matemática',
+                level: 'Ensino Superior',
+                name: 'Cálculo de Logaritmo',
+                formula_display: 'log_b(x) = y \\iff b^y = x',
+                description: "A operação inversa da exponenciação. Foi criada para simplificar cálculos manuais de multiplicação e divisão, transformando-os em somas e subtrações. Hoje é vital para medir grandezas como pH, decibéis e a escala Richter.",
+                inputs: [
+                    { id: 'x', label: 'Logaritmando (x)', unit: '' },
+                    { id: 'b', label: 'Base (b)', unit: '' },
+                ],
+                calculationFunction: (inputs) => {
+                    const x = parseFloat(inputs.x.replace(',', '.'));
+                    const b = parseFloat(inputs.b.replace(',', '.'));
+                    if (isNaN(x) || isNaN(b) || x <= 0 || b <= 0 || b === 1) return { result: 'Erro' };
+                    const y = Math.log(x) / Math.log(b);
+                    return { result: `log_${b}(${x}) = ${formatNumber(y)}` };
+                }
+            },
+            {
+                id: 'derivada-potencia',
+                category: 'Matemática',
+                level: 'Ensino Superior',
+                name: 'Derivada (Regra da Potência)',
+                formula_display: '\\frac{d}{dx}(ax^n) = anx^{n-1}',
+                description: "Uma regra fundamental do Cálculo Diferencial para encontrar a taxa de variação instantânea de funções polinomiais. É a base para otimizar problemas, calcular velocidades e acelerações.",
+                inputs: [
+                    { id: 'a', label: 'Coeficiente (a)', unit: '' },
+                    { id: 'n', label: 'Expoente (n)', unit: '' },
+                ],
+                calculationFunction: (inputs) => {
+                    const a = parseFloat(inputs.a.replace(',', '.'));
+                    const n = parseFloat(inputs.n.replace(',', '.'));
+                    if (isNaN(a) || isNaN(n)) return { result: 'Erro' };
+                    const new_a = a * n;
+                    const new_n = n - 1;
+                    return { result: `d/dx = ${formatNumber(new_a)}x^${formatNumber(new_n)}` };
+                }
+            },
+            {
+                id: 'soma-pg-infinita',
+                category: 'Matemática',
+                level: 'Ensino Superior',
+                name: 'Soma de uma PG Infinita',
+                formula_display: 'S = \\frac{a_1}{1-q}',
+                description: "Calcula a soma de uma série geométrica infinita, desde que a razão seja entre -1 e 1. É usada para resolver paradoxos como o de Zeno e para modelar processos que convergem para um valor limite.",
+                inputs: [
+                    { id: 'a1', label: 'Primeiro termo (a₁)', unit: '' },
+                    { id: 'q', label: 'Razão (q)', unit: '' },
+                ],
+                calculationFunction: (inputs) => {
+                    const a1 = parseFloat(inputs.a1.replace(',', '.'));
+                    const q = parseFloat(inputs.q.replace(',', '.'));
+                    if (isNaN(a1) || isNaN(q) || Math.abs(q) >= 1) return { result: 'Erro: |q| deve ser < 1' };
+                    const s = a1 / (1-q);
+                    return { result: `S = ${formatNumber(s)}` };
+                }
+            },
+            
+            // --- FÍSICA ---
+            {
+                id: 'velocidade-media',
+                category: 'Física',
+                level: 'Ensino Fundamental',
+                name: 'Velocidade Média',
+                formula_display: 'V_m = \\frac{\\Delta S}{\\Delta t}',
+                description: "Esta equação calcula a taxa média de deslocamento de um objeto. Foi criada para simplificar o estudo do movimento, fornecendo uma velocidade constante que descreveria o mesmo percurso no mesmo tempo, independentemente das variações de velocidade ao longo do trajeto.",
+                inputs: [
+                    { id: 'deltaS', label: 'Distância percorrida (ΔS)', unit: 'metros' },
+                    { id: 'deltaT', label: 'Tempo gasto (Δt)', unit: 'segundos' },
+                ],
+                calculationFunction: (inputs) => {
+                    const deltaS = parseFloat(inputs.deltaS.replace(',', '.'));
+                    const deltaT = parseFloat(inputs.deltaT.replace(',', '.'));
+                    if (isNaN(deltaS) || isNaN(deltaT) || deltaT === 0) return { result: 'Erro' };
+                    const vm = deltaS / deltaT;
+                    return { result: `${formatNumber(vm, 2)} m/s` };
+                }
+            },
+            {
+                id: 'peso-objeto',
+                category: 'Física',
+                level: 'Ensino Fundamental',
+                name: 'Peso de um Objeto',
+                formula_display: 'P = m \\cdot g',
+                description: "Esta fórmula define o Peso como a força da gravidade atuando sobre a massa de um objeto. Foi criada para diferenciar 'massa' (quantidade de matéria) de 'peso' (a força de atração), um conceito fundamental na mecânica de Newton.",
+                inputs: [
+                    { id: 'm', label: 'Massa do objeto (m)', unit: 'kg' },
+                    { id: 'g', label: 'Aceleração da gravidade (g)', unit: 'm/s²' },
+                ],
+                calculationFunction: (inputs) => {
+                    const m = parseFloat(inputs.m.replace(',', '.'));
+                    const g = parseFloat(inputs.g.replace(',', '.'));
+                    if (isNaN(m) || isNaN(g)) return { result: 'Erro' };
+                    const p = m * g;
+                    return { result: `P = ${formatNumber(p, 2)} N` };
+                }
+            },
+            {
+                id: 'torricelli',
+                category: 'Física',
+                level: 'Ensino Médio',
+                name: 'Equação de Torricelli',
+                formula_display: 'v^2 = v_0^2 + 2a\\Delta S',
+                description: "Esta equação relaciona a velocidade final de um objeto com sua velocidade inicial, aceleração e distância percorrida, sem a necessidade de conhecer o tempo. Foi criada por Evangelista Torricelli como uma ferramenta poderosa para resolver problemas de cinemática onde o tempo não é uma variável conhecida.",
+                inputs: [
+                    { id: 'v0', label: 'Velocidade Inicial (v₀)', unit: 'm/s' },
+                    { id: 'a', label: 'Aceleração (a)', unit: 'm/s²' },
+                    { id: 'deltaS', label: 'Distância (ΔS)', unit: 'm' },
+                ],
+                calculationFunction: (inputs) => {
+                    const v0 = parseFloat(inputs.v0.replace(',', '.'));
+                    const a = parseFloat(inputs.a.replace(',', '.'));
+                    const deltaS = parseFloat(inputs.deltaS.replace(',', '.'));
+                    if (isNaN(v0) || isNaN(a) || isNaN(deltaS)) return { result: 'Erro' };
+                    const v2 = v0*v0 + 2*a*deltaS;
+                    if (v2 < 0) {
+                        return { result: 'Não há velocidade final real.' };
+                    }
+                    const v = Math.sqrt(v2);
+                    return { result: `v = ${formatNumber(v, 2)} m/s` };
+                }
+            },
+            {
+                id: 'newton-segunda-lei',
+                category: 'Física',
+                level: 'Ensino Médio',
+                name: 'Segunda Lei de Newton',
+                formula_display: 'F_r = m \\cdot a',
+                description: "Também conhecida como Princípio Fundamental da Dinâmica, esta é uma das leis mais importantes da física. Ela estabelece que a força resultante aplicada a um objeto é igual ao produto de sua massa pela aceleração. Foi criada por Isaac Newton para descrever matematicamente como as forças alteram o estado de movimento dos corpos.",
+                inputs: [
+                    { id: 'm', label: 'Massa (m)', unit: 'kg' },
+                    { id: 'a', label: 'Aceleração (a)', unit: 'm/s²' },
+                ],
+                calculationFunction: (inputs) => {
+                    const m = parseFloat(inputs.m.replace(',', '.'));
+                    const a = parseFloat(inputs.a.replace(',', '.'));
+                    if (isNaN(m) || isNaN(a)) return { result: 'Erro' };
+                    const F = m * a;
+                    return { result: `Fᵣ = ${formatNumber(F, 2)} N` };
+                }
+            },
+             {
+                id: 'energia-cinetica',
+                category: 'Física',
+                level: 'Ensino Superior',
+                name: 'Energia Cinética Relativística',
+                formula_display: 'E_k = (\\gamma - 1)mc^2',
+                description: "Esta equação calcula a energia associada ao movimento de um corpo em velocidades próximas à da luz, onde os efeitos da Teoria da Relatividade de Einstein se tornam significativos. Ela expande a física clássica para descrever a energia em regimes de alta velocidade.",
+                inputs: [
+                    { id: 'm', label: 'Massa de repouso (m)', unit: 'kg' },
+                    { id: 'v', label: 'Velocidade do objeto (v)', unit: 'm/s' },
+                ],
+                calculationFunction: (inputs) => {
+                    const m = parseFloat(inputs.m.replace(',', '.'));
+                    const v = parseFloat(inputs.v.replace(',', '.'));
+                    const c = 299792458; 
+                    if (isNaN(m) || isNaN(v) || v >= c || v < 0) return { result: 'Erro' };
+                    const gamma = 1 / Math.sqrt(1 - (v*v)/(c*c));
+                    const Ek = (gamma - 1) * m * (c*c);
+                    return { result: `Eₖ = ${formatExponential(Ek)} J` };
+                }
+            },
+            {
+                id: 'energia-massa',
+                category: 'Física',
+                level: 'Ensino Superior',
+                name: 'Equivalência Massa-Energia',
+                formula_display: 'E = mc^2',
+                description: "A equação mais famosa de Albert Einstein, ela revela a equivalência fundamental entre massa e energia. Foi criada para mostrar que massa pode ser convertida em energia e vice-versa, um princípio que é a base da energia nuclear.",
+                inputs: [
+                    { id: 'm', label: 'Massa (m)', unit: 'kg' },
+                ],
+                calculationFunction: (inputs) => {
+                    const m = parseFloat(inputs.m.replace(',', '.'));
+                    const c = 299792458;
+                    if (isNaN(m) || m < 0) return { result: 'Erro' };
+                    const E = m * c * c;
+                    return { result: `E = ${formatExponential(E)} J` };
+                }
+            },
+            
+            // --- QUÍMICA ---
+            {
+                id: 'densidade',
+                category: 'Química',
+                level: 'Ensino Fundamental',
+                name: 'Cálculo de Densidade',
+                formula_display: 'd = \\frac{m}{V}',
+                description: "Mede a concentração de massa em um determinado volume. É uma propriedade fundamental da matéria, usada para identificar substâncias e prever se um objeto flutuará.",
+                inputs: [
+                    { id: 'm', label: 'Massa (m)', unit: 'gramas' },
+                    { id: 'V', label: 'Volume (V)', unit: 'mL' },
+                ],
+                calculationFunction: (inputs) => {
+                    const m = parseFloat(inputs.m.replace(',', '.'));
+                    const V = parseFloat(inputs.V.replace(',', '.'));
+                    if(isNaN(m) || isNaN(V) || V === 0) return { result: 'Erro' };
+                    const d = m / V;
+                    return { result: `d = ${formatNumber(d)} g/mL` };
+                }
+            },
+            {
+                id: 'celsius-kelvin',
+                category: 'Química',
+                level: 'Ensino Fundamental',
+                name: 'Conversão Celsius para Kelvin',
+                formula_display: 'K = C + 273,15',
+                description: "Converte a temperatura da escala de uso diário (Celsius) para a escala absoluta (Kelvin), usada em cálculos científicos. O zero Kelvin representa a ausência total de energia térmica.",
+                inputs: [
+                    { id: 'C', label: 'Temperatura em Celsius (C)', unit: '°C' },
+                ],
+                calculationFunction: (inputs) => {
+                    const C = parseFloat(inputs.C.replace(',', '.'));
+                    if(isNaN(C)) return { result: 'Erro' };
+                    const K = C + 273.15;
+                    return { result: `${formatNumber(K, 2)} K` };
+                }
+            },
+            {
+                id: 'gases-ideais',
+                category: 'Química',
+                level: 'Ensino Médio',
+                name: 'Equação dos Gases Ideais',
+                formula_display: 'PV = nRT',
+                description: "Relaciona pressão, volume, temperatura e quantidade de um gás. É um modelo fundamental para prever o comportamento de gases em diversas condições, essencial em química e engenharia.",
+                inputs: [
+                    { id: 'P', label: 'Pressão (P)', unit: 'atm' },
+                    { id: 'V', label: 'Volume (V)', unit: 'L' },
+                    { id: 'n', label: 'Nº de Mols (n)', unit: 'mol' },
+                ],
+                calculationFunction: (inputs) => {
+                    const P = parseFloat(inputs.P.replace(',', '.'));
+                    const V = parseFloat(inputs.V.replace(',', '.'));
+                    const n = parseFloat(inputs.n.replace(',', '.'));
+                    const R = 0.082; 
+                    if (isNaN(P) || isNaN(V) || isNaN(n) || P <= 0 || V <= 0 || n <= 0) return { result: 'Erro'};
+                    const T = (P * V) / (n * R);
+                    return { result: `T = ${formatNumber(T, 2)} K` };
+                }
+            },
+            {
+                id: 'molaridade',
+                category: 'Química',
+                level: 'Ensino Médio',
+                name: 'Cálculo de Molaridade',
+                formula_display: 'M = \\frac{n}{V_{(L)}}',
+                description: "Mede a concentração de uma solução em termos de mols de soluto por litro. É a unidade de concentração mais comum em laboratórios para preparar soluções e controlar reações químicas.",
+                inputs: [
+                    { id: 'n', label: 'Nº de Mols do Soluto (n)', unit: 'mol' },
+                    { id: 'V', label: 'Volume da Solução (V)', unit: 'mL' },
+                ],
+                calculationFunction: (inputs) => {
+                    const n = parseFloat(inputs.n.replace(',', '.'));
+                    const V_ml = parseFloat(inputs.V.replace(',', '.'));
+                    if (isNaN(n) || isNaN(V_ml) || n < 0 || V_ml <= 0) return { result: 'Erro'};
+                    const V_l = V_ml / 1000;
+                    const M = n / V_l;
+                    return { result: `M = ${formatNumber(M)} M` };
+                }
+            },
+            {
+                id: 'lei-beer',
+                category: 'Química',
+                level: 'Ensino Superior',
+                name: 'Lei de Beer-Lambert',
+                formula_display: 'A = \\epsilon c l',
+                description: "Relaciona a absorção de luz com as propriedades de um material. É a base da espectrofotometria, uma técnica usada para determinar a concentração de substâncias em uma amostra medindo a luz que passa por ela.",
+                inputs: [
+                    { id: 'epsilon', label: 'Absortividade Molar (ε)', unit: 'L mol⁻¹ cm⁻¹' },
+                    { id: 'c', label: 'Concentração (c)', unit: 'mol/L' },
+                    { id: 'l', label: 'Caminho Óptico (l)', unit: 'cm' },
+                ],
+                calculationFunction: (inputs) => {
+                    const epsilon = parseFloat(inputs.epsilon.replace(',', '.'));
+                    const c = parseFloat(inputs.c.replace(',', '.'));
+                    const l = parseFloat(inputs.l.replace(',', '.'));
+                    if (isNaN(epsilon) || isNaN(c) || isNaN(l) || epsilon < 0 || c < 0 || l < 0) return { result: 'Erro' };
+                    const A = epsilon * c * l;
+                    return { result: `Absorvância (A) = ${formatNumber(A)}` };
+                }
+            },
+
+            // --- BIOLOGIA ---
+            {
+                id: 'fcmax',
+                category: 'Biologia',
+                level: 'Ensino Fundamental',
+                name: 'Frequência Cardíaca Máxima',
+                formula_display: 'FC_{max} \\approx 220 - \\text{idade}',
+                description: "Uma fórmula simples para estimar o número máximo de batimentos por minuto que o coração de uma pessoa pode atingir. É usada como referência para definir zonas de treinamento físico.",
+                inputs: [
+                    { id: 'idade', label: 'Sua Idade', unit: 'anos' },
+                ],
+                calculationFunction: (inputs) => {
+                    const idade = parseInt(inputs.idade);
+                    if(isNaN(idade) || idade <= 0 || idade > 120) return { result: 'Erro' };
+                    const fcmax = 220 - idade;
+                    return { result: `FCₘₐₓ ≈ ${fcmax} bpm` };
+                }
+            },
+            {
+                id: 'imc',
+                category: 'Biologia',
+                level: 'Ensino Médio',
+                name: 'Índice de Massa Corporal (IMC)',
+                formula_display: 'IMC = \\frac{\\text{Peso}}{\\text{Altura}^2}',
+                description: "Uma medida internacional para avaliar se o peso de uma pessoa está dentro de uma faixa saudável para sua altura. Foi criada como uma ferramenta rápida para triagem em estudos de saúde populacional.",
+                inputs: [
+                    { id: 'peso', label: 'Peso', unit: 'kg' },
+                    { id: 'altura', label: 'Altura', unit: 'm' },
+                ],
+                calculationFunction: (inputs) => {
+                    const peso = parseFloat(inputs.peso.replace(',', '.'));
+                    const altura = parseFloat(inputs.altura.replace(',', '.'));
+                    if(isNaN(peso) || isNaN(altura) || peso <= 0 || altura <= 0) return { result: 'Erro' };
+                    const imc = peso / (altura * altura);
+                    let classificacao = '';
+                    if (imc < 18.5) classificacao = 'Abaixo do peso';
+                    else if (imc < 24.9) classificacao = 'Peso normal';
+                    else if (imc < 29.9) classificacao = 'Sobrepeso';
+                    else if (imc < 34.9) classificacao = 'Obesidade Grau I';
+                    else if (imc < 39.9) classificacao = 'Obesidade Grau II';
+                    else classificacao = 'Obesidade Grau III';
+                    return { result: `${formatNumber(imc, 2)} kg/m² (${classificacao})` };
+                }
+            },
+            {
+                id: 'hardy-weinberg',
+                category: 'Biologia',
+                level: 'Ensino Médio',
+                name: 'Equilíbrio de Hardy-Weinberg',
+                formula_display: 'p^2 + 2pq + q^2 = 1',
+                description: "Um princípio da genética de populações que descreve a frequência de alelos e genótipos em uma população que não está evoluindo. Serve como um modelo nulo para testar se a evolução está ocorrendo.",
+                inputs: [
+                    { id: 'p', label: 'Frequência do alelo dominante (p)', unit: '' },
+                ],
+                calculationFunction: (inputs) => {
+                    const p = parseFloat(inputs.p.replace(',', '.'));
+                    if(isNaN(p) || p < 0 || p > 1) return { result: 'Erro' };
+                    const q = 1 - p;
+                    const p2 = p * p;
+                    const pq2 = 2 * p * q;
+                    const q2 = q * q;
+                    return { result: `Frequências: AA=${formatNumber(p2)}, Aa=${formatNumber(pq2)}, aa=${formatNumber(q2)}` };
+                }
+            },
+            {
+                id: 'crescimento-logistico',
+                category: 'Biologia',
+                level: 'Ensino Superior',
+                name: 'Crescimento Populacional Logístico',
+                formula_display: '\\frac{dN}{dt} = rN(1 - \\frac{N}{K})',
+                description: "Um modelo matemático que descreve o crescimento de uma população considerando a limitação de recursos do ambiente (capacidade de suporte K). É mais realista que o crescimento exponencial para a maioria das populações.",
+                inputs: [
+                    { id: 'r', label: 'Taxa de crescimento (r)', unit: '' },
+                    { id: 'N', label: 'Tamanho atual da população (N)', unit: '' },
+                    { id: 'K', label: 'Capacidade de suporte (K)', unit: '' },
+                ],
+                calculationFunction: (inputs) => {
+                    const r = parseFloat(inputs.r.replace(',', '.'));
+                    const N = parseFloat(inputs.N.replace(',', '.'));
+                    const K = parseFloat(inputs.K.replace(',', '.'));
+                    if (isNaN(r) || isNaN(N) || isNaN(K) || N < 0 || K <= 0) return { result: 'Erro' };
+                    const dNdt = r * N * (1 - (N/K));
+                    return { result: `Taxa de crescimento ≈ ${formatNumber(dNdt)}` };
+                }
+            },
+
+            // --- GEOMETRIA ---
+            {
+                id: 'area-quadrado',
+                category: 'Geometria',
+                level: 'Ensino Fundamental',
+                name: 'Área do Quadrado',
+                formula_display: 'A = l^2',
+                description: "Calcula a medida da superfície de um quadrado. Foi criada como uma das fórmulas básicas da geometria para medição de terrenos e espaços com lados iguais.",
+                inputs: [ { id: 'l', label: 'Lado (l)', unit: 'cm' } ],
+                calculationFunction: (inputs) => {
+                    const l = parseFloat(inputs.l.replace(',', '.'));
+                    if (isNaN(l) || l <= 0) return { result: 'Erro' };
+                    return { result: `A = ${formatNumber(l*l)} cm²` };
+                }
+            },
+            {
+                id: 'area-retangulo',
+                category: 'Geometria',
+                level: 'Ensino Fundamental',
+                name: 'Área do Retângulo',
+                formula_display: 'A = b \\cdot h',
+                description: "Calcula a medida da superfície de um retângulo. É uma fórmula fundamental para medir qualquer espaço retangular, desde um campo até a planta de uma casa.",
+                inputs: [
+                    { id: 'b', label: 'Base (b)', unit: 'cm' },
+                    { id: 'h', label: 'Altura (h)', unit: 'cm' },
+                ],
+                calculationFunction: (inputs) => {
+                    const b = parseFloat(inputs.b.replace(',', '.'));
+                    const h = parseFloat(inputs.h.replace(',', '.'));
+                    if (isNaN(b) || isNaN(h) || b <= 0 || h <= 0) return { result: 'Erro' };
+                    return { result: `A = ${formatNumber(b*h)} cm²` };
+                }
+            },
+            {
+                id: 'area-triangulo',
+                category: 'Geometria',
+                level: 'Ensino Fundamental',
+                name: 'Área do Triângulo',
+                formula_display: 'A = \\frac{b \\cdot h}{2}',
+                description: "Calcula a medida da superfície de um triângulo. Foi desenvolvida para medir áreas de formas triangulares, que são a base para calcular a área de polígonos mais complexos.",
+                inputs: [
+                    { id: 'b', label: 'Base (b)', unit: 'cm' },
+                    { id: 'h', label: 'Altura (h)', unit: 'cm' },
+                ],
+                calculationFunction: (inputs) => {
+                    const b = parseFloat(inputs.b.replace(',', '.'));
+                    const h = parseFloat(inputs.h.replace(',', '.'));
+                    if (isNaN(b) || isNaN(h) || b <= 0 || h <= 0) return { result: 'Erro' };
+                    return { result: `A = ${formatNumber((b * h)/2)} cm²` };
+                }
+            },
+            {
+                id: 'area-circulo',
+                category: 'Geometria',
+                level: 'Ensino Fundamental',
+                name: 'Área do Círculo',
+                formula_display: 'A = \\pi \\cdot r^2',
+                description: "Calcula a medida da superfície de um círculo a partir do seu raio. É uma fórmula essencial em engenharia, design e ciência para qualquer objeto ou espaço de formato circular.",
+                inputs: [ { id: 'r', label: 'Raio (r)', unit: 'cm' } ],
+                calculationFunction: (inputs) => {
+                    const r = parseFloat(inputs.r.replace(',', '.'));
+                    if (isNaN(r) || r <= 0) return { result: 'Erro' };
+                    return { result: `A = ${formatNumber(Math.PI * r * r)} cm²` };
+                }
+            },
+            {
+                id: 'area-paralelogramo',
+                category: 'Geometria',
+                level: 'Ensino Fundamental',
+                name: 'Área do Paralelogramo',
+                formula_display: 'A = b \\cdot h',
+                description: "Calcula a medida da superfície de um paralelogramo. É uma generalização da área do retângulo, útil para medir terrenos ou objetos com lados paralelos, mas não necessariamente com ângulos de 90 graus.",
+                inputs: [
+                    { id: 'b', label: 'Base (b)', unit: 'cm' },
+                    { id: 'h', label: 'Altura (h)', unit: 'cm' },
+                ],
+                calculationFunction: (inputs) => {
+                    const b = parseFloat(inputs.b.replace(',', '.'));
+                    const h = parseFloat(inputs.h.replace(',', '.'));
+                    if (isNaN(b) || isNaN(h) || b <= 0 || h <= 0) return { result: 'Erro' };
+                    return { result: `A = ${formatNumber(b * h)} cm²` };
+                }
+            },
+            {
+                id: 'area-losango',
+                category: 'Geometria',
+                level: 'Ensino Fundamental',
+                name: 'Área do Losango',
+                formula_display: 'A = \\frac{D \\cdot d}{2}',
+                description: "Calcula a medida da superfície de um losango a partir de suas diagonais. É particularmente útil em design e cristalografia, onde a forma de losango é comum.",
+                inputs: [
+                    { id: 'D', label: 'Diagonal Maior (D)', unit: 'cm' },
+                    { id: 'd', label: 'Diagonal Menor (d)', unit: 'cm' },
+                ],
+                calculationFunction: (inputs) => {
+                    const D = parseFloat(inputs.D.replace(',', '.'));
+                    const d = parseFloat(inputs.d.replace(',', '.'));
+                    if (isNaN(D) || isNaN(d) || D <= 0 || d <= 0) return { result: 'Erro' };
+                    return { result: `A = ${formatNumber((D*d)/2)} cm²` };
+                }
+            },
+            {
+                id: 'area-trapezio',
+                category: 'Geometria',
+                level: 'Ensino Fundamental',
+                name: 'Área do Trapézio',
+                formula_display: 'A = \\frac{(B+b)h}{2}',
+                description: "Calcula a medida da superfície de um trapézio. Foi criada para medir áreas de terrenos ou figuras com apenas dois lados paralelos, uma forma geométrica comum em arquitetura e engenharia civil.",
+                inputs: [
+                    { id: 'B', label: 'Base Maior (B)', unit: 'cm' },
+                    { id: 'b', label: 'Base Menor (b)', unit: 'cm' },
+                    { id: 'h', label: 'Altura (h)', unit: 'cm' },
+                ],
+                calculationFunction: (inputs) => {
+                    const B = parseFloat(inputs.B.replace(',', '.'));
+                    const b = parseFloat(inputs.b.replace(',', '.'));
+                    const h = parseFloat(inputs.h.replace(',', '.'));
+                    if ([B,b,h].some(isNaN) || B <= 0 || b <= 0 || h <= 0) return { result: 'Erro' };
+                    return { result: `A = ${formatNumber(((B+b)*h)/2)} cm²` };
+                }
+            },
+            {
+                id: 'perimetro-quadrado',
+                category: 'Geometria',
+                level: 'Ensino Fundamental',
+                name: 'Perímetro do Quadrado',
+                formula_display: 'P = 4 \\cdot l',
+                description: "Calcula o comprimento total do contorno de um quadrado. É uma fórmula básica para medir cercas, molduras e qualquer projeto que necessite do comprimento total dos lados de uma forma quadrada.",
+                inputs: [ { id: 'l', label: 'Lado (l)', unit: 'cm' } ],
+                calculationFunction: (inputs) => {
+                    const l = parseFloat(inputs.l.replace(',', '.'));
+                    if (isNaN(l) || l <= 0) return { result: 'Erro' };
+                    return { result: `P = ${formatNumber(4 * l, 2)} cm` };
+                }
+            },
+            {
+                id: 'comprimento-circunferencia',
+                category: 'Geometria',
+                level: 'Ensino Fundamental',
+                name: 'Comprimento da Circunferência',
+                formula_display: 'C = 2 \\pi r',
+                description: "Calcula o comprimento total do contorno de um círculo (sua 'borda'). É crucial para o design de rodas, engrenagens e qualquer projeto que envolva a medição da borda de um objeto circular.",
+                inputs: [ { id: 'r', label: 'Raio (r)', unit: 'cm' } ],
+                calculationFunction: (inputs) => {
+                    const r = parseFloat(inputs.r.replace(',', '.'));
+                    if (isNaN(r) || r <= 0) return { result: 'Erro' };
+                    return { result: `C = ${formatNumber(2 * Math.PI * r)} cm` };
+                }
+            },
+            {
+                id: 'pitagoras',
+                category: 'Geometria',
+                level: 'Ensino Médio',
+                name: 'Teorema de Pitágoras',
+                formula_display: 'a^2 = b^2 + c^2',
+                description: "Esta é uma das relações mais fundamentais da geometria, descrevendo a relação entre os lados de um triângulo retângulo. Foi desenvolvida para resolver problemas práticos de medição de distâncias, arquitetura e navegação.",
+                inputs: [
+                    { id: 'b', label: 'Cateto b', unit: 'cm' },
+                    { id: 'c', label: 'Cateto c', unit: 'cm' },
+                ],
+                calculationFunction: (inputs) => {
+                    const b = parseFloat(inputs.b.replace(',', '.'));
+                    const c = parseFloat(inputs.c.replace(',', '.'));
+                    if (isNaN(b) || isNaN(c) || b <= 0 || c <= 0) return { result: 'Erro' };
+                    const a = Math.sqrt((b*b) + (c*c));
+                    return { result: `Hipotenusa (a) = ${formatNumber(a)} cm` };
+                }
+            },
+            {
+                id: 'teorema-tales',
+                category: 'Geometria',
+                level: 'Ensino Médio',
+                name: 'Teorema de Tales',
+                formula_display: '\\frac{a}{b} = \\frac{c}{x}',
+                description: "Este teorema estabelece a proporcionalidade entre segmentos de retas cortadas por retas paralelas. Foi criado por Tales de Mileto para medir alturas e distâncias inacessíveis, como a altura de uma pirâmide, usando sombras e proporções.",
+                inputs: [
+                    { id: 'a', label: 'Segmento a', unit: '' },
+                    { id: 'b', label: 'Segmento b', unit: '' },
+                    { id: 'c', label: 'Segmento c', unit: '' },
+                ],
+                calculationFunction: (inputs) => {
+                    const a = parseFloat(inputs.a.replace(',', '.'));
+                    const b = parseFloat(inputs.b.replace(',', '.'));
+                    const c = parseFloat(inputs.c.replace(',', '.'));
+                    if ([a,b,c].some(isNaN) || a === 0) return { result: 'Erro' };
+                    const x = (b*c)/a;
+                    return { result: `x = ${formatNumber(x)}` };
+                }
+            },
+            {
+                id: 'volume-esfera',
+                category: 'Geometria',
+                level: 'Ensino Médio',
+                name: 'Volume da Esfera',
+                formula_display: 'V = \\frac{4}{3}\\pi r^3',
+                description: "Calcula a medida do espaço tridimensional ocupado por uma esfera. É essencial em campos como a astrofísica (para calcular o volume de planetas) e engenharia (para projetar rolamentos de esferas).",
+                inputs: [ { id: 'r', label: 'Raio (r)', unit: 'cm' } ],
+                calculationFunction: (inputs) => {
+                    const r = parseFloat(inputs.r.replace(',', '.'));
+                    if (isNaN(r) || r <= 0) return { result: 'Erro' };
+                    const volume = (4/3) * Math.PI * Math.pow(r, 3);
+                    return { result: `V = ${formatNumber(volume)} cm³` };
+                }
+            },
+            {
+                id: 'volume-cilindro',
+                category: 'Geometria',
+                level: 'Ensino Médio',
+                name: 'Volume do Cilindro',
+                formula_display: 'V = \\pi r^2 h',
+                description: "Calcula a medida do espaço tridimensional ocupado por um cilindro. É uma fórmula amplamente utilizada na indústria para calcular a capacidade de tanques, latas e tubulações.",
+                inputs: [
+                    { id: 'r', label: 'Raio da base (r)', unit: 'cm' },
+                    { id: 'h', label: 'Altura (h)', unit: 'cm' },
+                ],
+                calculationFunction: (inputs) => {
+                    const r = parseFloat(inputs.r.replace(',', '.'));
+                    const h = parseFloat(inputs.h.replace(',', '.'));
+                    if (isNaN(r) || isNaN(h) || r <= 0 || h <= 0) return { result: 'Erro' };
+                    const volume = Math.PI * r * r * h;
+                    return { result: `V = ${formatNumber(volume)} cm³` };
+                }
+            },
+            {
+                id: 'area-triangulo-equilatero',
+                category: 'Geometria',
+                level: 'Ensino Médio',
+                name: 'Área do Triângulo Equilátero',
+                formula_display: 'A = \\frac{l^2\\sqrt{3}}{4}',
+                description: "Calcula a área de um triângulo com todos os três lados iguais. É uma fórmula específica que simplifica o cálculo quando se sabe que o triângulo é equilátero, comum em design e estruturas arquitetônicas.",
+                inputs: [ { id: 'l', label: 'Lado (l)', unit: 'cm' } ],
+                calculationFunction: (inputs) => {
+                    const l = parseFloat(inputs.l.replace(',', '.'));
+                    if (isNaN(l) || l <= 0) return { result: 'Erro' };
+                    const area = (l*l * Math.sqrt(3)) / 4;
+                    return { result: `A = ${formatNumber(area)} cm²` };
+                }
+            },
+            {
+                id: 'soma-angulos-poligono',
+                category: 'Geometria',
+                level: 'Ensino Médio',
+                name: 'Soma dos Ângulos Internos de um Polígono',
+                formula_display: 'S = (n-2) \\cdot 180°',
+                description: "Fornece a soma de todos os ângulos internos de um polígono regular ou irregular com 'n' lados. Foi criada para entender as propriedades geométricas dos polígonos e auxiliar no design e na construção de estruturas.",
+                inputs: [ { id: 'n', label: 'Nº de lados (n)', unit: '' } ],
+                calculationFunction: (inputs) => {
+                    const n = parseInt(inputs.n);
+                    if (isNaN(n) || n < 3) return { result: 'Erro (n≥3)' };
+                    return { result: `S = ${formatNumber((n-2)*180)}°` };
+                }
+            },
+            {
+                id: 'area-hexagono-regular',
+                category: 'Geometria',
+                level: 'Ensino Médio',
+                name: 'Área do Hexágono Regular',
+                formula_display: 'A = \\frac{3l^2\\sqrt{3}}{2}',
+                description: "Calcula a área de um polígono de seis lados iguais. O hexágono é uma forma muito eficiente encontrada na natureza (favo de mel) e em engenharia (parafusos), e esta fórmula simplifica a medição de sua superfície.",
+                inputs: [ { id: 'l', label: 'Lado (l)', unit: 'cm' } ],
+                calculationFunction: (inputs) => {
+                    const l = parseFloat(inputs.l.replace(',', '.'));
+                    if (isNaN(l) || l <= 0) return { result: 'Erro' };
+                    const area = (3 * l*l * Math.sqrt(3)) / 2;
+                    return { result: `A = ${formatNumber(area)} cm²` };
+                }
+            },
+            {
+                id: 'triangulo-inscrito',
+                category: 'Geometria',
+                level: 'Ensino Médio',
+                name: 'Triângulo Equilátero Inscrito',
+                formula_display: 'l = R\\sqrt{3}',
+                description: "Relaciona o lado de um triângulo equilátero com o raio da circunferência que o circunscreve. É uma fórmula usada em geometria construtiva e design para encaixar formas perfeitamente.",
+                inputs: [ { id: 'R', label: 'Raio da Circunferência (R)', unit: 'cm' } ],
+                calculationFunction: (inputs) => {
+                    const R = parseFloat(inputs.R.replace(',', '.'));
+                    if (isNaN(R) || R <= 0) return { result: 'Erro' };
+                    const l = R * Math.sqrt(3);
+                    return { result: `Lado (l) = ${formatNumber(l)} cm` };
+                }
+            },
+            {
+                id: 'quadrado-inscrito',
+                category: 'Geometria',
+                level: 'Ensino Médio',
+                name: 'Quadrado Inscrito',
+                formula_display: 'l = R\\sqrt{2}',
+                description: "Relaciona o lado de um quadrado com o raio da circunferência que o circunscreve. É usada em problemas de otimização de espaço e design, para saber o maior quadrado que cabe dentro de um círculo.",
+                inputs: [ { id: 'R', label: 'Raio da Circunferência (R)', unit: 'cm' } ],
+                calculationFunction: (inputs) => {
+                    const R = parseFloat(inputs.R.replace(',', '.'));
+                    if (isNaN(R) || R <= 0) return { result: 'Erro' };
+                    const l = R * Math.sqrt(2);
+                    return { result: `Lado (l) = ${formatNumber(l)} cm` };
+                }
+            },
+            {
+                id: 'hexagono-inscrito',
+                category: 'Geometria',
+                level: 'Ensino Médio',
+                name: 'Hexágono Regular Inscrito',
+                formula_display: 'l = R',
+                description: "Relaciona o lado de um hexágono regular com o raio da circunferência que o circunscreve (são iguais!). É uma propriedade geométrica elegante e útil em design mecânico e padrões de mosaico.",
+                inputs: [ { id: 'R', label: 'Raio da Circunferência (R)', unit: 'cm' } ],
+                calculationFunction: (inputs) => {
+                    const R = parseFloat(inputs.R.replace(',', '.'));
+                    if (isNaN(R) || R <= 0) return { result: 'Erro' };
+                    return { result: `Lado (l) = ${formatNumber(R)} cm` };
+                }
+            },
+            {
+                id: 'distancia-pontos',
+                category: 'Geometria',
+                level: 'Ensino Superior',
+                name: 'Distância Entre Dois Pontos',
+                formula_display: 'd = \\sqrt{(x_2 - x_1)^2 + (y_2 - y_1)^2}',
+                description: "Baseada no Teorema de Pitágoras, esta fórmula calcula a distância em linha reta entre dois pontos em um plano cartesiano. É fundamental para a geometria analítica, navegação por GPS e computação gráfica.",
+                inputs: [
+                    { id: 'x1', label: 'Ponto A (x₁)', unit: '' },
+                    { id: 'y1', label: 'Ponto A (y₁)', unit: '' },
+                    { id: 'x2', label: 'Ponto B (x₂)', unit: '' },
+                    { id: 'y2', label: 'Ponto B (y₂)', unit: '' },
+                ],
+                calculationFunction: (inputs) => {
+                    const x1 = parseFloat(inputs.x1.replace(',', '.'));
+                    const y1 = parseFloat(inputs.y1.replace(',', '.'));
+                    const x2 = parseFloat(inputs.x2.replace(',', '.'));
+                    const y2 = parseFloat(inputs.y2.replace(',', '.'));
+                    if ([x1, y1, x2, y2].some(isNaN)) return { result: 'Erro' };
+                    const d = Math.sqrt(Math.pow(x2 - x1, 2) + Math.pow(y2 - y1, 2));
+                    return { result: `d = ${formatNumber(d)}` };
+                }
+            },
+        ];
+
+        // --- APPLICATION LOGIC ---
+        const mainMenu = document.getElementById('main-menu');
+        const listView = document.getElementById('list-view');
+        const calculatorView = document.getElementById('calculator-view');
+        
+        let currentCategory = '';
+
+        const categories = [...new Set(formulas.map(f => f.category))].sort();
+        
+        const categoryColors = {
+            'Matemática': 'from-blue-500 to-indigo-500',
+            'Física': 'from-yellow-500 to-orange-500',
+            'Química': 'from-green-500 to-teal-500',
+            'Biologia': 'from-lime-500 to-emerald-500',
+            'Geometria': 'from-purple-500 to-pink-500',
+            'Conversores': 'from-rose-500 to-red-500',
+        };
+
+        function showView(viewId) {
+            mainMenu.classList.add('hidden');
+            listView.classList.add('hidden');
+            calculatorView.classList.add('hidden');
+            document.getElementById(viewId).classList.remove('hidden');
+            window.scrollTo(0, 0);
+        }
+
+        function renderMainMenu() {
+            const menuGrid = mainMenu.querySelector('.grid');
+            menuGrid.innerHTML = '';
+            categories.forEach(category => {
+                const color = categoryColors[category] || 'from-gray-500 to-gray-600';
+                const button = document.createElement('button');
+                button.className = `p-8 rounded-2xl text-white text-2xl font-bold shadow-lg transition-transform transform hover:scale-105 bg-gradient-to-br ${color}`;
+                button.textContent = category;
+                button.dataset.category = category;
+                button.addEventListener('click', () => {
+                    currentCategory = category;
+                    renderFormulaListView(category);
+                    showView('list-view');
+                });
+                menuGrid.appendChild(button);
+            });
+        }
+        
+        function renderFormulaListView(category) {
+            document.getElementById('list-title').textContent = `Fórmulas de ${category}`;
+            const contentDiv = document.getElementById('list-content');
+            contentDiv.innerHTML = '';
+            
+            const levels = ['Ensino Fundamental', 'Ensino Médio', 'Ensino Superior'];
+            levels.forEach(level => {
+                const formulasInLevel = formulas.filter(f => f.category === category && f.level === level);
+                if (formulasInLevel.length > 0) {
+                    const levelSection = document.createElement('div');
+                    levelSection.innerHTML = `<h3 class="text-2xl font-semibold mb-4 text-blue-600 dark:text-blue-400">${level}</h3>`;
+                    const list = document.createElement('div');
+                    list.className = 'grid grid-cols-1 md:grid-cols-2 gap-4';
+                    
+                    formulasInLevel.sort((a, b) => a.name.localeCompare(b.name)).forEach(formula => {
+                        const card = document.createElement('div');
+                        card.className = 'bg-white dark:bg-gray-800 p-4 rounded-lg shadow-md hover:shadow-xl hover:ring-2 hover:ring-blue-400 transition-all cursor-pointer';
+                        card.innerHTML = `<h4 class="font-bold text-lg">${formula.name}</h4>`;
+                        card.addEventListener('click', () => {
+                            renderCalculator(formula.id);
+                            showView('calculator-view');
+                        });
+                        list.appendChild(card);
+                    });
+                    
+                    levelSection.appendChild(list);
+                    contentDiv.appendChild(levelSection);
+                }
+            });
+        }
+
+        function renderCalculator(formulaId) {
+            const formula = formulas.find(f => f.id === formulaId);
+            if (!formula) return;
+            
+            document.getElementById('calculator-title').textContent = formula.name;
+            const formulaDiv = document.getElementById('calculator-formula');
+            katex.render(formula.formula_display, formulaDiv, { throwOnError: false });
+
+            const descriptionDiv = document.getElementById('calculator-description');
+            if (formula.description) {
+                descriptionDiv.innerHTML = `<h3 class="font-semibold text-lg mb-2 text-gray-800 dark:text-gray-200">Sobre esta fórmula:</h3><p>${formula.description}</p>`;
+                descriptionDiv.classList.remove('hidden');
+            } else {
+                descriptionDiv.innerHTML = '';
+                descriptionDiv.classList.add('hidden');
+            }
+            
+            const inputsDiv = document.getElementById('calculator-inputs');
+            inputsDiv.innerHTML = '';
+
+            const calculateBtn = document.getElementById('calculate-btn');
+            
+            if (formula.id === 'conversor-moeda' && (!exchangeRates || exchangeRates.ERROR)) {
+                inputsDiv.innerHTML = `<p class="text-red-500 col-span-full">Não foi possível carregar as taxas de câmbio. Por favor, tente novamente mais tarde.</p>`;
+                calculateBtn.style.display = 'none';
+            } else {
+                calculateBtn.style.display = 'block';
+                formula.inputs.forEach(input => {
+                    const inputGroup = document.createElement('div');
+                    let inputElementHTML = '';
+                    let options = input.options || [];
+
+                    if (formula.id === 'conversor-moeda' && (input.id === 'from' || input.id === 'to')) {
+                        options = Object.keys(exchangeRates).map(currency => ({ value: currency, text: currency }));
+                    }
+                    
+                    if (input.type === 'select') {
+                         const optionsHTML = options.map(opt => `<option value="${opt.value}">${opt.text}</option>`).join('');
+                        inputElementHTML = `<select id="${input.id}" name="${input.id}" class="w-full p-2 border border-gray-300 dark:border-gray-600 rounded-md bg-gray-50 dark:bg-gray-700 focus:ring-blue-500 focus:border-blue-500">${optionsHTML}</select>`;
+                    } else {
+                         inputElementHTML = `<input type="text" inputmode="decimal" id="${input.id}" name="${input.id}" class="w-full p-2 border border-gray-300 dark:border-gray-600 rounded-md bg-gray-50 dark:bg-gray-700 focus:ring-blue-500 focus:border-blue-500" placeholder="0">`;
+                    }
+
+                    inputGroup.innerHTML = `
+                        <label for="${input.id}" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">${input.label}</label>
+                        <div class="flex items-center">
+                            ${inputElementHTML}
+                            ${input.unit ? `<span class="ml-2 text-gray-500 dark:text-gray-400">${input.unit}</span>` : ''}
+                        </div>
+                    `;
+                    inputsDiv.appendChild(inputGroup);
+                });
+
+                if (formula.id === 'conversor-moeda') {
+                    const fromSelect = document.getElementById('from');
+                    const toSelect = document.getElementById('to');
+                    if(fromSelect) fromSelect.value = 'USD';
+                    if(toSelect) toSelect.value = 'BRL';
+                }
+            }
+
+            
+            document.getElementById('calculator-results').classList.add('hidden');
+            
+            const newBtn = calculateBtn.cloneNode(true);
+            calculateBtn.parentNode.replaceChild(newBtn, calculateBtn);
+
+            const performCalculation = () => {
+                const inputValues = {};
+                formula.inputs.forEach(input => {
+                    inputValues[input.id] = document.getElementById(input.id).value;
+                });
+                
+                const result = formula.calculationFunction(inputValues);
+                
+                document.getElementById('results-final').textContent = result.result;
+                document.getElementById('calculator-results').classList.remove('hidden');
+            };
+
+            formula.inputs.forEach(input => {
+                const inputElement = document.getElementById(input.id);
+                if (inputElement) {
+                    inputElement.addEventListener('keydown', (event) => {
+                        if (event.key === 'Enter') {
+                            event.preventDefault();
+                            performCalculation();
+                        }
+                    });
+                }
+            });
+
+            newBtn.addEventListener('click', performCalculation);
+        }
+
+        // --- Navigation ---
+        document.getElementById('back-to-menu').addEventListener('click', () => showView('main-menu'));
+        document.getElementById('back-to-list').addEventListener('click', () => showView('list-view'));
+
+        // --- Initial Render ---
+        renderMainMenu();
+        showView('main-menu');
+    });
+    </script>
+</body>
+</html>
+
