@@ -343,76 +343,11 @@
             { "atomic_number": 68, "symbol": "Er", "name": "Érbio", "atomic_mass": 167.259, "group": -1, "period": 6, "category": "Lantanídeo" },
             { "atomic_number": 69, "symbol": "Tm", "name": "Túlio", "atomic_mass": 168.934, "group": -1, "period": 6, "category": "Lantanídeo" },
             { "atomic_number": 70, "symbol": "Yb", "name": "Itérbio", "atomic_mass": 173.054, "group": -1, "period": 6, "category": "Lantanídeo" },
-            { "atomic_number": 71, "symbol": "Lu", "name": "Lutécio", "atomic_mass": 174.966, "group": -1, "period": 6, "category": "Lantanídeo" },
-            // Actinides
-            { "atomic_number": 90, "symbol": "Th", "name": "Tório", "atomic_mass": 232.038, "group": -2, "period": 7, "category": "Actinídeo" },
-            { "atomic_number": 91, "symbol": "Pa", "name": "Protactínio", "atomic_mass": 231.035, "group": -2, "period": 7, "category": "Actinídeo" },
-            { "atomic_number": 92, "symbol": "U", "name": "Urânio", "atomic_mass": 238.028, "group": -2, "period": 7, "category": "Actinídeo" },
-            { "atomic_number": 93, "symbol": "Np", "name": "Netúnio", "atomic_mass": 237, "group": -2, "period": 7, "category": "Actinídeo" },
-            { "atomic_number": 94, "symbol": "Pu", "name": "Plutônio", "atomic_mass": 244, "group": -2, "period": 7, "category": "Actinídeo" },
-            { "atomic_number": 95, "symbol": "Am", "name": "Amerício", "atomic_mass": 243, "group": -2, "period": 7, "category": "Actinídeo" },
-            { "atomic_number": 96, "symbol": "Cm", "name": "Cúrio", "atomic_mass": 247, "group": -2, "period": 7, "category": "Actinídeo" },
-            { "atomic_number": 97, "symbol": "Bk", "name": "Berquélio", "atomic_mass": 247, "group": -2, "period": 7, "category": "Actinídeo" },
-            { "atomic_number": 98, "symbol": "Cf", "name": "Califórnio", "atomic_mass": 251, "group": -2, "period": 7, "category": "Actinídeo" },
-            { "atomic_number": 99, "symbol": "Es", "name": "Einstênio", "atomic_mass": 252, "group": -2, "period": 7, "category": "Actinídeo" },
-            { "atomic_number": 100, "symbol": "Fm", "name": "Férmio", "atomic_mass": 257, "group": -2, "period": 7, "category": "Actinídeo" },
-            { "atomic_number": 101, "symbol": "Md", "name": "Mendelévio", "atomic_mass": 258, "group": -2, "period": 7, "category": "Actinídeo" },
-            { "atomic_number": 102, "symbol": "No", "name": "Nobélio", "atomic_mass": 259, "group": -2, "period": 7, "category": "Actinídeo" },
-            { "atomic_number": 103, "symbol": "Lr", "name": "Laurêncio", "atomic_mass": 262, "group": -2, "period": 7, "category": "Actinídeo" }
+            { "atomic_number": 71, "symbol": "Lu", "name": "Lutécio", "atomic_mass": 174.966, "group": -1, "period": 6, "category": "Lantanídeo" }
         ];
 
         // --- DATABASE OF FORMULAS & DATA ---
         const formulas = [
-            // --- IA SOLVER ---
-            {
-                id: 'ia-solver',
-                category: 'IA Resolve',
-                level: 'Inteligência Artificial',
-                name: 'Resolva Qualquer Cálculo',
-                formula_display: 'Descreva \\: seu \\: problema \\: matemático',
-                description: "Escreva qualquer problema ou fórmula em linguagem natural (ex: 'quanto é 15% de 350?' ou 'resolva 2x - 8 = 4') e a nossa IA irá resolver e explicar o passo a passo para você.",
-                inputs: [
-                    { id: 'user_query', type: 'textarea', label: 'Descreva sua fórmula aqui:' }
-                ],
-                calculationFunction: async (inputs) => {
-                    const query = inputs.user_query;
-                    if (!query) return { result: "Por favor, insira uma pergunta." };
-
-                    const apiKey = "";
-                    const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-05-20:generateContent?key=${apiKey}`;
-                    const systemPrompt = "Você é um professor de matemática amigável e didático. Sua tarefa é resolver o problema matemático fornecido pelo usuário. Responda em português do Brasil. Sua resposta DEVE ser estruturada em duas partes, separadas EXATAMENTE por '---'. A primeira parte deve ser APENAS o resultado final, de forma clara e direta, sem nenhuma palavra extra. A segunda parte deve ser um passo a passo detalhado e humanizado de como você chegou à solução, explicando cada etapa como se estivesse ensinando um aluno. Use quebras de linha para separar os passos.";
-                    
-                    const payload = {
-                        contents: [{ parts: [{ text: query }] }],
-                        systemInstruction: { parts: [{ text: systemPrompt }] },
-                    };
-
-                    try {
-                        const response = await fetch(apiUrl, {
-                            method: 'POST',
-                            headers: { 'Content-Type': 'application/json' },
-                            body: JSON.stringify(payload)
-                        });
-
-                        if (!response.ok) throw new Error(`API error: ${response.status}`);
-                        
-                        const result = await response.json();
-                        const text = result.candidates?.[0]?.content?.parts?.[0]?.text;
-
-                        if (text) {
-                            const parts = text.split('---');
-                            const finalAnswer = parts[0] ? parts[0].trim() : "Não foi possível extrair a resposta final.";
-                            const steps = parts[1] ? parts[1].trim().replace(/\n/g, '<br>') : "Não foi possível gerar o passo a passo.";
-                            return { result: finalAnswer, steps: steps };
-                        } else {
-                            throw new Error("Resposta da API vazia ou mal formatada.");
-                        }
-                    } catch (error) {
-                        console.error("Erro na chamada da API:", error);
-                        return { result: 'Desculpe, ocorreu um erro ao tentar resolver. Tente novamente.' };
-                    }
-                }
-            },
             // --- CONVERSORES ---
             {
                 id: 'conversor-comprimento',
@@ -1851,7 +1786,7 @@
 
         let currentCategory = '';
         
-        const categories = [...new Set(formulas.map(f => f.category))].sort();
+        const categories = [...new Set(formulas.map(f => f.category))].filter(cat => cat !== 'IA Resolve').sort();
         
         const categoryColors = {
             'Matemática': 'from-blue-500 to-indigo-500',
