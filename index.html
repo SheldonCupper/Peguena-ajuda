@@ -1783,7 +1783,7 @@
 
         let currentCategory = '';
         
-        const categories = [...new Set(formulas.map(f => f.category))].filter(cat => cat !== 'IA Resolve').sort();
+        const categories = [...new Set(formulas.map(f => f.category))].sort();
         
         const categoryColors = {
             'Matemática': 'from-blue-500 to-indigo-500',
@@ -1792,7 +1792,6 @@
             'Biologia': 'from-lime-500 to-emerald-500',
             'Geometria': 'from-purple-500 to-pink-500',
             'Conversores': 'from-rose-500 to-red-500',
-            'IA Resolve': 'from-teal-500 to-cyan-500',
         };
         
         const categoryIcons = {
@@ -1802,7 +1801,6 @@
             'Biologia': 'ph-leaf',
             'Geometria': 'ph-compass',
             'Conversores': 'ph-arrows-clockwise',
-            'IA Resolve': 'ph-magic-wand',
         };
 
         function showView(viewId) {
@@ -2020,7 +2018,18 @@
                     `;
                     inputsDiv.appendChild(inputGroup);
                 });
-
+                
+                // Add event listeners for Enter key to all inputs
+                const allInputs = inputsDiv.querySelectorAll('input, select');
+                allInputs.forEach(input => {
+                    input.addEventListener('keydown', (event) => {
+                        if (event.key === 'Enter') {
+                            event.preventDefault();
+                            performCalculation();
+                        }
+                    });
+                });
+                
                 if (formula.id === 'conversor-moeda') {
                     const fromSelect = document.getElementById('from');
                     const toSelect = document.getElementById('to');
@@ -2060,20 +2069,7 @@
                      document.getElementById('calculator-steps-container').classList.add('hidden');
                 }
             };
-
-            formula.inputs.forEach(input => {
-                const inputElement = document.getElementById(input.id);
-                if (inputElement) {
-                    const eventType = input.type === 'textarea' ? 'keydown' : 'keydown';
-                    inputElement.addEventListener(eventType, (event) => {
-                         if (event.key === 'Enter' && input.type !== 'textarea') {
-                            event.preventDefault();
-                            performCalculation();
-                        }
-                    });
-                }
-            });
-
+            
             newBtn.addEventListener('click', performCalculation);
         }
 
