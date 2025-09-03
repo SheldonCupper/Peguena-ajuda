@@ -556,10 +556,10 @@
             },
             // --- MATEMÁTICA ---
             {
-                id: 'soma',
+                id: 'soma-simples',
                 category: 'Matemática',
                 level: 'Ensino Fundamental',
-                name: 'Soma',
+                name: 'Soma de Dois Números',
                 formula_display: 'a + b',
                 description: "A operação mais fundamental da aritmética. Foi criada para unificar ou agregar quantidades, sendo a base para todos os outros cálculos complexos.",
                 inputs: [
@@ -571,6 +571,89 @@
                     const b = parseFloat(inputs.b.replace(',', '.'));
                     if (isNaN(a) || isNaN(b)) return { result: 'Erro' };
                     const result = a + b;
+                    return { result: `${formatNumber(result)}` };
+                }
+            },
+            {
+                id: 'soma-varios',
+                category: 'Matemática',
+                level: 'Ensino Fundamental',
+                name: 'Soma de Vários Números',
+                formula_display: 'a_1 + a_2 + ... + a_n',
+                description: "Soma uma lista de números, sejam eles positivos ou negativos, para obter o total. Insira os números separados por vírgula (ex: 10, -5, 20, 1.5).",
+                inputs: [
+                    { id: 'numbers', label: 'Números para somar (separados por vírgula)', unit: '', type: 'text' },
+                ],
+                calculationFunction: (inputs) => {
+                    const numbersString = inputs.numbers;
+                    if (!numbersString) return { result: 'Por favor, insira os números.' };
+                    const numbersArray = numbersString.split(',').map(num => parseFloat(num.replace(',', '.')));
+                    if (numbersArray.some(isNaN)) return { result: 'Erro: insira apenas números válidos separados por vírgula.' };
+                    const sum = numbersArray.reduce((acc, curr) => acc + curr, 0);
+                    return { result: `${formatNumber(sum)}` };
+                }
+            },
+            {
+                id: 'subtracao-varios',
+                category: 'Matemática',
+                level: 'Ensino Fundamental',
+                name: 'Subtração de Vários Números',
+                formula_display: 'a_1 - a_2 - ... - a_n',
+                description: "Subtrai uma lista de números do primeiro número. Insira os números separados por vírgula (ex: 100, 10, 5, -2).",
+                inputs: [
+                    { id: 'numbers', label: 'Números para subtrair (separados por vírgula)', unit: '', type: 'text' },
+                ],
+                calculationFunction: (inputs) => {
+                    const numbersString = inputs.numbers;
+                    if (!numbersString) return { result: 'Por favor, insira os números.' };
+                    const numbersArray = numbersString.split(',').map(num => parseFloat(num.replace(',', '.')));
+                    if (numbersArray.some(isNaN)) return { result: 'Erro: insira apenas números válidos separados por vírgula.' };
+                    if (numbersArray.length === 0) return { result: 'Erro: insira pelo menos um número.' };
+                    
+                    const result = numbersArray.slice(1).reduce((acc, curr) => acc - curr, numbersArray[0]);
+                    return { result: `${formatNumber(result)}` };
+                }
+            },
+            {
+                id: 'multiplicacao-varios',
+                category: 'Matemática',
+                level: 'Ensino Fundamental',
+                name: 'Multiplicação de Vários Números',
+                formula_display: 'a_1 \\cdot a_2 \\cdot ... \\cdot a_n',
+                description: "Multiplica uma lista de números, sejam eles positivos, negativos ou decimais. Insira os números separados por vírgula (ex: 5, 2, 3, -1).",
+                inputs: [
+                    { id: 'numbers', label: 'Números para multiplicar (separados por vírgula)', unit: '', type: 'text' },
+                ],
+                calculationFunction: (inputs) => {
+                    const numbersString = inputs.numbers;
+                    if (!numbersString) return { result: 'Por favor, insira os números.' };
+                    const numbersArray = numbersString.split(',').map(num => parseFloat(num.replace(',', '.')));
+                    if (numbersArray.some(isNaN)) return { result: 'Erro: insira apenas números válidos separados por vírgula.' };
+                    if (numbersArray.length === 0) return { result: 'Erro: insira pelo menos um número.' };
+                    
+                    const result = numbersArray.reduce((acc, curr) => acc * curr, 1);
+                    return { result: `${formatNumber(result)}` };
+                }
+            },
+            {
+                id: 'divisao-varios',
+                category: 'Matemática',
+                level: 'Ensino Fundamental',
+                name: 'Divisão de Vários Números',
+                formula_display: 'a_1 \\div a_2 \\div ... \\div a_n',
+                description: "Divide o primeiro número pelos demais em sequência. Insira os números separados por vírgula (ex: 100, 2, 5).",
+                inputs: [
+                    { id: 'numbers', label: 'Números para dividir (separados por vírgula)', unit: '', type: 'text' },
+                ],
+                calculationFunction: (inputs) => {
+                    const numbersString = inputs.numbers;
+                    if (!numbersString) return { result: 'Por favor, insira os números.' };
+                    const numbersArray = numbersString.split(',').map(num => parseFloat(num.replace(',', '.')));
+                    if (numbersArray.some(isNaN)) return { result: 'Erro: insira apenas números válidos separados por vírgula.' };
+                    if (numbersArray.length <= 1) return { result: 'Erro: insira pelo menos dois números.' };
+                    if (numbersArray.slice(1).some(n => n === 0)) return { result: 'Divisão por zero não é permitida.' };
+
+                    const result = numbersArray.slice(1).reduce((acc, curr) => acc / curr, numbersArray[0]);
                     return { result: `${formatNumber(result)}` };
                 }
             },
@@ -913,7 +996,7 @@
                 level: 'Ensino Médio',
                 name: 'Função Afim (1º Grau)',
                 formula_display: 'y = ax + b',
-                description: "Modela relações de crescimento ou decrescimento linear e constante. É usada para descrever situações como custo de produção, planos de telefonia e movimento com velocidade constante.",
+                description: "Modela relações de crescimento ou decaimento linear e constante. É usada para descrever situações como custo de produção, planos de telefonia e movimento com velocidade constante.",
                 inputs: [
                     { id: 'a', label: 'Coeficiente Angular (a)', unit: '' },
                     { id: 'x', label: 'Variável (x)', unit: '' },
@@ -1363,7 +1446,7 @@
                     { id: 'idade', label: 'Sua Idade', unit: 'anos' },
                 ],
                 calculationFunction: (inputs) => {
-                    const idade = parseInt(inputs.idade);
+                    const idade = parseFloat(inputs.idade.replace(',', '.'));
                     if(isNaN(idade) || idade <= 0 || idade > 120) return { result: 'Erro' };
                     const fcmax = 220 - idade;
                     return { result: `FCₘₐₓ ≈ ${fcmax} bpm` };
@@ -1747,7 +1830,8 @@
                 calculationFunction: (inputs) => {
                     const R = parseFloat(inputs.R.replace(',', '.'));
                     if (isNaN(R) || R <= 0) return { result: 'Erro' };
-                    return { result: `Lado (l) = ${formatNumber(R)} cm` };
+                    const l = R;
+                    return { result: `Lado (l) = ${formatNumber(l)} cm` };
                 }
             },
             {
@@ -1782,9 +1866,9 @@
         const periodicTableView = document.getElementById('periodic-table-view');
 
         let currentCategory = '';
-        
+
         const categories = [...new Set(formulas.map(f => f.category))].sort();
-        
+
         const categoryColors = {
             'Matemática': 'from-blue-500 to-indigo-500',
             'Física': 'from-yellow-500 to-orange-500',
@@ -1793,7 +1877,7 @@
             'Geometria': 'from-purple-500 to-pink-500',
             'Conversores': 'from-rose-500 to-red-500',
         };
-        
+
         const categoryIcons = {
             'Matemática': 'ph-calculator',
             'Física': 'ph-atom',
@@ -2006,7 +2090,7 @@
                         const optionsHTML = options.map(opt => `<option value="${opt.value}">${opt.text}</option>`).join('');
                         inputElementHTML = `<select id="${input.id}" name="${input.id}" class="w-full p-2 border border-gray-300 dark:border-gray-600 rounded-md bg-gray-50 dark:bg-gray-700 focus:ring-blue-500 focus:border-blue-500">${optionsHTML}</select>`;
                     } else {
-                         inputElementHTML = `<input type="text" inputmode="decimal" id="${input.id}" name="${input.id}" class="w-full p-2 border border-gray-300 dark:border-gray-600 rounded-md bg-gray-50 dark:bg-gray-700 focus:ring-blue-500 focus:border-blue-500" placeholder="0">`;
+                         inputElementHTML = `<input type="text" id="${input.id}" name="${input.id}" class="w-full p-2 border border-gray-300 dark:border-gray-600 rounded-md bg-gray-50 dark:bg-gray-700 focus:ring-blue-500 focus:border-blue-500" placeholder="0">`;
                     }
 
                     inputGroup.innerHTML = `
@@ -2019,8 +2103,7 @@
                     inputsDiv.appendChild(inputGroup);
                 });
                 
-                // Add event listeners for Enter key to all inputs
-                const allInputs = inputsDiv.querySelectorAll('input, select');
+                const allInputs = inputsDiv.querySelectorAll('input, select, textarea');
                 allInputs.forEach(input => {
                     input.addEventListener('keydown', (event) => {
                         if (event.key === 'Enter') {
