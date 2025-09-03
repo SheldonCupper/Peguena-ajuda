@@ -1366,7 +1366,7 @@
                 category: 'Química',
                 level: 'Ensino Médio',
                 name: 'Calculadora de Massa Molar',
-                formula_display: 'Calcular \\ a \\ massa \\ molar \\ de \\ uma \\ formula \\ química',
+                formula_display: 'M = \\sum_i (n_i \\cdot m_i)',
                 description: "Use esta ferramenta para calcular a massa molar de qualquer composto químico. Basta inserir a fórmula (por exemplo, H2SO4) e a ferramenta fará o cálculo com base nas massas atômicas dos elementos.",
                 inputs: [
                     { id: 'formula', label: 'Fórmula Química', type: 'text', unit: '' }
@@ -1474,11 +1474,11 @@
                     const imc = peso / (altura_m * altura_m);
                     
                     if (imc < 18.5) {
-                        return { result: 'Abaixo do peso Procure um Médico' };
+                        return { result: 'Abaixo do peso' };
                     } else if (imc >= 18.5 && imc <= 24.9) {
-                        return { result: 'Peso normal, Parabens ' };
+                        return { result: 'Peso normal' };
                     } else {
-                        return { result: 'Acima do peso, Procure um Médico' };
+                        return { result: 'Acima do peso' };
                     }
                 }
             },
