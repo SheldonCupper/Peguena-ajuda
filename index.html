@@ -24,80 +24,44 @@
             background-attachment: fixed;
         }
         /* Custom scrollbar for better aesthetics */
-        ::-webkit-scrollbar {
-            width: 8px;
-        }
-        ::-webkit-scrollbar-track {
-            background: #f1f1f1;
-        }
-        ::-webkit-scrollbar-thumb {
-            background: #888;
-            border-radius: 4px;
-        }
-        ::-webkit-scrollbar-thumb:hover {
-            background: #555;
-        }
-        /* Style for KaTeX rendered formulas */
-        .katex {
-            font-size: 1.1em !important;
-        }
-        /* Periodic table grid layout */
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: #f1f1f1; }
+        ::-webkit-scrollbar-thumb { background: #888; border-radius: 4px; }
+        ::-webkit-scrollbar-thumb:hover { background: #555; }
+        .katex { font-size: 1.1em !important; }
+        
+        /* Periodic table styles */
         .periodic-table-grid {
             display: grid;
             grid-template-columns: repeat(18, minmax(0, 1fr));
             gap: 4px;
             overflow-x: auto;
-            -webkit-overflow-scrolling: touch; /* For smoother scrolling on iOS */
+            -webkit-overflow-scrolling: touch;
         }
         .element-cell {
-            position: relative;
-            background-color: #e2e8f0;
-            border-radius: 0.5rem;
-            padding: 4px;
-            font-size: 0.75rem;
-            text-align: center;
-            cursor: pointer;
-            transition: all 0.2s ease;
-            color: #1f2937; /* Default text color */
+            position: relative; background-color: #e2e8f0; border-radius: 0.5rem;
+            padding: 4px; font-size: 0.75rem; text-align: center;
+            cursor: pointer; transition: all 0.2s ease; color: #1f2937;
         }
         .element-cell:hover {
             transform: scale(1.05);
             box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
         }
-        .element-number {
-            font-size: 0.625rem;
-            position: absolute;
-            top: 2px;
-            left: 2px;
-        }
-        .element-symbol {
-            font-weight: bold;
-            font-size: 1.25rem;
-        }
-
-        /* Colors for different categories of elements */
-        .metal-alcalino { background-color: #fca5a5; } /* Red-300 */
-        .metal-alcalino-terroso { background-color: #fcd34d; } /* Amber-300 */
-        .metal-de-transicao { background-color: #a5f3fc; } /* Cyan-300 */
-        .metal-pos-transicao { background-color: #93c5fd; } /* Blue-300 */
-        .semimetal { background-color: #c4b5fd; } /* Violet-300 */
-        .nao-metal { background-color: #86efac; } /* Green-300 */
-        .halogenio { background-color: #a7f3d0; } /* Teal-300 */
-        .gas-nobre { background-color: #d1d5db; } /* Gray-300 */
-        .lantanideo, .actinideo { background-color: #f9a8d4; } /* Pink-300 */
-
-        .lanthanide-actinide-placeholder {
-            background-color: #d1d5db;
-            color: #4b5563;
-        }
+        .element-number { font-size: 0.625rem; position: absolute; top: 2px; left: 2px; }
+        .element-symbol { font-weight: bold; font-size: 1.25rem; }
+        .metal-alcalino { background-color: #fca5a5; }
+        .metal-alcalino-terroso { background-color: #fcd34d; }
+        .metal-de-transicao { background-color: #a5f3fc; }
+        .metal-pos-transicao { background-color: #93c5fd; }
+        .semimetal { background-color: #c4b5fd; }
+        .nao-metal { background-color: #86efac; }
+        .halogenio { background-color: #a7f3d0; }
+        .gas-nobre { background-color: #d1d5db; }
+        .lantanideo, .actinideo { background-color: #f9a8d4; }
+        .lanthanide-actinide-placeholder { background-color: #d1d5db; color: #4b5563; }
         .lanthanide-container, .actinide-container {
-            display: grid;
-            grid-template-columns: repeat(15, minmax(0, 1fr));
-            gap: 4px;
-            margin-top: 1rem;
-            font-size: 0.65rem;
-            overflow-x: auto;
-            -webkit-overflow-scrolling: touch; /* For smoother scrolling on iOS */
+            display: grid; grid-template-columns: repeat(15, minmax(0, 1fr));
+            gap: 4px; margin-top: 1rem; font-size: 0.65rem; overflow-x: auto;
         }
     </style>
 </head>
@@ -186,6 +150,30 @@
             </div>
         </section>
 
+        <!-- Suggestions View -->
+        <section id="suggestions-view" class="hidden w-full">
+            <button class="back-btn mb-6 bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded-lg shadow-md transition-transform transform hover:scale-105">
+                &larr; Voltar
+            </button>
+            <div class="bg-white/80 dark:bg-gray-800/90 p-6 rounded-2xl shadow-lg">
+                <h2 class="text-2xl sm:text-3xl font-bold mb-4 text-gray-800 dark:text-white">Caixa de Sugestões</h2>
+                <p class="text-gray-700 dark:text-gray-300 mb-6">
+                    Sua opinião é muito importante para nós! Use este espaço para enviar sugestões de novas calculadoras, relatar um problema ou simplesmente deixar um comentário. Agradecemos sua colaboração para melhorar esta ferramenta.
+                </p>
+                <form id="suggestion-form" action="https://formspree.io/f/xkgvppvy" method="POST">
+                    <label for="suggestion-text" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Sua Mensagem:</label>
+                    <textarea id="suggestion-text" name="sugestao" rows="5" class="w-full p-2 border border-gray-300 dark:border-gray-600 rounded-md bg-gray-50 dark:bg-gray-700 focus:ring-blue-500 focus:border-blue-500" placeholder="Digite sua sugestão aqui..." required></textarea>
+                    
+                    <input type="hidden" name="usuario" id="suggestion-user-name">
+
+                    <button type="submit" class="w-full mt-4 bg-green-600 hover:bg-green-700 text-white font-bold py-3 px-4 rounded-lg shadow-lg text-lg transition-transform transform hover:scale-105">
+                        Enviar Sugestão
+                    </button>
+                </form>
+                <p id="suggestion-feedback" class="text-center mt-4 text-green-600 dark:text-green-400 font-semibold"></p>
+            </div>
+        </section>
+
         <!-- Calculator View -->
         <section id="calculator-view" class="hidden w-full">
             <button class="back-btn mb-6 bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded-lg shadow-md transition-transform transform hover:scale-105">
@@ -241,10 +229,11 @@
     </div>
 
     <script>
-        document.addEventListener('DOMContentLoaded', () => {
+    document.addEventListener('DOMContentLoaded', () => {
 
         let currentUserProfile = null;
         let currentView = 'login-view';
+        let currentCategory = ''; // Keep track of the current category
 
         // App Views
         const authContainer = document.getElementById('auth-container');
@@ -256,16 +245,15 @@
         const calculatorView = document.getElementById('calculator-view');
         const periodicTableView = document.getElementById('periodic-table-view');
         const historyView = document.getElementById('history-view');
+        const suggestionsView = document.getElementById('suggestions-view');
         
-        // --- LOCAL STORAGE AUTHENTICATION LOGIC ---
+        // --- LOCAL STORAGE AUTHENTICATION ---
         function checkUserProfile() {
             const profile = localStorage.getItem('userProfile');
             if (profile) {
                 currentUserProfile = JSON.parse(profile);
-                console.log("User profile found in local storage:", currentUserProfile);
                 showApp();
             } else {
-                console.log("No user profile found, showing login screen.");
                 showAuthView('login-view');
             }
         }
@@ -290,28 +278,12 @@
             try {
                 localStorage.setItem('userProfile', JSON.stringify(userProfile));
                 currentUserProfile = userProfile;
-                console.log("User profile saved to local storage.");
                 showAuthView('inspirational-message-view');
             } catch(e) {
                 console.error("Error saving profile to local storage:", e);
                 errorEl.textContent = 'Erro ao salvar perfil. Tente novamente.';
                 errorEl.classList.remove('hidden');
             }
-        });
-
-        const loginInputs = document.querySelectorAll('#login-view input');
-        loginInputs.forEach((input, index) => {
-            input.addEventListener('keydown', (event) => {
-                if (event.key === 'Enter') {
-                    event.preventDefault();
-                    const nextInput = loginInputs[index + 1];
-                    if (nextInput) {
-                        nextInput.focus();
-                    } else {
-                        document.getElementById('login-btn').click();
-                    }
-                }
-            });
         });
 
         document.getElementById('continue-to-app-btn').addEventListener('click', showApp);
@@ -339,7 +311,6 @@
             showView('main-menu');
         }
 
-        // Initial check when the page loads
         checkUserProfile();
 
 
@@ -363,19 +334,11 @@
         function saveToHistory(formulaName, inputs, result) {
             try {
                 let history = JSON.parse(localStorage.getItem('calculationHistory')) || [];
-                history.unshift({
-                    formulaName,
-                    inputs,
-                    result,
-                    timestamp: new Date().toISOString()
-                });
-                // Keep history to a reasonable size, e.g., last 50 calculations
-                if(history.length > 50) {
-                    history.pop();
-                }
+                history.unshift({ formulaName, inputs, result, timestamp: new Date().toISOString() });
+                if(history.length > 50) history.pop();
                 localStorage.setItem('calculationHistory', JSON.stringify(history));
             } catch (e) {
-                console.error("Error saving history to local storage:", e);
+                console.error("Error saving history:", e);
             }
         }
 
@@ -506,1711 +469,157 @@
         const formulas = [
             // --- CONVERSORES ---
             {
-                id: 'conversor-comprimento',
-                category: 'Conversores',
-                level: 'Ensino Fundamental',
-                name: 'Conversor de Comprimento',
+                id: 'conversor-comprimento', category: 'Conversores', level: 'Ensino Fundamental', name: 'Conversor de Comprimento',
                 formula_display: 'km \\leftrightarrow m \\leftrightarrow mi \\leftrightarrow ft',
-                inputs: [
-                    { id: 'value', label: 'Valor', unit: '' },
-                    { id: 'from', label: 'De', type: 'select', options: [
-                        { value: 'km', text: 'Quilômetro (km)'},
-                        { value: 'm', text: 'Metro (m)'},
-                        { value: 'cm', text: 'Centímetro (cm)'},
-                        { value: 'mm', text: 'Milímetro (mm)'},
-                        { value: 'mi', text: 'Milha (mi)'},
-                        { value: 'ft', text: 'Pé (ft)'},
-                        { value: 'in', text: 'Polegada (in)'}
-                    ]},
-                    { id: 'to', label: 'Para', type: 'select', options: [
-                        { value: 'km', text: 'Quilômetro (km)'},
-                        { value: 'm', text: 'Metro (m)'},
-                        { value: 'cm', text: 'Centímetro (cm)'},
-                        { value: 'mm', text: 'Milímetro (mm)'},
-                        { value: 'mi', text: 'Milha (mi)'},
-                        { value: 'ft', text: 'Pé (ft)'},
-                        { value: 'in', text: 'Polegada (in)'}
-                    ]}
-                ],
-                calculationFunction: (inputs) => {
-                    const value = parseFloat(inputs.value.replace(',', '.'));
-                    if (isNaN(value)) return { result: 'Erro' };
-                    const factors = { km: 1000, m: 1, cm: 0.01, mm: 0.001, mi: 1609.34, ft: 0.3048, in: 0.0254 };
-                    const valueInMeters = value * factors[inputs.from];
-                    const result = valueInMeters / factors[inputs.to];
-                    return { result: `${formatNumber(result, 4)} ${inputs.to}` };
-                }
+                inputs: [ { id: 'value', label: 'Valor' }, { id: 'from', label: 'De', type: 'select', options: [ { value: 'km', text: 'Quilômetro (km)'}, { value: 'm', text: 'Metro (m)'}, { value: 'cm', text: 'Centímetro (cm)'}, { value: 'mm', text: 'Milímetro (mm)'}, { value: 'mi', text: 'Milha (mi)'}, { value: 'ft', text: 'Pé (ft)'}, { value: 'in', text: 'Polegada (in)'} ]}, { id: 'to', label: 'Para', type: 'select', options: [ { value: 'km', text: 'Quilômetro (km)'}, { value: 'm', text: 'Metro (m)'}, { value: 'cm', text: 'Centímetro (cm)'}, { value: 'mm', text: 'Milímetro (mm)'}, { value: 'mi', text: 'Milha (mi)'}, { value: 'ft', text: 'Pé (ft)'}, { value: 'in', text: 'Polegada (in)'} ]} ],
+                calculationFunction: (inputs) => { const value = parseFloat(inputs.value.replace(',', '.')); if (isNaN(value)) return { result: 'Erro' }; const factors = { km: 1000, m: 1, cm: 0.01, mm: 0.001, mi: 1609.34, ft: 0.3048, in: 0.0254 }; const valueInMeters = value * factors[inputs.from]; const result = valueInMeters / factors[inputs.to]; return { result: `${formatNumber(result, 4)} ${inputs.to}` }; }
             },
             {
-                id: 'conversor-area',
-                category: 'Conversores',
-                level: 'Ensino Fundamental',
-                name: 'Conversor de Área',
+                id: 'conversor-area', category: 'Conversores', level: 'Ensino Fundamental', name: 'Conversor de Área',
                 formula_display: 'm^2 \\leftrightarrow km^2 \\leftrightarrow ha',
-                inputs: [
-                    { id: 'value', label: 'Valor', unit: '' },
-                    { id: 'from', label: 'De', type: 'select', options: [
-                        { value: 'm2', text: 'Metro Quadrado (m²)' },
-                        { value: 'km2', text: 'Quilômetro Quadrado (km²)' },
-                        { value: 'ha', text: 'Hectare (ha)' },
-                        { value: 'ft2', text: 'Pé Quadrado (ft²)' },
-                        { value: 'acre', text: 'Acre (acre)' }
-                    ]},
-                    { id: 'to', label: 'Para', type: 'select', options: [
-                        { value: 'm2', text: 'Metro Quadrado (m²)' },
-                        { value: 'km2', text: 'Quilômetro Quadrado (km²)' },
-                        { value: 'ha', text: 'Hectare (ha)' },
-                        { value: 'ft2', text: 'Pé Quadrado (ft²)' },
-                        { value: 'acre', text: 'Acre (acre)' }
-                    ]}
-                ],
-                calculationFunction: (inputs) => {
-                    const value = parseFloat(inputs.value.replace(',', '.'));
-                    if (isNaN(value)) return { result: 'Erro' };
-                    const factors = { m2: 1, km2: 1000000, ha: 10000, ft2: 0.092903, acre: 4046.86 };
-                    const valueInM2 = value * factors[inputs.from];
-                    const result = valueInM2 / factors[inputs.to];
-                    return { result: `${formatNumber(result, 4)} ${inputs.to.replace('2', '²')}` };
-                }
+                inputs: [ { id: 'value', label: 'Valor' }, { id: 'from', label: 'De', type: 'select', options: [ { value: 'm2', text: 'Metro Quadrado (m²)' }, { value: 'km2', text: 'Quilômetro Quadrado (km²)' }, { value: 'ha', text: 'Hectare (ha)' }, { value: 'ft2', text: 'Pé Quadrado (ft²)' }, { value: 'acre', text: 'Acre (acre)' } ]}, { id: 'to', label: 'Para', type: 'select', options: [ { value: 'm2', text: 'Metro Quadrado (m²)' }, { value: 'km2', text: 'Quilômetro Quadrado (km²)' }, { value: 'ha', text: 'Hectare (ha)' }, { value: 'ft2', text: 'Pé Quadrado (ft²)' }, { value: 'acre', text: 'Acre (acre)' } ]} ],
+                calculationFunction: (inputs) => { const value = parseFloat(inputs.value.replace(',', '.')); if (isNaN(value)) return { result: 'Erro' }; const factors = { m2: 1, km2: 1000000, ha: 10000, ft2: 0.092903, acre: 4046.86 }; const valueInM2 = value * factors[inputs.from]; const result = valueInM2 / factors[inputs.to]; return { result: `${formatNumber(result, 4)} ${inputs.to.replace('2', '²')}` }; }
             },
             {
-                id: 'conversor-massa',
-                category: 'Conversores',
-                level: 'Ensino Fundamental',
-                name: 'Conversor de Massa',
+                id: 'conversor-massa', category: 'Conversores', level: 'Ensino Fundamental', name: 'Conversor de Massa',
                 formula_display: 'kg \\leftrightarrow g \\leftrightarrow lb \\leftrightarrow oz',
-                inputs: [
-                    { id: 'value', label: 'Valor', unit: '' },
-                    { id: 'from', label: 'De', type: 'select', options: [
-                        { value: 'kg', text: 'Quilograma (kg)' },
-                        { value: 'g', text: 'Grama (g)' },
-                        { value: 'mg', text: 'Miligrama (mg)' },
-                        { value: 't', text: 'Tonelada (t)' },
-                        { value: 'lb', text: 'Libra (lb)' },
-                        { value: 'oz', text: 'Onça (oz)' }
-                    ]},
-                    { id: 'to', label: 'Para', type: 'select', options: [
-                        { value: 'kg', text: 'Quilograma (kg)' },
-                        { value: 'g', text: 'Grama (g)' },
-                        { value: 'mg', text: 'Miligrama (mg)' },
-                        { value: 't', text: 'Tonelada (t)' },
-                        { value: 'lb', text: 'Libra (lb)' },
-                        { value: 'oz', text: 'Onça (oz)' }
-                    ]}
-                ],
-                calculationFunction: (inputs) => {
-                    const value = parseFloat(inputs.value.replace(',', '.'));
-                    if (isNaN(value)) return { result: 'Erro' };
-                    const factors = { kg: 1000, g: 1, mg: 0.001, t: 1000000, lb: 453.592, oz: 28.3495 };
-                    const valueInG = value * factors[inputs.from];
-                    const result = valueInG / factors[inputs.to];
-                    return { result: `${formatNumber(result, 4)} ${inputs.to}` };
-                }
+                inputs: [ { id: 'value', label: 'Valor' }, { id: 'from', label: 'De', type: 'select', options: [ { value: 'kg', text: 'Quilograma (kg)' }, { value: 'g', text: 'Grama (g)' }, { value: 'mg', text: 'Miligrama (mg)' }, { value: 't', text: 'Tonelada (t)' }, { value: 'lb', text: 'Libra (lb)' }, { value: 'oz', text: 'Onça (oz)' } ]}, { id: 'to', label: 'Para', type: 'select', options: [ { value: 'kg', text: 'Quilograma (kg)' }, { value: 'g', text: 'Grama (g)' }, { value: 'mg', text: 'Miligrama (mg)' }, { value: 't', text: 'Tonelada (t)' }, { value: 'lb', text: 'Libra (lb)' }, { value: 'oz', text: 'Onça (oz)' } ]} ],
+                calculationFunction: (inputs) => { const value = parseFloat(inputs.value.replace(',', '.')); if (isNaN(value)) return { result: 'Erro' }; const factors = { kg: 1000, g: 1, mg: 0.001, t: 1000000, lb: 453.592, oz: 28.3495 }; const valueInG = value * factors[inputs.from]; const result = valueInG / factors[inputs.to]; return { result: `${formatNumber(result, 4)} ${inputs.to}` }; }
             },
             {
-                id: 'conversor-volume',
-                category: 'Conversores',
-                level: 'Ensino Fundamental',
-                name: 'Conversor de Volume',
+                id: 'conversor-volume', category: 'Conversores', level: 'Ensino Fundamental', name: 'Conversor de Volume',
                 formula_display: 'L \\leftrightarrow mL \\leftrightarrow m^3 \\leftrightarrow gal',
-                inputs: [
-                    { id: 'value', label: 'Valor', unit: '' },
-                    { id: 'from', label: 'De', type: 'select', options: [
-                        { value: 'L', text: 'Litro (L)' },
-                        { value: 'mL', text: 'Mililitro (mL)' },
-                        { value: 'm3', text: 'Metro Cúbico (m³)' },
-                        { value: 'gal', text: 'Galão Americano (gal)' },
-                        { value: 'floz', text: 'Onça Fluida (fl oz)' }
-                    ]},
-                    { id: 'to', label: 'Para', type: 'select', options: [
-                        { value: 'L', text: 'Litro (L)' },
-                        { value: 'mL', text: 'Mililitro (mL)' },
-                        { value: 'm3', text: 'Metro Cúbico (m³)' },
-                        { value: 'gal', text: 'Galão Americano (gal)' },
-                        { value: 'floz', text: 'Onça Fluida (fl oz)' }
-                    ]}
-                ],
-                calculationFunction: (inputs) => {
-                    const value = parseFloat(inputs.value.replace(',', '.'));
-                    if (isNaN(value)) return { result: 'Erro' };
-                    const factors = { L: 1, mL: 0.001, m3: 1000, gal: 3.78541, floz: 0.0295735 };
-                    const valueInL = value * factors[inputs.from];
-                    const result = valueInL / factors[inputs.to];
-                    return { result: `${formatNumber(result, 4)} ${inputs.to.replace('3','³')}` };
-                }
+                inputs: [ { id: 'value', label: 'Valor' }, { id: 'from', label: 'De', type: 'select', options: [ { value: 'L', text: 'Litro (L)' }, { value: 'mL', text: 'Mililitro (mL)' }, { value: 'm3', text: 'Metro Cúbico (m³)' }, { value: 'gal', text: 'Galão Americano (gal)' }, { value: 'floz', text: 'Onça Fluida (fl oz)' } ]}, { id: 'to', label: 'Para', type: 'select', options: [ { value: 'L', text: 'Litro (L)' }, { value: 'mL', text: 'Mililitro (mL)' }, { value: 'm3', text: 'Metro Cúbico (m³)' }, { value: 'gal', text: 'Galão Americano (gal)' }, { value: 'floz', text: 'Onça Fluida (fl oz)' } ]} ],
+                calculationFunction: (inputs) => { const value = parseFloat(inputs.value.replace(',', '.')); if (isNaN(value)) return { result: 'Erro' }; const factors = { L: 1, mL: 0.001, m3: 1000, gal: 3.78541, floz: 0.0295735 }; const valueInL = value * factors[inputs.from]; const result = valueInL / factors[inputs.to]; return { result: `${formatNumber(result, 4)} ${inputs.to.replace('3','³')}` }; }
             },
             {
-                id: 'conversor-dados',
-                category: 'Conversores',
-                level: 'Ensino Médio',
-                name: 'Conversor de Armazenamento de Dados',
+                id: 'conversor-dados', category: 'Conversores', level: 'Ensino Médio', name: 'Conversor de Armazenamento de Dados',
                 formula_display: 'TB \\leftrightarrow GB \\leftrightarrow MB \\leftrightarrow KB',
-                inputs: [
-                    { id: 'value', label: 'Valor', unit: '' },
-                    { id: 'from', label: 'De', type: 'select', options: [
-                        { value: 'B', text: 'Byte (B)'},
-                        { value: 'KB', text: 'Kilobyte (KB)'},
-                        { value: 'MB', text: 'Megabyte (MB)'},
-                        { value: 'GB', text: 'Gigabyte (GB)'},
-                        { value: 'TB', text: 'Terabyte (TB)'}
-                    ]},
-                    { id: 'to', label: 'Para', type: 'select', options: [
-                        { value: 'B', text: 'Byte (B)'},
-                        { value: 'KB', text: 'Kilobyte (KB)'},
-                        { value: 'MB', text: 'Megabyte (MB)'},
-                        { value: 'GB', text: 'Gigabyte (GB)'},
-                        { value: 'TB', text: 'Terabyte (TB)'}
-                    ]}
-                ],
-                calculationFunction: (inputs) => {
-                    const value = parseFloat(inputs.value.replace(',', '.'));
-                    if (isNaN(value)) return { result: 'Erro' };
-                    // Base unit: byte (B)
-                    const factors = { B: 1, KB: 1024, MB: Math.pow(1024, 2), GB: Math.pow(1024, 3), TB: Math.pow(1024, 4) };
-                    const valueInBytes = value * factors[inputs.from];
-                    const result = valueInBytes / factors[inputs.to];
-                    return { result: `${formatNumber(result, 4)} ${inputs.to}` };
-                }
+                inputs: [ { id: 'value', label: 'Valor' }, { id: 'from', label: 'De', type: 'select', options: [ { value: 'B', text: 'Byte (B)'}, { value: 'KB', text: 'Kilobyte (KB)'}, { value: 'MB', text: 'Megabyte (MB)'}, { value: 'GB', text: 'Gigabyte (GB)'}, { value: 'TB', text: 'Terabyte (TB)'} ]}, { id: 'to', label: 'Para', type: 'select', options: [ { value: 'B', text: 'Byte (B)'}, { value: 'KB', text: 'Kilobyte (KB)'}, { value: 'MB', text: 'Megabyte (MB)'}, { value: 'GB', text: 'Gigabyte (GB)'}, { value: 'TB', text: 'Terabyte (TB)'} ]} ],
+                calculationFunction: (inputs) => { const value = parseFloat(inputs.value.replace(',', '.')); if (isNaN(value)) return { result: 'Erro' }; const factors = { B: 1, KB: 1024, MB: Math.pow(1024, 2), GB: Math.pow(1024, 3), TB: Math.pow(1024, 4) }; const valueInBytes = value * factors[inputs.from]; const result = valueInBytes / factors[inputs.to]; return { result: `${formatNumber(result, 4)} ${inputs.to}` }; }
             },
             {
-                id: 'conversor-velocidade',
-                category: 'Conversores',
-                level: 'Ensino Fundamental',
-                name: 'Conversor de Velocidade',
+                id: 'conversor-velocidade', category: 'Conversores', level: 'Ensino Fundamental', name: 'Conversor de Velocidade',
                 formula_display: 'km/h \\leftrightarrow m/s \\leftrightarrow mph',
-                inputs: [
-                    { id: 'value', label: 'Valor', unit: '' },
-                    { id: 'from', label: 'De', type: 'select', options: [
-                        { value: 'kmh', text: 'Quilômetros por hora (km/h)'},
-                        { value: 'ms', text: 'Metros por segundo (m/s)'},
-                        { value: 'mph', text: 'Milhas por hora (mph)'}
-                    ]},
-                    { id: 'to', label: 'Para', type: 'select', options: [
-                        { value: 'kmh', text: 'Quilômetros por hora (km/h)'},
-                        { value: 'ms', text: 'Metros por segundo (m/s)'},
-                        { value: 'mph', text: 'Milhas por hora (mph)'}
-                    ]}
-                ],
-                calculationFunction: (inputs) => {
-                    const value = parseFloat(inputs.value.replace(',', '.'));
-                    const from = inputs.from;
-                    const to = inputs.to;
-                    if (isNaN(value)) return { result: 'Erro' };
-
-                    if (from === to) return { result: `${formatNumber(value)} ${from.replace('h','/h')}` };
-                    
-                    let valueInMs;
-                    if (from === 'kmh') {
-                        valueInMs = value / 3.6;
-                    } else if (from === 'ms') {
-                        valueInMs = value;
-                    } else if (from === 'mph') {
-                        valueInMs = value * 0.44704;
-                    }
-
-                    let result;
-                    if (to === 'kmh') {
-                        result = valueInMs * 3.6;
-                    } else if (to === 'ms') {
-                        result = valueInMs;
-                    } else if (to === 'mph') {
-                        result = valueInMs / 0.44704;
-                    }
-
-                    return { result: `${formatNumber(result, 2)} ${to.replace('h','/h')}` };
-                }
+                inputs: [ { id: 'value', label: 'Valor' }, { id: 'from', label: 'De', type: 'select', options: [ { value: 'kmh', text: 'Quilômetros por hora (km/h)'}, { value: 'ms', text: 'Metros por segundo (m/s)'}, { value: 'mph', text: 'Milhas por hora (mph)'} ]}, { id: 'to', label: 'Para', type: 'select', options: [ { value: 'kmh', text: 'Quilômetros por hora (km/h)'}, { value: 'ms', text: 'Metros por segundo (m/s)'}, { value: 'mph', text: 'Milhas por hora (mph)'} ]} ],
+                calculationFunction: (inputs) => { const value = parseFloat(inputs.value.replace(',', '.')); if (isNaN(value)) return { result: 'Erro' }; let valueInMs; if (inputs.from === 'kmh') valueInMs = value / 3.6; else if (inputs.from === 'ms') valueInMs = value; else if (inputs.from === 'mph') valueInMs = value * 0.44704; let result; if (inputs.to === 'kmh') result = valueInMs * 3.6; else if (inputs.to === 'ms') result = valueInMs; else if (inputs.to === 'mph') result = valueInMs / 0.44704; return { result: `${formatNumber(result, 2)} ${inputs.to.replace('h','/h')}` }; }
             },
             {
-                id: 'conversor-tempo',
-                category: 'Conversores',
-                level: 'Ensino Fundamental',
-                name: 'Conversor de Tempo',
+                id: 'conversor-tempo', category: 'Conversores', level: 'Ensino Fundamental', name: 'Conversor de Tempo',
                 formula_display: 'Anos \\leftrightarrow Dias \\leftrightarrow Horas...',
-                inputs: [
-                    { id: 'value', label: 'Valor', unit: '' },
-                    { id: 'from', label: 'De', type: 'select', options: [
-                        { value: 'anos', text: 'Anos' },
-                        { value: 'meses', text: 'Meses' },
-                        { value: 'dias', text: 'Dias' },
-                        { value: 'horas', text: 'Horas' },
-                        { value: 'minutos', text: 'Minutos' },
-                        { value: 'segundos', text: 'Segundos' }
-                    ]},
-                    { id: 'to', label: 'Para', type: 'select', options: [
-                        { value: 'anos', text: 'Anos' },
-                        { value: 'meses', text: 'Meses' },
-                        { value: 'dias', text: 'Dias' },
-                        { value: 'horas', text: 'Horas' },
-                        { value: 'minutos', text: 'Minutos' },
-                        { value: 'segundos', text: 'Segundos' }
-                    ]}
-                ],
-                calculationFunction: (inputs) => {
-                    const value = parseFloat(inputs.value.replace(',', '.'));
-                    if (isNaN(value)) return { result: 'Erro' };
-                    // Valores aproximados para conversão
-                    const factors = { anos: 31536000, meses: 2628000, dias: 86400, horas: 3600, minutos: 60, segundos: 1 };
-                    const valueInSeconds = value * factors[inputs.from];
-                    const result = valueInSeconds / factors[inputs.to];
-                    return { result: `${formatNumber(result, 4)} ${inputs.to}` };
-                }
+                inputs: [ { id: 'value', label: 'Valor' }, { id: 'from', label: 'De', type: 'select', options: [ { value: 'anos', text: 'Anos' }, { value: 'meses', text: 'Meses' }, { value: 'dias', text: 'Dias' }, { value: 'horas', text: 'Horas' }, { value: 'minutos', text: 'Minutos' }, { value: 'segundos', text: 'Segundos' } ]}, { id: 'to', label: 'Para', type: 'select', options: [ { value: 'anos', text: 'Anos' }, { value: 'meses', text: 'Meses' }, { value: 'dias', text: 'Dias' }, { value: 'horas', text: 'Horas' }, { value: 'minutos', text: 'Minutos' }, { value: 'segundos', text: 'Segundos' } ]} ],
+                calculationFunction: (inputs) => { const value = parseFloat(inputs.value.replace(',', '.')); if (isNaN(value)) return { result: 'Erro' }; const factors = { anos: 31536000, meses: 2628000, dias: 86400, horas: 3600, minutos: 60, segundos: 1 }; const valueInSeconds = value * factors[inputs.from]; const result = valueInSeconds / factors[inputs.to]; return { result: `${formatNumber(result, 4)} ${inputs.to}` }; }
             },
             {
-                id: 'conversor-temperatura',
-                category: 'Conversores',
-                level: 'Ensino Fundamental',
-                name: 'Conversor de Temperatura',
+                id: 'conversor-temperatura', category: 'Conversores', level: 'Ensino Fundamental', name: 'Conversor de Temperatura',
                 formula_display: 'C \\leftrightarrow K \\leftrightarrow F',
-                description: "Converte valores entre as três escalas de temperatura mais comuns: Celsius (C), Kelvin (K) e Fahrenheit (F). Essencial para ciência, engenharia e comunicação internacional.",
-                inputs: [
-                    { id: 'value', label: 'Valor da Temperatura', unit: '' },
-                    { id: 'from', label: 'Converter De', type: 'select', options: [
-                        { value: 'C', text: 'Celsius (°C)' },
-                        { value: 'K', text: 'Kelvin (K)' },
-                        { value: 'F', text: 'Fahrenheit (°F)' }
-                    ]},
-                    { id: 'to', label: 'Converter Para', type: 'select', options: [
-                        { value: 'C', text: 'Celsius (°C)' },
-                        { value: 'K', text: 'Kelvin (K)' },
-                        { value: 'F', text: 'Fahrenheit (°F)' }
-                    ]}
-                ],
-                calculationFunction: (inputs) => {
-                    const value = parseFloat(inputs.value.replace(',', '.'));
-                    const from = inputs.from;
-                    const to = inputs.to;
-                    if (isNaN(value)) return { result: 'Erro' };
-
-                    if (from === to) return { result: `${formatNumber(value)} °${to}` };
-
-                    let valueInCelsius;
-
-                    // Etapa 1: Converter a entrada para Celsius
-                    switch (from) {
-                        case 'C':
-                            valueInCelsius = value;
-                            break;
-                        case 'K':
-                            valueInCelsius = value - 273.15;
-                            break;
-                        case 'F':
-                            valueInCelsius = (value - 32) * 5 / 9;
-                            break;
-                    }
-
-                    let result;
-
-                    // Etapa 2: Converter de Celsius para a unidade de destino
-                    switch (to) {
-                        case 'C':
-                            result = valueInCelsius;
-                            break;
-                        case 'K':
-                            result = valueInCelsius + 273.15;
-                            break;
-                        case 'F':
-                            result = (valueInCelsius * 9 / 5) + 32;
-                            break;
-                    }
-                    
-                    return { result: `${formatNumber(result)} °${to}` };
-                }
+                description: "Converte valores entre as três escalas de temperatura mais comuns: Celsius (C), Kelvin (K) e Fahrenheit (F).",
+                inputs: [ { id: 'value', label: 'Valor da Temperatura' }, { id: 'from', label: 'Converter De', type: 'select', options: [ { value: 'C', text: 'Celsius (°C)' }, { value: 'K', text: 'Kelvin (K)' }, { value: 'F', text: 'Fahrenheit (°F)' } ]}, { id: 'to', label: 'Converter Para', type: 'select', options: [ { value: 'C', text: 'Celsius (°C)' }, { value: 'K', text: 'Kelvin (K)' }, { value: 'F', text: 'Fahrenheit (°F)' } ]} ],
+                calculationFunction: (inputs) => { const value = parseFloat(inputs.value.replace(',', '.')); if (isNaN(value)) return { result: 'Erro' }; if (inputs.from === inputs.to) return { result: `${formatNumber(value)} °${inputs.to}` }; let valueInCelsius; switch (inputs.from) { case 'C': valueInCelsius = value; break; case 'K': valueInCelsius = value - 273.15; break; case 'F': valueInCelsius = (value - 32) * 5 / 9; break; } let result; switch (inputs.to) { case 'C': result = valueInCelsius; break; case 'K': result = valueInCelsius + 273.15; break; case 'F': result = (valueInCelsius * 9 / 5) + 32; break; } return { result: `${formatNumber(result)} °${inputs.to}` }; }
             },
             // --- MATEMÁTICA ---
-            {
-                id: 'soma-simples',
-                category: 'Matemática',
-                level: 'Ensino Fundamental',
-                name: 'Soma de Dois Números',
-                formula_display: 'a + b',
-                description: "A operação mais fundamental da aritmética. Foi criada para unificar ou agregar quantidades, sendo a base para todos os outros cálculos complexos.",
-                inputs: [
-                    { id: 'a', label: 'Primeiro número (a)', unit: '' },
-                    { id: 'b', label: 'Segundo número (b)', unit: '' },
-                ],
-                calculationFunction: (inputs) => {
-                    const a = parseFloat(inputs.a.replace(',', '.'));
-                    const b = parseFloat(inputs.b.replace(',', '.'));
-                    if (isNaN(a) || isNaN(b)) return { result: 'Erro' };
-                    const result = a + b;
-                    return { result: `${formatNumber(result)}` };
-                }
-            },
-            {
-                id: 'soma-varios',
-                category: 'Matemática',
-                level: 'Ensino Fundamental',
-                name: 'Soma de Vários Números',
-                formula_display: 'a_1 + a_2 + ... + a_n',
-                description: "Soma uma lista de números, sejam eles positivos ou negativos, para obter o total. Insira os números separados por vírgula (ex: 10, -5, 20, 1.5).",
-                inputs: [
-                    { id: 'numbers', label: 'Números para somar (separados por vírgula)', unit: '', type: 'text' },
-                ],
-                calculationFunction: (inputs) => {
-                    const numbersString = inputs.numbers;
-                    if (!numbersString) return { result: 'Por favor, insira os números.' };
-                    const numbersArray = numbersString.split(',').map(num => parseFloat(num.replace(',', '.')));
-                    if (numbersArray.some(isNaN)) return { result: 'Erro: insira apenas números válidos separados por vírgula.' };
-                    const sum = numbersArray.reduce((acc, curr) => acc + curr, 0);
-                    return { result: `${formatNumber(sum)}` };
-                }
-            },
-            {
-                id: 'subtracao-varios',
-                category: 'Matemática',
-                level: 'Ensino Fundamental',
-                name: 'Subtração de Vários Números',
-                formula_display: 'a_1 - a_2 - ... - a_n',
-                description: "Subtrai uma lista de números do primeiro número. Insira os números separados por vírgula (ex: 100, 10, 5, -2).",
-                inputs: [
-                    { id: 'numbers', label: 'Números para subtrair (separados por vírgula)', unit: '', type: 'text' },
-                ],
-                calculationFunction: (inputs) => {
-                    const numbersString = inputs.numbers;
-                    if (!numbersString) return { result: 'Por favor, insira os números.' };
-                    const numbersArray = numbersString.split(',').map(num => parseFloat(num.replace(',', '.')));
-                    if (numbersArray.some(isNaN)) return { result: 'Erro: insira apenas números válidos separados por vírgula.' };
-                    if (numbersArray.length === 0) return { result: 'Erro: insira pelo menos um número.' };
-                    
-                    const result = numbersArray.slice(1).reduce((acc, curr) => acc - curr, numbersArray[0]);
-                    return { result: `${formatNumber(result)}` };
-                }
-            },
-            {
-                id: 'multiplicacao-varios',
-                category: 'Matemática',
-                level: 'Ensino Fundamental',
-                name: 'Multiplicação de Vários Números',
-                formula_display: 'a_1 \\cdot a_2 \\cdot ... \\cdot a_n',
-                description: "Multiplica uma lista de números, sejam eles positivos, negativos ou decimais. Insira os números separados por vírgula (ex: 5, 2, 3, -1).",
-                inputs: [
-                    { id: 'numbers', label: 'Números para multiplicar (separados por vírgula)', unit: '', type: 'text' },
-                ],
-                calculationFunction: (inputs) => {
-                    const numbersString = inputs.numbers;
-                    if (!numbersString) return { result: 'Por favor, insira os números.' };
-                    const numbersArray = numbersString.split(',').map(num => parseFloat(num.replace(',', '.')));
-                    if (numbersArray.some(isNaN)) return { result: 'Erro: insira apenas números válidos separados por vírgula.' };
-                    if (numbersArray.length === 0) return { result: 'Erro: insira pelo menos um número.' };
-                    
-                    const result = numbersArray.reduce((acc, curr) => acc * curr, 1);
-                    return { result: `${formatNumber(result)}` };
-                }
-            },
-            {
-                id: 'divisao-varios',
-                category: 'Matemática',
-                level: 'Ensino Fundamental',
-                name: 'Divisão de Vários Números',
-                formula_display: 'a_1 \\div a_2 \\div ... \\div a_n',
-                description: "Divide o primeiro número pelos demais em sequência. Insira os números separados por vírgula (ex: 100, 2, 5).",
-                inputs: [
-                    { id: 'numbers', label: 'Números para dividir (separados por vírgula)', unit: '', type: 'text' },
-                ],
-                calculationFunction: (inputs) => {
-                    const numbersString = inputs.numbers;
-                    if (!numbersString) return { result: 'Por favor, insira os números.' };
-                    const numbersArray = numbersString.split(',').map(num => parseFloat(num.replace(',', '.')));
-                    if (numbersArray.some(isNaN)) return { result: 'Erro: insira apenas números válidos separados por vírgula.' };
-                    if (numbersArray.length <= 1) return { result: 'Erro: insira pelo menos dois números.' };
-                    if (numbersArray.slice(1).some(n => n === 0)) return { result: 'Divisão por zero não é permitida.' };
-
-                    const result = numbersArray.slice(1).reduce((acc, curr) => acc / curr, numbersArray[0]);
-                    return { result: `${formatNumber(result)}` };
-                }
-            },
-            {
-                id: 'multiplicacao',
-                category: 'Matemática',
-                level: 'Ensino Fundamental',
-                name: 'Multiplicação',
-                formula_display: 'a \\cdot b',
-                description: "Uma forma eficiente de realizar somas repetidas de um mesmo número. É essencial para cálculos de escala, áreas e proporções.",
-                inputs: [
-                    { id: 'a', label: 'Primeiro número (a)', unit: '' },
-                    { id: 'b', label: 'Segundo número (b)', unit: '' },
-                ],
-                calculationFunction: (inputs) => {
-                    const a = parseFloat(inputs.a.replace(',', '.'));
-                    const b = parseFloat(inputs.b.replace(',', '.'));
-                    if (isNaN(a) || isNaN(b)) return { result: 'Erro' };
-                    const result = a * b;
-                    return { result: `${formatNumber(result)}` };
-                }
-            },
-            {
-                id: 'divisao',
-                category: 'Matemática',
-                level: 'Ensino Fundamental',
-                name: 'Divisão',
-                formula_display: 'a \\div b',
-                description: "A operação de repartir uma quantidade em partes iguais. É fundamental para noções de proporção, frações e para determinar quantas vezes um número cabe em outro.",
-                inputs: [
-                    { id: 'a', label: 'Dividendo (a)', unit: '' },
-                    { id: 'b', label: 'Divisor (b)', unit: '' },
-                ],
-                calculationFunction: (inputs) => {
-                    const a = parseFloat(inputs.a.replace(',', '.'));
-                    const b = parseFloat(inputs.b.replace(',', '.'));
-                    if (isNaN(a) || isNaN(b)) return { result: 'Erro' };
-                    if (b === 0) return { result: 'Divisão por zero' };
-                    const result = a / b;
-                    return { result: `${formatNumber(result)}` };
-                }
-            },
-            {
-                id: 'resolver-x',
-                category: 'Matemática',
-                level: 'Ensino Fundamental',
-                name: 'Resolver para X (Eq. 1º Grau)',
-                formula_display: 'ax + b = c',
-                description: "Encontra o valor de uma incógnita (x) em uma equação linear. É o primeiro passo na álgebra para isolar e descobrir um valor desconhecido, fundamental para a resolução de problemas.",
-                inputs: [
-                    { id: 'a', label: 'Valor que multiplica x (a)', unit: '' },
-                    { id: 'b', label: 'Valor que soma (b)', unit: '' },
-                    { id: 'c', label: 'Resultado da equação (c)', unit: '' },
-                ],
-                calculationFunction: (inputs) => {
-                    const a = parseFloat(inputs.a.replace(',', '.'));
-                    const b = parseFloat(inputs.b.replace(',', '.'));
-                    const c = parseFloat(inputs.c.replace(',', '.'));
-                    if (isNaN(a) || isNaN(b) || isNaN(c)) return { result: 'Erro' };
-                    if (a === 0) return { result: 'O valor de "a" não pode ser zero.' };
-                    const x = (c - b) / a;
-                    return { result: `x = ${formatNumber(x)}` };
-                }
-            },
-            {
-                id: 'regra-de-tres',
-                category: 'Matemática',
-                level: 'Ensino Fundamental',
-                name: 'Regra de Três Simples',
-                formula_display: 'a \\cdot x = b \\cdot c',
-                description: "Um método prático para resolver problemas que envolvem grandezas proporcionais. É usado para encontrar um valor desconhecido a partir de outros três, sendo vital para cálculos de porcentagem, conversões e receitas.",
-                inputs: [
-                    { id: 'a', label: 'Valor A está para', unit: '' },
-                    { id: 'b', label: 'Assim como o Valor B', unit: '' },
-                    { id: 'c', label: 'Está para o Valor C', unit: '' },
-                ],
-                calculationFunction: (inputs) => {
-                    const a = parseFloat(inputs.a.replace(',', '.'));
-                    const b = parseFloat(inputs.b.replace(',', '.'));
-                    const c = parseFloat(inputs.c.replace(',', '.'));
-                    if (isNaN(a) || isNaN(b) || isNaN(c) || a === 0) return { result: 'Erro' };
-                    const x = (b * c) / a;
-                    return { result: `x = ${formatNumber(x)}` };
-                }
-            },
-            {
-                id: 'juros-simples',
-                category: 'Matemática',
-                level: 'Ensino Fundamental',
-                name: 'Juros Simples',
-                formula_display: 'J = C \\cdot i \\cdot t',
-                description: "Calcula o rendimento de um capital a uma taxa fixa, sem que os juros rendam sobre si mesmos. É a base para entender transações financeiras simples, como empréstimos de curto prazo.",
-                inputs: [
-                    { id: 'C', label: 'Capital (C)', unit: 'R$' },
-                    { id: 'i', label: 'Taxa de Juros (i)', unit: '% ao mês' },
-                    { id: 't', label: 'Tempo (t)', unit: 'meses' },
-                ],
-                calculationFunction: (inputs) => {
-                    const C = parseFloat(inputs.C.replace(',', '.'));
-                    const i_percent = parseFloat(inputs.i.replace(',', '.'));
-                    const i_decimal = i_percent / 100;
-                    const t = parseFloat(inputs.t.replace(',', '.'));
-                    if (isNaN(C) || isNaN(i_decimal) || isNaN(t)) return { result: 'Erro' };
-                    const J = C * i_decimal * t;
-                    const M = C + J;
-                    return { result: `Juros (J) = R$ ${formatMoney(J)} | Montante (M) = R$ ${formatMoney(M)}` };
-                }
-            },
-            {
-                id: 'soma-fracoes',
-                category: 'Matemática',
-                level: 'Ensino Fundamental',
-                name: 'Soma de Frações',
-                formula_display: '\\frac{a}{b} + \\frac{c}{d} = \\frac{ad+bc}{bd}',
-                description: "Define como somar partes de um todo. É fundamental para trabalhar com números que não são inteiros e resolver problemas de partilha e proporção.",
-                inputs: [
-                    { id: 'a', label: 'Numerador 1 (a)', unit: '' },
-                    { id: 'b', label: 'Denominador 1 (b)', unit: '' },
-                    { id: 'c', label: 'Numerador 2 (c)', unit: '' },
-                    { id: 'd', label: 'Denominador 2 (d)', unit: '' },
-                ],
-                calculationFunction: (inputs) => {
-                    const a = parseInt(inputs.a);
-                    const b = parseInt(inputs.b);
-                    const c = parseInt(inputs.c);
-                    const d = parseInt(inputs.d);
-                    if ([a,b,c,d].some(isNaN) || b === 0 || d === 0) return { result: 'Erro' };
-                    const num = a * d + c * b;
-                    const den = b * d;
-                    return { result: `Resultado = ${num}/${den} ≈ ${formatNumber(num/den)}` };
-                }
-            },
-            {
-                id: 'funcao-modular',
-                category: 'Matemática',
-                level: 'Ensino Fundamental',
-                name: 'Função Modular (Absoluto)',
-                formula_display: '|x|',
-                description: "Calcula o valor de um número sem considerar seu sinal, ou seja, sua distância até o zero. É usada para medir magnitudes, distâncias e erros, onde apenas o valor importa.",
-                inputs: [
-                    { id: 'x', label: 'Número (x)', unit: '' },
-                ],
-                calculationFunction: (inputs) => {
-                    const x = parseFloat(inputs.x.replace(',', '.'));
-                    if (isNaN(x)) return { result: 'Erro' };
-                    return { result: `|${x}| = ${formatNumber(Math.abs(x))}` };
-                }
-            },
-            {
-                id: 'bhaskara',
-                category: 'Matemática',
-                level: 'Ensino Médio',
-                name: 'Equação do 2º Grau (Bhaskara)',
-                formula_display: 'x = \\frac{-b \\pm \\sqrt{b^2 - 4ac}}{2a}',
-                description: "Uma fórmula resolutiva para encontrar as raízes (soluções) de equações do segundo grau. É fundamental para modelar fenômenos como a trajetória de projéteis, otimização de áreas e problemas de física.",
-                inputs: [
-                    { id: 'a', label: 'Valor de a', unit: '' },
-                    { id: 'b', label: 'Valor de b', unit: '' },
-                    { id: 'c', label: 'Valor de c', unit: '' },
-                ],
-                calculationFunction: (inputs) => {
-                    const a = parseFloat(inputs.a.replace(',', '.'));
-                    const b = parseFloat(inputs.b.replace(',', '.'));
-                    const c = parseFloat(inputs.c.replace(',', '.'));
-                    if (isNaN(a) || isNaN(b) || isNaN(c) || a === 0) return { result: 'Erro' };
-                    const delta = (b*b) - (4*a*c);
-                    if (delta < 0) {
-                        return { result: 'Não existem raízes reais.' };
-                    }
-                    const x1 = (-b + Math.sqrt(delta)) / (2 * a);
-                    const x2 = (-b - Math.sqrt(delta)) / (2 * a);
-                    if (delta === 0) {
-                        return { result: `A raiz única é x = ${formatNumber(x1)}` };
-                    }
-                    return { result: `x' = ${formatNumber(x1)} e x'' = ${formatNumber(x2)}` };
-                }
-            },
-            {
-                id: 'arranjo-simples',
-                category: 'Matemática',
-                level: 'Ensino Médio',
-                name: 'Arranjo Simples',
-                formula_display: 'A_{n,p} = \\frac{n!}{(n-p)!}',
-                description: "Calcula o número de maneiras de escolher e ordenar 'p' elementos de um conjunto de 'n' elementos. A ordem importa. É usado em problemas de senhas, pódios de competição e códigos.",
-                inputs: [
-                    { id: 'n', label: 'Nº total de elementos (n)', unit: '' },
-                    { id: 'p', label: 'Nº de elementos por grupo (p)', unit: '' },
-                ],
-                calculationFunction: (inputs) => {
-                    const n = parseInt(inputs.n);
-                    const p = parseInt(inputs.p);
-                    if (isNaN(n) || isNaN(p) || n < p || n < 0 || p < 0) return { result: 'Erro' };
-                    const factorial = (num) => {
-                        if (num < 0) return -1;
-                        if (num === 0) return 1;
-                        let res = 1;
-                        for (let i = 2; i <= num; i++) res *= i;
-                        return res;
-                    };
-                    const result = factorial(n) / factorial(n - p);
-                    return { result: `A_{${n},${p}} = ${formatNumber(result)}` };
-                }
-            },
-            {
-                id: 'permutacao-simples',
-                category: 'Matemática',
-                level: 'Ensino Médio',
-                name: 'Permutação Simples',
-                formula_display: 'P_n = n!',
-                description: "Calcula o número de maneiras de ordenar todos os 'n' elementos de um conjunto. É fundamental para problemas de anagramas e organização de itens em fila.",
-                inputs: [
-                    { id: 'n', label: 'Nº de elementos (n)', unit: '' },
-                ],
-                calculationFunction: (inputs) => {
-                    const n = parseInt(inputs.n);
-                    if (isNaN(n) || n < 0) return { result: 'Erro' };
-                    const factorial = (num) => {
-                        if (num < 0) return -1;
-                        if (num === 0) return 1;
-                        let res = 1;
-                        for(let i=2; i<=num; i++) res *=i;
-                        return res;
-                    };
-                    return { result: `P_${n} = ${formatNumber(factorial(n))}` };
-                }
-            },
-            {
-                id: 'combinacao-simples',
-                category: 'Matemática',
-                level: 'Ensino Médio',
-                name: 'Combinação Simples',
-                formula_display: 'C_{n,p} = \\frac{n!}{p!(n-p)!}',
-                description: "Calcula o número de maneiras de escolher 'p' elementos de um conjunto de 'n' elementos, onde a ordem não importa. É usado para formar comissões, times e em jogos de loteria.",
-                inputs: [
-                    { id: 'n', label: 'Nº total de elementos (n)', unit: '' },
-                    { id: 'p', label: 'Nº de elementos por grupo (p)', unit: '' },
-                ],
-                calculationFunction: (inputs) => {
-                    const n = parseInt(inputs.n);
-                    const p = parseInt(inputs.p);
-                    if (isNaN(n) || isNaN(p) || n < p || n < 0 || p < 0) return { result: 'Erro' };
-                    const factorial = (num) => {
-                        if (num < 0) return -1;
-                        if (num === 0) return 1;
-                        let res = 1;
-                        for(let i=2; i<=num; i++) res *=i;
-                        return res;
-                    };
-                    const result = factorial(n) / (factorial(p) * factorial(n - p));
-                    return { result: `C_{${n},${p}} = ${formatNumber(result)}` };
-                }
-            },
-            {
-                id: 'binomio-newton',
-                category: 'Matemática',
-                level: 'Ensino Médio',
-                name: 'Coeficiente Binomial',
-                formula_display: '\\binom{n}{k} = C_{n,k}',
-                description: "Calcula os coeficientes da expansão de um binômio $(a+b)^n$. É a mesma fórmula da combinação e é a base do Triângulo de Pascal, sendo crucial em probabilidade e estatística.",
-                inputs: [
-                    { id: 'n', label: 'Linha (n)', unit: '' },
-                    { id: 'k', label: 'Coluna (k)', unit: '' },
-                ],
-                calculationFunction: (inputs) => {
-                    const n = parseInt(inputs.n);
-                    const k = parseInt(inputs.k);
-                    if (isNaN(n) || isNaN(k) || n < k || n < 0 || k < 0) return { result: 'Erro' };
-                    const factorial = (num) => {
-                        if (num < 0) return -1;
-                        if (num === 0) return 1;
-                        let res = 1;
-                        for(let i=2; i<=num; i++) res *=i;
-                        return res;
-                    };
-                    const result = factorial(n) / (factorial(k) * factorial(n - k));
-                    return { result: `\\binom{${n}}{${k}} = ${formatNumber(result)}` };
-                }
-            },
-            {
-                id: 'trigonometria-basica',
-                category: 'Matemática',
-                level: 'Ensino Médio',
-                name: 'Seno, Cosseno e Tangente',
-                formula_display: 'sen(\\theta), cos(\\theta), tan(\\theta)',
-                description: "São as relações fundamentais entre os ângulos e os lados de um triângulo retângulo. Foram criadas para a astronomia, agrimensura e navegação, permitindo calcular distâncias inacessíveis.",
-                inputs: [
-                    { id: 'theta', label: 'Ângulo (θ)', unit: 'graus' },
-                ],
-                calculationFunction: (inputs) => {
-                    const angle = parseFloat(inputs.theta.replace(',', '.'));
-                    if (isNaN(angle)) return { result: 'Erro' };
-                    const rad = angle * (Math.PI / 180);
-                    const sen = Math.sin(rad);
-                    const cos = Math.cos(rad);
-                    const tan = Math.tan(rad);
-                    return { result: `sen(${angle}°) = ${formatNumber(sen)}; cos(${angle}°) = ${formatNumber(cos)}; tan(${angle}°) = ${formatNumber(tan)}` };
-                }
-            },
-            {
-                id: 'seno-soma-arcos',
-                category: 'Matemática',
-                level: 'Ensino Médio',
-                name: 'Seno da Soma de Arcos',
-                formula_display: 'sen(a+b) = sen(a)cos(b) + sen(b)cos(a)',
-                description: "Permite calcular o seno de um ângulo que é a soma de outros dois ângulos conhecidos. É crucial para simplificar expressões trigonométricas e no estudo de ondas e vibrações.",
-                inputs: [
-                    { id: 'a', label: 'Ângulo a', unit: 'graus' },
-                    { id: 'b', label: 'Ângulo b', unit: 'graus' },
-                ],
-                calculationFunction: (inputs) => {
-                    const a = parseFloat(inputs.a.replace(',', '.'));
-                    const b = parseFloat(inputs.b.replace(',', '.'));
-                    if (isNaN(a) || isNaN(b)) return { result: 'Erro' };
-                    const a_rad = a * (Math.PI / 180);
-                    const b_rad = b * (Math.PI / 180);
-                    const result = Math.sin(a_rad) * Math.cos(b_rad) + Math.sin(b_rad) * Math.cos(a_rad);
-                    return { result: `sen(${a+b}°) = ${formatNumber(result)}` };
-                }
-            },
-            {
-                id: 'tangente-soma-arcos',
-                category: 'Matemática',
-                level: 'Ensino Médio',
-                name: 'Tangente da Soma de Arcos',
-                formula_display: 'tan(a+b) = \\frac{tan(a)+tan(b)}{1-tan(a)tan(b)}',
-                description: "Calcula a tangente de um ângulo que é a soma de outros dois. É usada em física, especialmente em óptica e eletromagnetismo, para lidar com ângulos de incidência e refração.",
-                inputs: [
-                    { id: 'a', label: 'Ângulo a', unit: 'graus' },
-                    { id: 'b', label: 'Ângulo b', unit: 'graus' },
-                ],
-                calculationFunction: (inputs) => {
-                    const a = parseFloat(inputs.a.replace(',', '.'));
-                    const b = parseFloat(inputs.b.replace(',', '.'));
-                    if (isNaN(a) || isNaN(b)) return { result: 'Erro' };
-                    const a_rad = a * (Math.PI / 180);
-                    const b_rad = b * (Math.PI / 180);
-                    const tanA = Math.tan(a_rad);
-                    const tanB = Math.tan(b_rad);
-                    const result = (tanA + tanB) / (1 - tanA * tanB);
-                    return { result: `tan(${a+b}°) = ${formatNumber(result)}` };
-                }
-            },
-            {
-                id: 'funcao-afim',
-                category: 'Matemática',
-                level: 'Ensino Médio',
-                name: 'Função Afim (1º Grau)',
-                formula_display: 'y = ax + b',
-                description: "Modela relações de crescimento ou decaimento linear e constante. É usada para descrever situações como custo de produção, planos de telefonia e movimento com velocidade constante.",
-                inputs: [
-                    { id: 'a', label: 'Coeficiente Angular (a)', unit: '' },
-                    { id: 'x', label: 'Variável (x)', unit: '' },
-                    { id: 'b', label: 'Coeficiente Linear (b)', unit: '' },
-                ],
-                calculationFunction: (inputs) => {
-                    const a = parseFloat(inputs.a.replace(',', '.'));
-                    const x = parseFloat(inputs.x.replace(',', '.'));
-                    const b = parseFloat(inputs.b.replace(',', '.'));
-                    if ([a,x,b].some(isNaN)) return { result: 'Erro' };
-                    const y = a * x + b;
-                    return { result: `y = ${formatNumber(y)}` };
-                }
-            },
-            {
-                id: 'vertice-parabola',
-                category: 'Matemática',
-                level: 'Ensino Médio',
-                name: 'Vértice da Parábola',
-                formula_display: 'X_v = \\frac{-b}{2a}, Y_v = \\frac{-\\Delta}{4a}',
-                description: "Encontra o ponto de máximo ou mínimo de uma função do segundo grau. É crucial para problemas de otimização, como encontrar a altura máxima de um projétil ou o lucro máximo de uma empresa.",
-                inputs: [
-                    { id: 'a', label: 'Valor de a', unit: '' },
-                    { id: 'b', label: 'Valor de b', unit: '' },
-                    { id: 'c', label: 'Valor de c', unit: '' },
-                ],
-                calculationFunction: (inputs) => {
-                    const a = parseFloat(inputs.a.replace(',', '.'));
-                    const b = parseFloat(inputs.b.replace(',', '.'));
-                    const c = parseFloat(inputs.c.replace(',', '.'));
-                    if (isNaN(a) || isNaN(b) || isNaN(c) || a === 0) return { result: 'Erro' };
-                    const delta = (b*b) - (4*a*c);
-                    const xv = -b / (2*a);
-                    const yv = -delta / (4*a);
-                    return { result: `V = (${formatNumber(xv)}, ${formatNumber(yv)})` };
-                }
-            },
-            {
-                id: 'soma-pa',
-                category: 'Matemática',
-                level: 'Ensino Médio',
-                name: 'Soma de uma PA Finita',
-                formula_display: 'S_n = \\frac{(a_1 + a_n)n}{2}',
-                description: "Calcula a soma dos termos de uma Progressão Aritmética. Foi criada, segundo a lenda, por Gauss para somar números de 1 a 100 rapidamente, sendo útil para somar sequências com crescimento constante.",
-                inputs: [
-                    { id: 'a1', label: 'Primeiro termo (a₁)', unit: '' },
-                    { id: 'an', label: 'Último termo (aₙ)', unit: '' },
-                    { id: 'n', label: 'Número de termos (n)', unit: '' },
-                ],
-                calculationFunction: (inputs) => {
-                    const a1 = parseFloat(inputs.a1.replace(',', '.'));
-                    const an = parseFloat(inputs.an.replace(',', '.'));
-                    const n = parseInt(inputs.n);
-                    if ([a1, an, n].some(isNaN) || n <= 0) return { result: 'Erro' };
-                    const sn = ((a1 + an) * n) / 2;
-                    return { result: `Sₙ = ${formatNumber(sn)}` };
-                }
-            },
-            {
-                id: 'soma-pg',
-                category: 'Matemática',
-                level: 'Ensino Médio',
-                name: 'Soma de uma PG Finita',
-                formula_display: 'S_n = \\frac{a_1(q^n - 1)}{q-1}',
-                description: "Calcula a soma dos termos de uma Progressão Geométrica. É fundamental em matemática financeira para calcular juros compostos e o valor de investimentos ao longo do tempo.",
-                inputs: [
-                    { id: 'a1', label: 'Primeiro termo (a₁)', unit: '' },
-                    { id: 'q', label: 'Razão (q)', unit: '' },
-                    { id: 'n', label: 'Número de termos (n)', unit: '' },
-                ],
-                calculationFunction: (inputs) => {
-                    const a1 = parseFloat(inputs.a1.replace(',', '.'));
-                    const q = parseFloat(inputs.q.replace(',', '.'));
-                    const n = parseInt(inputs.n);
-                    if ([a1, q, n].some(isNaN) || n <= 0 || q === 1) return { result: 'Erro' };
-                    const sn = a1 * (Math.pow(q,n) - 1) / (q - 1);
-                    return { result: `Sₙ = ${formatNumber(sn)}` };
-                }
-            },
-            {
-                id: 'funcao-exponencial',
-                category: 'Matemática',
-                level: 'Ensino Médio',
-                name: 'Função Exponencial',
-                formula_display: 'y = a^x',
-                description: "Modela fenômenos de crescimento ou decaimento muito rápidos, como crescimento populacional, juros compostos ou decaimento radioativo.",
-                inputs: [
-                    { id: 'a', label: 'Base (a)', unit: '' },
-                    { id: 'x', label: 'Expoente (x)', unit: '' },
-                ],
-                calculationFunction: (inputs) => {
-                    const a = parseFloat(inputs.a.replace(',', '.'));
-                    const x = parseFloat(inputs.x.replace(',', '.'));
-                    if (isNaN(a) || isNaN(x)) return { result: 'Erro' };
-                    return { result: `y = ${formatNumber(Math.pow(a,x))}` };
-                }
-            },
-            {
-                id: 'logaritmo',
-                category: 'Matemática',
-                level: 'Ensino Superior',
-                name: 'Cálculo de Logaritmo',
-                formula_display: 'log_b(x) = y \\iff b^y = x',
-                description: "A operação inversa da exponenciação. Foi criada para simplificar cálculos manuais de multiplicação e divisão, transformando-os em somas e subtrações. Hoje é vital para medir grandezas como pH, decibéis e a escala Richter.",
-                inputs: [
-                    { id: 'x', label: 'Logaritmando (x)', unit: '' },
-                    { id: 'b', label: 'Base (b)', unit: '' },
-                ],
-                calculationFunction: (inputs) => {
-                    const x = parseFloat(inputs.x.replace(',', '.'));
-                    const b = parseFloat(inputs.b.replace(',', '.'));
-                    if (isNaN(x) || isNaN(b) || x <= 0 || b <= 0 || b === 1) return { result: 'Erro' };
-                    const y = Math.log(x) / Math.log(b);
-                    return { result: `log_${b}(${x}) = ${formatNumber(y)}` };
-                }
-            },
-            {
-                id: 'derivada-potencia',
-                category: 'Matemática',
-                level: 'Ensino Superior',
-                name: 'Derivada (Regra da Potência)',
-                formula_display: '\\frac{d}{dx}(ax^n) = anx^{n-1}',
-                description: "Uma regra fundamental do Cálculo Diferencial para encontrar a taxa de variação instantânea de funções polinomiais. É a base para otimizar problemas, calcular velocidades e acelerações.",
-                inputs: [
-                    { id: 'a', label: 'Coeficiente (a)', unit: '' },
-                    { id: 'n', label: 'Expoente (n)', unit: '' },
-                ],
-                calculationFunction: (inputs) => {
-                    const a = parseFloat(inputs.a.replace(',', '.'));
-                    const n = parseFloat(inputs.n.replace(',', '.'));
-                    if (isNaN(a) || isNaN(n)) return { result: 'Erro' };
-                    const new_a = a * n;
-                    const new_n = n - 1;
-                    return { result: `d/dx = ${formatNumber(new_a)}x^${formatNumber(new_n)}` };
-                }
-            },
-            {
-                id: 'soma-pg-infinita',
-                category: 'Matemática',
-                level: 'Ensino Superior',
-                name: 'Soma de uma PG Infinita',
-                formula_display: 'S = \\frac{a_1}{1-q}',
-                description: "Calcula a soma de uma série geométrica infinita, desde que a razão seja entre -1 e 1. É usada para resolver paradoxos como o de Zeno e para modelar processos que convergem para um valor limite.",
-                inputs: [
-                    { id: 'a1', label: 'Primeiro termo (a₁)', unit: '' },
-                    { id: 'q', label: 'Razão (q)', unit: '' },
-                ],
-                calculationFunction: (inputs) => {
-                    const a1 = parseFloat(inputs.a1.replace(',', '.'));
-                    const q = parseFloat(inputs.q.replace(',', '.'));
-                    if (isNaN(a1) || isNaN(q) || Math.abs(q) >= 1) return { result: 'Erro: |q| deve ser < 1' };
-                    const s = a1 / (1-q);
-                    return { result: `S = ${formatNumber(s)}` };
-                }
-            },
+            { id: 'soma-simples', category: 'Matemática', level: 'Ensino Fundamental', name: 'Soma de Dois Números', formula_display: 'a + b', description: "A operação mais fundamental da aritmética. Soma dois números.", inputs: [ { id: 'a', label: 'Primeiro número (a)' }, { id: 'b', label: 'Segundo número (b)' } ], calculationFunction: (inputs) => { const a = parseFloat(inputs.a.replace(',','.')); const b = parseFloat(inputs.b.replace(',','.')); if(isNaN(a)||isNaN(b)) return {result:'Erro'}; return { result: `${formatNumber(a+b)}` }; } },
+            { id: 'soma-varios', category: 'Matemática', level: 'Ensino Fundamental', name: 'Soma de Vários Números', formula_display: 'a_1 + a_2 + ... + a_n', description: "Soma uma lista de números separados por vírgula (ex: 10, -5, 20.5).", inputs: [ { id: 'numbers', label: 'Números para somar (separados por vírgula)', type: 'text' } ], calculationFunction: (inputs) => { const nums = inputs.numbers.split(',').map(n=>parseFloat(n.trim().replace(',','.'))); if(nums.some(isNaN)) return {result:'Erro'}; return { result: `${formatNumber(nums.reduce((a,c)=>a+c,0))}` }; } },
+            { id: 'subtracao-varios', category: 'Matemática', level: 'Ensino Fundamental', name: 'Subtração de Vários Números', formula_display: 'a_1 - a_2 - ... - a_n', description: "Subtrai uma lista de números do primeiro (ex: 100, 10, 5).", inputs: [ { id: 'numbers', label: 'Números (separados por vírgula)', type: 'text' } ], calculationFunction: (inputs) => { const nums = inputs.numbers.split(',').map(n=>parseFloat(n.trim().replace(',','.'))); if(nums.some(isNaN)||nums.length<1) return {result:'Erro'}; return { result: `${formatNumber(nums.slice(1).reduce((a,c)=>a-c,nums[0]))}` }; } },
+            { id: 'multiplicacao-varios', category: 'Matemática', level: 'Ensino Fundamental', name: 'Multiplicação de Vários Números', formula_display: 'a_1 \\cdot a_2 \\cdot ... \\cdot a_n', description: "Multiplica uma lista de números (ex: 5, 2, 3).", inputs: [ { id: 'numbers', label: 'Números (separados por vírgula)', type: 'text' } ], calculationFunction: (inputs) => { const nums = inputs.numbers.split(',').map(n=>parseFloat(n.trim().replace(',','.'))); if(nums.some(isNaN)||nums.length<1) return {result:'Erro'}; return { result: `${formatNumber(nums.reduce((a,c)=>a*c,1))}` }; } },
+            { id: 'divisao-varios', category: 'Matemática', level: 'Ensino Fundamental', name: 'Divisão de Vários Números', formula_display: 'a_1 \\div a_2 \\div ... \\div a_n', description: "Divide o primeiro número pelos demais em sequência (ex: 100, 2, 5).", inputs: [ { id: 'numbers', label: 'Números (separados por vírgula)', type: 'text' } ], calculationFunction: (inputs) => { const nums = inputs.numbers.split(',').map(n=>parseFloat(n.trim().replace(',','.'))); if(nums.some(isNaN)||nums.length<2||nums.slice(1).some(n=>n===0)) return {result:'Erro'}; return { result: `${formatNumber(nums.slice(1).reduce((a,c)=>a/c,nums[0]))}` }; } },
+            { id: 'resolver-x', category: 'Matemática', level: 'Ensino Fundamental', name: 'Resolver para X (Eq. 1º Grau)', formula_display: 'ax + b = c', description: "Encontra o valor de X em uma equação linear.", inputs: [ { id: 'a', label: 'Valor de a' }, { id: 'b', label: 'Valor de b' }, { id: 'c', label: 'Valor de c' } ], calculationFunction: (inputs) => { const a=parseFloat(inputs.a.replace(',','.')); const b=parseFloat(inputs.b.replace(',','.')); const c=parseFloat(inputs.c.replace(',','.')); if(isNaN(a)||isNaN(b)||isNaN(c)||a===0) return {result:'Erro'}; return { result: `x = ${formatNumber((c-b)/a)}` }; } },
+            { id: 'regra-de-tres', category: 'Matemática', level: 'Ensino Fundamental', name: 'Regra de Três Simples', formula_display: 'a \\cdot x = b \\cdot c', description: "Resolve problemas de proporção.", inputs: [ { id: 'a', label: 'Valor A' }, { id: 'b', label: 'Valor B' }, { id: 'c', label: 'Valor C' } ], calculationFunction: (inputs) => { const a=parseFloat(inputs.a.replace(',','.')); const b=parseFloat(inputs.b.replace(',','.')); const c=parseFloat(inputs.c.replace(',','.')); if(isNaN(a)||isNaN(b)||isNaN(c)||a===0) return {result:'Erro'}; return { result: `x = ${formatNumber((b*c)/a)}` }; } },
+            { id: 'juros-simples', category: 'Matemática', level: 'Ensino Fundamental', name: 'Juros Simples', formula_display: 'J = C \\cdot i \\cdot t', description: "Calcula juros simples e o montante final.", inputs: [ { id: 'C', label: 'Capital (C)', unit: 'R$' }, { id: 'i', label: 'Taxa (i)', unit: '% ao mês' }, { id: 't', label: 'Tempo (t)', unit: 'meses' } ], calculationFunction: (inputs) => { const C=parseFloat(inputs.C.replace(',','.')); const i=parseFloat(inputs.i.replace(',','.'))/100; const t=parseFloat(inputs.t.replace(',','.')); if(isNaN(C)||isNaN(i)||isNaN(t)) return {result:'Erro'}; const J=C*i*t; return { result: `Juros = R$ ${formatMoney(J)} | Montante = R$ ${formatMoney(C+J)}` }; } },
+            { id: 'soma-fracoes', category: 'Matemática', level: 'Ensino Fundamental', name: 'Soma de Frações', formula_display: '\\frac{a}{b} + \\frac{c}{d} = \\frac{ad+bc}{bd}', description: "Soma duas frações.", inputs: [ { id: 'a', label: 'Numerador 1 (a)' }, { id: 'b', label: 'Denominador 1 (b)' }, { id: 'c', label: 'Numerador 2 (c)' }, { id: 'd', label: 'Denominador 2 (d)' } ], calculationFunction: (inputs) => { const a=parseInt(inputs.a),b=parseInt(inputs.b),c=parseInt(inputs.c),d=parseInt(inputs.d); if([a,b,c,d].some(isNaN)||b===0||d===0) return {result:'Erro'}; const num=a*d+c*b, den=b*d; return { result: `${num}/${den} ≈ ${formatNumber(num/den)}` }; } },
+            { id: 'funcao-modular', category: 'Matemática', level: 'Ensino Fundamental', name: 'Função Modular (Absoluto)', formula_display: '|x|', description: "Calcula o valor absoluto de um número.", inputs: [ { id: 'x', label: 'Número (x)' } ], calculationFunction: (inputs) => { const x=parseFloat(inputs.x.replace(',','.')); if(isNaN(x)) return {result:'Erro'}; return { result: `|${x}| = ${formatNumber(Math.abs(x))}` }; } },
+            { id: 'bhaskara', category: 'Matemática', level: 'Ensino Médio', name: 'Equação do 2º Grau (Bhaskara)', formula_display: 'x = \\frac{-b \\pm \\sqrt{b^2 - 4ac}}{2a}', description: "Encontra as raízes de uma equação do segundo grau.", inputs: [ { id: 'a', label: 'Valor de a' }, { id: 'b', label: 'Valor de b' }, { id: 'c', label: 'Valor de c' } ], calculationFunction: (inputs) => { const a=parseFloat(inputs.a.replace(',','.')); const b=parseFloat(inputs.b.replace(',','.')); const c=parseFloat(inputs.c.replace(',','.')); if(isNaN(a)||isNaN(b)||isNaN(c)||a===0) return {result:'Erro'}; const delta=b*b-4*a*c; if(delta<0) return {result:'Não há raízes reais.'}; const x1=(-b+Math.sqrt(delta))/(2*a); const x2=(-b-Math.sqrt(delta))/(2*a); return { result: delta===0 ? `x = ${formatNumber(x1)}` : `x'=${formatNumber(x1)}, x''=${formatNumber(x2)}` }; } },
+            { id: 'arranjo-simples', category: 'Matemática', level: 'Ensino Médio', name: 'Arranjo Simples', formula_display: 'A_{n,p} = \\frac{n!}{(n-p)!}', description: "Calcula arranjos, onde a ordem importa.", inputs: [ { id: 'n', label: 'Total de elementos (n)' }, { id: 'p', label: 'Elementos por grupo (p)' } ], calculationFunction: (inputs) => { const n=parseInt(inputs.n),p=parseInt(inputs.p); if(isNaN(n)||isNaN(p)||n<p||n<0||p<0) return {result:'Erro'}; const fact=(num)=>{if(num<0)return -1;if(num===0)return 1;let r=1;for(let i=2;i<=num;i++)r*=i;return r;}; return { result: `A = ${formatNumber(fact(n)/fact(n-p))}` }; } },
+            { id: 'permutacao-simples', category: 'Matemática', level: 'Ensino Médio', name: 'Permutação Simples', formula_display: 'P_n = n!', description: "Calcula o número de formas de ordenar 'n' elementos.", inputs: [ { id: 'n', label: 'Nº de elementos (n)' } ], calculationFunction: (inputs) => { const n=parseInt(inputs.n); if(isNaN(n)||n<0) return {result:'Erro'}; const fact=(num)=>{if(num<0)return -1;if(num===0)return 1;let r=1;for(let i=2;i<=num;i++)r*=i;return r;}; return { result: `P = ${formatNumber(fact(n))}` }; } },
+            { id: 'combinacao-simples', category: 'Matemática', level: 'Ensino Médio', name: 'Combinação Simples', formula_display: 'C_{n,p} = \\frac{n!}{p!(n-p)!}', description: "Calcula combinações, onde a ordem não importa.", inputs: [ { id: 'n', label: 'Total de elementos (n)' }, { id: 'p', label: 'Elementos por grupo (p)' } ], calculationFunction: (inputs) => { const n=parseInt(inputs.n),p=parseInt(inputs.p); if(isNaN(n)||isNaN(p)||n<p||n<0||p<0) return {result:'Erro'}; const fact=(num)=>{if(num<0)return -1;if(num===0)return 1;let r=1;for(let i=2;i<=num;i++)r*=i;return r;}; return { result: `C = ${formatNumber(fact(n)/(fact(p)*fact(n-p)))}` }; } },
+            { id: 'binomio-newton', category: 'Matemática', level: 'Ensino Médio', name: 'Coeficiente Binomial', formula_display: '\\binom{n}{k} = C_{n,k}', description: "Calcula os coeficientes da expansão de um binômio.", inputs: [ { id: 'n', label: 'Linha (n)' }, { id: 'k', label: 'Coluna (k)' } ], calculationFunction: (inputs) => { const n=parseInt(inputs.n),k=parseInt(inputs.k); if(isNaN(n)||isNaN(k)||n<k||n<0||k<0) return {result:'Erro'}; const fact=(num)=>{if(num<0)return -1;if(num===0)return 1;let r=1;for(let i=2;i<=num;i++)r*=i;return r;}; return { result: `\\binom{${n}}{${k}} = ${formatNumber(fact(n)/(fact(k)*fact(n-k)))}` }; } },
+            { id: 'trigonometria-basica', category: 'Matemática', level: 'Ensino Médio', name: 'Seno, Cosseno e Tangente', formula_display: 'sen(\\theta), cos(\\theta), tan(\\theta)', description: "Calcula as relações trigonométricas básicas para um ângulo.", inputs: [ { id: 'theta', label: 'Ângulo (θ)', unit: 'graus' } ], calculationFunction: (inputs) => { const angle=parseFloat(inputs.theta.replace(',','.')); if(isNaN(angle)) return {result:'Erro'}; const rad=angle*Math.PI/180; return { result: `sen=${formatNumber(Math.sin(rad))}; cos=${formatNumber(Math.cos(rad))}; tan=${formatNumber(Math.tan(rad))}` }; } },
+            { id: 'seno-soma-arcos', category: 'Matemática', level: 'Ensino Médio', name: 'Seno da Soma de Arcos', formula_display: 'sen(a+b) = sen(a)cos(b) + sen(b)cos(a)', description: "Calcula o seno da soma de dois ângulos.", inputs: [ { id: 'a', label: 'Ângulo a', unit: 'graus' }, { id: 'b', label: 'Ângulo b', unit: 'graus' } ], calculationFunction: (inputs) => { const a=parseFloat(inputs.a.replace(',','.')); const b=parseFloat(inputs.b.replace(',','.')); if(isNaN(a)||isNaN(b)) return {result:'Erro'}; const ar=a*Math.PI/180, br=b*Math.PI/180; return { result: `sen(${a+b}°) = ${formatNumber(Math.sin(ar)*Math.cos(br)+Math.sin(br)*Math.cos(ar))}` }; } },
+            { id: 'tangente-soma-arcos', category: 'Matemática', level: 'Ensino Médio', name: 'Tangente da Soma de Arcos', formula_display: 'tan(a+b) = \\frac{tan(a)+tan(b)}{1-tan(a)tan(b)}', description: "Calcula a tangente da soma de dois ângulos.", inputs: [ { id: 'a', label: 'Ângulo a', unit: 'graus' }, { id: 'b', label: 'Ângulo b', unit: 'graus' } ], calculationFunction: (inputs) => { const a=parseFloat(inputs.a.replace(',','.')); const b=parseFloat(inputs.b.replace(',','.')); if(isNaN(a)||isNaN(b)) return {result:'Erro'}; const ar=a*Math.PI/180, br=b*Math.PI/180; const tA=Math.tan(ar),tB=Math.tan(br); return { result: `tan(${a+b}°) = ${formatNumber((tA+tB)/(1-tA*tB))}` }; } },
+            { id: 'funcao-afim', category: 'Matemática', level: 'Ensino Médio', name: 'Função Afim (1º Grau)', formula_display: 'y = ax + b', description: "Modela relações de crescimento ou decaimento linear.", inputs: [ { id: 'a', label: 'Coeficiente Angular (a)' }, { id: 'x', label: 'Variável (x)' }, { id: 'b', label: 'Coeficiente Linear (b)' } ], calculationFunction: (inputs) => { const a=parseFloat(inputs.a.replace(',','.')); const x=parseFloat(inputs.x.replace(',','.')); const b=parseFloat(inputs.b.replace(',','.')); if([a,x,b].some(isNaN)) return {result:'Erro'}; return { result: `y = ${formatNumber(a*x+b)}` }; } },
+            { id: 'vertice-parabola', category: 'Matemática', level: 'Ensino Médio', name: 'Vértice da Parábola', formula_display: 'X_v = \\frac{-b}{2a}, Y_v = \\frac{-\\Delta}{4a}', description: "Encontra o ponto de máximo ou mínimo de uma função do segundo grau.", inputs: [ { id: 'a', label: 'Valor de a' }, { id: 'b', label: 'Valor de b' }, { id: 'c', label: 'Valor de c' } ], calculationFunction: (inputs) => { const a=parseFloat(inputs.a.replace(',','.')); const b=parseFloat(inputs.b.replace(',','.')); const c=parseFloat(inputs.c.replace(',','.')); if(isNaN(a)||isNaN(b)||isNaN(c)||a===0) return {result:'Erro'}; const delta=b*b-4*a*c; return { result: `V = (${formatNumber(-b/(2*a))}, ${formatNumber(-delta/(4*a))})` }; } },
+            { id: 'soma-pa', category: 'Matemática', level: 'Ensino Médio', name: 'Soma de uma PA Finita', formula_display: 'S_n = \\frac{(a_1 + a_n)n}{2}', description: "Calcula a soma dos termos de uma Progressão Aritmética.", inputs: [ { id: 'a1', label: 'Primeiro termo (a₁)' }, { id: 'an', label: 'Último termo (aₙ)' }, { id: 'n', label: 'Número de termos (n)' } ], calculationFunction: (inputs) => { const a1=parseFloat(inputs.a1.replace(',','.')); const an=parseFloat(inputs.an.replace(',','.')); const n=parseInt(inputs.n); if([a1,an,n].some(isNaN)||n<=0) return {result:'Erro'}; return { result: `Sₙ = ${formatNumber(((a1+an)*n)/2)}` }; } },
+            { id: 'soma-pg', category: 'Matemática', level: 'Ensino Médio', name: 'Soma de uma PG Finita', formula_display: 'S_n = \\frac{a_1(q^n - 1)}{q-1}', description: "Calcula a soma dos termos de uma Progressão Geométrica.", inputs: [ { id: 'a1', label: 'Primeiro termo (a₁)' }, { id: 'q', label: 'Razão (q)' }, { id: 'n', label: 'Número de termos (n)' } ], calculationFunction: (inputs) => { const a1=parseFloat(inputs.a1.replace(',','.')); const q=parseFloat(inputs.q.replace(',','.')); const n=parseInt(inputs.n); if([a1,q,n].some(isNaN)||n<=0||q===1) return {result:'Erro'}; return { result: `Sₙ = ${formatNumber(a1*(Math.pow(q,n)-1)/(q-1))}` }; } },
+            { id: 'funcao-exponencial', category: 'Matemática', level: 'Ensino Médio', name: 'Função Exponencial', formula_display: 'y = a^x', description: "Modela fenômenos de crescimento ou decaimento rápidos.", inputs: [ { id: 'a', label: 'Base (a)' }, { id: 'x', label: 'Expoente (x)' } ], calculationFunction: (inputs) => { const a=parseFloat(inputs.a.replace(',','.')); const x=parseFloat(inputs.x.replace(',','.')); if(isNaN(a)||isNaN(x)) return {result:'Erro'}; return { result: `y = ${formatNumber(Math.pow(a,x))}` }; } },
+            { id: 'logaritmo', category: 'Matemática', level: 'Ensino Superior', name: 'Cálculo de Logaritmo', formula_display: 'log_b(x) = y \\iff b^y = x', description: "A operação inversa da exponenciação.", inputs: [ { id: 'x', label: 'Logaritmando (x)' }, { id: 'b', label: 'Base (b)' } ], calculationFunction: (inputs) => { const x=parseFloat(inputs.x.replace(',','.')); const b=parseFloat(inputs.b.replace(',','.')); if(isNaN(x)||isNaN(b)||x<=0||b<=0||b===1) return {result:'Erro'}; return { result: `log_${b}(${x}) = ${formatNumber(Math.log(x)/Math.log(b))}` }; } },
+            { id: 'derivada-potencia', category: 'Matemática', level: 'Ensino Superior', name: 'Derivada (Regra da Potência)', formula_display: '\\frac{d}{dx}(ax^n) = anx^{n-1}', description: "Encontra a taxa de variação instantânea de funções polinomiais.", inputs: [ { id: 'a', label: 'Coeficiente (a)' }, { id: 'n', label: 'Expoente (n)' } ], calculationFunction: (inputs) => { const a=parseFloat(inputs.a.replace(',','.')); const n=parseFloat(inputs.n.replace(',','.')); if(isNaN(a)||isNaN(n)) return {result:'Erro'}; return { result: `d/dx = ${formatNumber(a*n)}x^${formatNumber(n-1)}` }; } },
+            { id: 'soma-pg-infinita', category: 'Matemática', level: 'Ensino Superior', name: 'Soma de uma PG Infinita', formula_display: 'S = \\frac{a_1}{1-q}', description: "Calcula a soma de uma série geométrica infinita convergente.", inputs: [ { id: 'a1', label: 'Primeiro termo (a₁)' }, { id: 'q', label: 'Razão (q)' } ], calculationFunction: (inputs) => { const a1=parseFloat(inputs.a1.replace(',','.')); const q=parseFloat(inputs.q.replace(',','.')); if(isNaN(a1)||isNaN(q)||Math.abs(q)>=1) return {result:'Erro: |q| deve ser < 1'}; return { result: `S = ${formatNumber(a1/(1-q))}` }; } },
             
-            // --- FÍSICA ---
-            {
-                id: 'velocidade-media',
-                category: 'Física',
-                level: 'Ensino Fundamental',
-                name: 'Velocidade Média',
-                formula_display: 'V_m = \\frac{\\Delta S}{\\Delta t}',
-                description: "Esta equação calcula a taxa média de deslocamento de um objeto. Foi criada para simplificar o estudo do movimento, fornecendo uma velocidade constante que descreveria o mesmo percurso no mesmo tempo, independentemente das variações de velocidade ao longo do trajeto.",
-                inputs: [
-                    { id: 'deltaS', label: 'Distância percorrida (ΔS)', unit: 'metros' },
-                    { id: 'deltaT', label: 'Tempo gasto (Δt)', unit: 'segundos' },
-                ],
-                calculationFunction: (inputs) => {
-                    const deltaS = parseFloat(inputs.deltaS.replace(',', '.'));
-                    const deltaT = parseFloat(inputs.deltaT.replace(',', '.'));
-                    if (isNaN(deltaS) || isNaN(deltaT) || deltaT === 0) return { result: 'Erro' };
-                    const vm = deltaS / deltaT;
-                    return { result: `${formatNumber(vm, 2)} m/s` };
-                }
-            },
-            {
-                id: 'peso-objeto',
-                category: 'Física',
-                level: 'Ensino Fundamental',
-                name: 'Peso de um Objeto',
-                formula_display: 'P = m \\cdot g',
-                description: "Esta fórmula define o Peso como a força da gravidade atuando sobre a massa de um objeto. Foi criada para diferenciar 'massa' (quantidade de matéria) de 'peso' (a força de atração), um conceito fundamental na mecânica de Newton.",
-                inputs: [
-                    { id: 'm', label: 'Massa do objeto (m)', unit: 'kg' },
-                    { id: 'g', label: 'Aceleração da gravidade (g)', unit: 'm/s²' },
-                ],
-                calculationFunction: (inputs) => {
-                    const m = parseFloat(inputs.m.replace(',', '.'));
-                    const g = parseFloat(inputs.g.replace(',', '.'));
-                    if (isNaN(m) || isNaN(g)) return { result: 'Erro' };
-                    const p = m * g;
-                    return { result: `P = ${formatNumber(p, 2)} N` };
-                }
-            },
-            {
-                id: 'torricelli',
-                category: 'Física',
-                level: 'Ensino Médio',
-                name: 'Equação de Torricelli',
-                formula_display: 'v^2 = v_0^2 + 2a\\Delta S',
-                description: "Esta equação relaciona a velocidade final de um objeto com sua velocidade inicial, aceleração e distância percorrida, sem a necessidade de conhecer o tempo. Foi criada por Evangelista Torricelli como uma ferramenta poderosa para resolver problemas de cinemática onde o tempo não é uma variável conhecida.",
-                inputs: [
-                    { id: 'v0', label: 'Velocidade Inicial (v₀)', unit: 'm/s' },
-                    { id: 'a', label: 'Aceleração (a)', unit: 'm/s²' },
-                    { id: 'deltaS', label: 'Distância (ΔS)', unit: 'm' },
-                ],
-                calculationFunction: (inputs) => {
-                    const v0 = parseFloat(inputs.v0.replace(',', '.'));
-                    const a = parseFloat(inputs.a.replace(',', '.'));
-                    const deltaS = parseFloat(inputs.deltaS.replace(',', '.'));
-                    if (isNaN(v0) || isNaN(a) || isNaN(deltaS)) return { result: 'Erro' };
-                    const v2 = v0*v0 + 2*a*deltaS;
-                    if (v2 < 0) {
-                        return { result: 'Não há velocidade final real.' };
-                    }
-                    const v = Math.sqrt(v2);
-                    return { result: `v = ${formatNumber(v, 2)} m/s` };
-                }
-            },
-            {
-                id: 'newton-segunda-lei',
-                category: 'Física',
-                level: 'Ensino Médio',
-                name: 'Segunda Lei de Newton',
-                formula_display: 'F_r = m \\cdot a',
-                description: "Também conhecida como Princípio Fundamental da Dinâmica, esta é uma das leis mais importantes da física. Ela estabelece que a força resultante aplicada a um objeto é igual ao produto de sua massa pela aceleração. Foi criada por Isaac Newton para descrever matematicamente como as forças alteram o estado de movimento dos corpos.",
-                inputs: [
-                    { id: 'm', label: 'Massa (m)', unit: 'kg' },
-                    { id: 'a', label: 'Aceleração (a)', unit: 'm/s²' },
-                ],
-                calculationFunction: (inputs) => {
-                    const m = parseFloat(inputs.m.replace(',', '.'));
-                    const a = parseFloat(inputs.a.replace(',', '.'));
-                    if (isNaN(m) || isNaN(a)) return { result: 'Erro' };
-                    const F = m * a;
-                    return { result: `Fᵣ = ${formatNumber(F, 2)} N` };
-                }
-            },
-             {
-                id: 'energia-cinetica',
-                category: 'Física',
-                level: 'Ensino Superior',
-                name: 'Energia Cinética Relativística',
-                formula_display: 'E_k = (\\gamma - 1)mc^2',
-                description: "Esta equação calcula a energia associada ao movimento de um corpo em velocidades próximas à da luz, onde os efeitos da Teoria da Relatividade de Einstein se tornam significativos. Ela expande a física clássica para descrever a energia em regimes de alta velocidade.",
-                inputs: [
-                    { id: 'm', label: 'Massa de repouso (m)', unit: 'kg' },
-                    { id: 'v', label: 'Velocidade do objeto (v)', unit: 'm/s' },
-                ],
-                calculationFunction: (inputs) => {
-                    const m = parseFloat(inputs.m.replace(',', '.'));
-                    const v = parseFloat(inputs.v.replace(',', '.'));
-                    const c = 299792458; 
-                    if (isNaN(m) || isNaN(v) || v >= c || v < 0) return { result: 'Erro' };
-                    const gamma = 1 / Math.sqrt(1 - (v*v)/(c*c));
-                    const Ek = (gamma - 1) * m * (c*c);
-                    return { result: `Eₖ = ${formatExponential(Ek)} J` };
-                }
-            },
-            {
-                id: 'energia-massa',
-                category: 'Física',
-                level: 'Ensino Superior',
-                name: 'Equivalência Massa-Energia',
-                formula_display: 'E = mc^2',
-                description: "A equação mais famosa de Albert Einstein, ela revela a equivalência fundamental entre massa e energia. Foi criada para mostrar que massa pode ser convertida em energia e vice-versa, um princípio que é a base da energia nuclear.",
-                inputs: [
-                    { id: 'm', label: 'Massa (m)', unit: 'kg' },
-                ],
-                calculationFunction: (inputs) => {
-                    const m = parseFloat(inputs.m.replace(',', '.'));
-                    const c = 299792458;
-                    if (isNaN(m) || m < 0) return { result: 'Erro' };
-                    const E = m * c * c;
-                    return { result: `E = ${formatExponential(E)} J` };
-                }
-            },
+             // --- FÍSICA ---
+            { id: 'velocidade-media', category: 'Física', level: 'Ensino Fundamental', name: 'Velocidade Média', formula_display: 'V_m = \\frac{\\Delta S}{\\Delta t}', description: "Calcula a velocidade média de um objeto.", inputs: [ { id: 'deltaS', label: 'Distância (ΔS)', unit: 'metros' }, { id: 'deltaT', label: 'Tempo (Δt)', unit: 'segundos' } ], calculationFunction: (inputs) => { const dS=parseFloat(inputs.deltaS.replace(',','.')); const dT=parseFloat(inputs.deltaT.replace(',','.')); if(isNaN(dS)||isNaN(dT)||dT===0) return {result:'Erro'}; return { result: `${formatNumber(dS/dT,2)} m/s` }; } },
+            { id: 'peso-objeto', category: 'Física', level: 'Ensino Fundamental', name: 'Peso de um Objeto', formula_display: 'P = m \\cdot g', description: "Calcula o peso de um objeto com base na sua massa e na gravidade.", inputs: [ { id: 'm', label: 'Massa (m)', unit: 'kg' }, { id: 'g', label: 'Gravidade (g)', unit: 'm/s²' } ], calculationFunction: (inputs) => { const m=parseFloat(inputs.m.replace(',','.')); const g=parseFloat(inputs.g.replace(',','.')); if(isNaN(m)||isNaN(g)) return {result:'Erro'}; return { result: `P = ${formatNumber(m*g,2)} N` }; } },
+            { id: 'torricelli', category: 'Física', level: 'Ensino Médio', name: 'Equação de Torricelli', formula_display: 'v^2 = v_0^2 + 2a\\Delta S', description: "Relaciona velocidade final, inicial, aceleração e distância.", inputs: [ { id: 'v0', label: 'Velocidade Inicial (v₀)', unit: 'm/s' }, { id: 'a', label: 'Aceleração (a)', unit: 'm/s²' }, { id: 'deltaS', label: 'Distância (ΔS)', unit: 'm' } ], calculationFunction: (inputs) => { const v0=parseFloat(inputs.v0.replace(',','.')); const a=parseFloat(inputs.a.replace(',','.')); const dS=parseFloat(inputs.deltaS.replace(',','.')); if(isNaN(v0)||isNaN(a)||isNaN(dS)) return {result:'Erro'}; const v2=v0*v0+2*a*dS; if(v2<0) return {result:'Não há velocidade real.'}; return { result: `v = ${formatNumber(Math.sqrt(v2),2)} m/s` }; } },
+            { id: 'newton-segunda-lei', category: 'Física', level: 'Ensino Médio', name: 'Segunda Lei de Newton', formula_display: 'F_r = m \\cdot a', description: "Princípio Fundamental da Dinâmica.", inputs: [ { id: 'm', label: 'Massa (m)', unit: 'kg' }, { id: 'a', label: 'Aceleração (a)', unit: 'm/s²' } ], calculationFunction: (inputs) => { const m=parseFloat(inputs.m.replace(',','.')); const a=parseFloat(inputs.a.replace(',','.')); if(isNaN(m)||isNaN(a)) return {result:'Erro'}; return { result: `Fᵣ = ${formatNumber(m*a,2)} N` }; } },
+            { id: 'energia-cinetica', category: 'Física', level: 'Ensino Superior', name: 'Energia Cinética Relativística', formula_display: 'E_k = (\\gamma - 1)mc^2', description: "Calcula a energia de movimento em velocidades próximas à da luz.", inputs: [ { id: 'm', label: 'Massa de repouso (m)', unit: 'kg' }, { id: 'v', label: 'Velocidade (v)', unit: 'm/s' } ], calculationFunction: (inputs) => { const m=parseFloat(inputs.m.replace(',','.')); const v=parseFloat(inputs.v.replace(',','.')); const c=299792458; if(isNaN(m)||isNaN(v)||v>=c||v<0) return {result:'Erro'}; const g=1/Math.sqrt(1-(v*v)/(c*c)); const Ek=(g-1)*m*c*c; return { result: `Eₖ = ${formatExponential(Ek)} J` }; } },
+            { id: 'energia-massa', category: 'Física', level: 'Ensino Superior', name: 'Equivalência Massa-Energia', formula_display: 'E = mc^2', description: "A famosa equação de Einstein que relaciona massa e energia.", inputs: [ { id: 'm', label: 'Massa (m)', unit: 'kg' } ], calculationFunction: (inputs) => { const m=parseFloat(inputs.m.replace(',','.')); const c=299792458; if(isNaN(m)||m<0) return {result:'Erro'}; return { result: `E = ${formatExponential(m*c*c)} J` }; } },
             
             // --- QUÍMICA ---
-            {
-                id: 'densidade',
-                category: 'Química',
-                level: 'Ensino Fundamental',
-                name: 'Cálculo de Densidade',
-                formula_display: 'd = \\frac{m}{V}',
-                description: "Mede a concentração de massa em um determinado volume. É uma propriedade fundamental da matéria, usada para identificar substâncias e prever se um objeto flutuará.",
-                inputs: [
-                    { id: 'm', label: 'Massa (m)', unit: 'gramas' },
-                    { id: 'V', label: 'Volume (V)', unit: 'mL' },
-                ],
-                calculationFunction: (inputs) => {
-                    const m = parseFloat(inputs.m.replace(',', '.'));
-                    const V = parseFloat(inputs.V.replace(',', '.'));
-                    if(isNaN(m) || isNaN(V) || V === 0) return { result: 'Erro' };
-                    const d = m / V;
-                    return { result: `d = ${formatNumber(d)} g/mL` };
-                }
-            },
-            {
-                id: 'molaridade',
-                category: 'Química',
-                level: 'Ensino Médio',
-                name: 'Cálculo de Molaridade',
-                formula_display: 'M = \\frac{n}{V_{(L)}}',
-                description: "Mede a concentração de uma solução em termos de mols de soluto por litro. É a unidade de concentração mais comum em laboratórios para preparar soluções e controlar reações químicas.",
-                inputs: [
-                    { id: 'n', label: 'Nº de Mols do Soluto (n)', unit: 'mol' },
-                    { id: 'V', label: 'Volume da Solução (V)', unit: 'mL' },
-                ],
-                calculationFunction: (inputs) => {
-                    const n = parseFloat(inputs.n.replace(',', '.'));
-                    const V_ml = parseFloat(inputs.V.replace(',', '.'));
-                    if (isNaN(n) || isNaN(V_ml) || n < 0 || V_ml <= 0) return { result: 'Erro'};
-                    const V_l = V_ml / 1000;
-                    const M = n / V_l;
-                    return { result: `M = ${formatNumber(M)} M` };
-                }
-            },
-            {
-                id: 'gases-ideais',
-                category: 'Química',
-                level: 'Ensino Médio',
-                name: 'Equação dos Gases Ideais',
-                formula_display: 'PV = nRT',
-                description: "Relaciona pressão, volume, temperatura e quantidade de um gás. É um modelo fundamental para prever o comportamento de gases em diversas condições, essencial em química e engenharia.",
-                inputs: [
-                    { id: 'P', label: 'Pressão (P)', unit: 'atm' },
-                    { id: 'V', label: 'Volume (V)', unit: 'L' },
-                    { id: 'n', label: 'Nº de Mols (n)', unit: 'mol' },
-                ],
-                calculationFunction: (inputs) => {
-                    const P = parseFloat(inputs.P.replace(',', '.'));
-                    const V = parseFloat(inputs.V.replace(',', '.'));
-                    const n = parseFloat(inputs.n.replace(',', '.'));
-                    const R = 0.082; 
-                    if (isNaN(P) || isNaN(V) || isNaN(n) || P <= 0 || V <= 0 || n <= 0) return { result: 'Erro'};
-                    const T = (P * V) / (n * R);
-                    return { result: `T = ${formatNumber(T, 2)} K` };
-                }
-            },
-            {
-                id: 'lei-beer',
-                category: 'Química',
-                level: 'Ensino Superior',
-                name: 'Lei de Beer-Lambert',
-                formula_display: 'A = \\epsilon c l',
-                description: "Relaciona a absorção de luz com as propriedades de um material. É a base da espectrofotometria, uma técnica usada para determinar a concentração de substâncias em uma amostra medindo a luz que passa por ela.",
-                inputs: [
-                    { id: 'epsilon', label: 'Absortividade Molar (ε)', unit: 'L mol⁻¹ cm⁻¹' },
-                    { id: 'c', label: 'Concentração (c)', unit: 'mol/L' },
-                    { id: 'l', label: 'Caminho Óptico (l)', unit: 'cm' },
-                ],
-                calculationFunction: (inputs) => {
-                    const epsilon = parseFloat(inputs.epsilon.replace(',', '.'));
-                    const c = parseFloat(inputs.c.replace(',', '.'));
-                    const l = parseFloat(inputs.l.replace(',', '.'));
-                    if (isNaN(epsilon) || isNaN(c) || isNaN(l) || epsilon < 0 || c < 0 || l < 0) return { result: 'Erro' };
-                    const A = epsilon * c * l;
-                    return { result: `Absorvância (A) = ${formatNumber(A)}` };
-                }
-            },
-            {
-                id: 'molar-mass',
-                category: 'Química',
-                level: 'Ensino Médio',
-                name: 'Calculadora de Massa Molar',
-                formula_display: 'M = \\sum_i (n_i \\cdot m_i)',
-                description: "Use esta ferramenta para calcular a massa molar de qualquer composto químico. Basta inserir a fórmula (por exemplo, H2SO4) e a ferramenta fará o cálculo com base nas massas atômicas dos elementos.",
-                inputs: [
-                    { id: 'formula', label: 'Fórmula Química', type: 'text', unit: '' }
-                ],
-                calculationFunction: (inputs) => {
-                    const formula = inputs.formula.trim();
-                    if (!formula) return { result: 'Por favor, insira uma fórmula química.' };
-                    
-                    let mass = 0;
-                    let i = 0;
-                    let currentElement = '';
-                    let count = 0;
-                    
-                    try {
-                        while (i < formula.length) {
-                            if (formula[i] >= 'A' && formula[i] <= 'Z') {
-                                // New element
-                                if (currentElement !== '') {
-                                    const elementData = elements.find(el => el.symbol === currentElement);
-                                    if (!elementData) throw new Error(`Elemento '${currentElement}' não encontrado.`);
-                                    mass += elementData.atomic_mass * (count > 0 ? count : 1);
-                                }
-                                currentElement = formula[i];
-                                count = 0;
-                                i++;
-                                if (i < formula.length && formula[i] >= 'a' && formula[i] <= 'z') {
-                                    currentElement += formula[i];
-                                    i++;
-                                }
-                            } else if (formula[i] >= '0' && formula[i] <= '9') {
-                                // Number
-                                let numStr = '';
-                                while (i < formula.length && formula[i] >= '0' && formula[i] <= '9') {
-                                    numStr += formula[i];
-                                    i++;
-                                }
-                                count = parseInt(numStr, 10);
-                            } else {
-                                throw new Error(`Caractere inválido: ${formula[i]}`);
-                            }
-                        }
-
-                        // Add the last element
-                        if (currentElement !== '') {
-                            const elementData = elements.find(el => el.symbol === currentElement);
-                            if (!elementData) throw new Error(`Elemento '${currentElement}' não encontrado.`);
-                            mass += elementData.atomic_mass * (count > 0 ? count : 1);
-                        }
-                    } catch (error) {
-                        return { result: `Erro: ${error.message}` };
-                    }
-                    
-                    return { result: `Massa molar ≈ ${formatNumber(mass, 4)} g/mol` };
-                }
-            },
-            {
-                id: 'tabela-periodica',
-                category: 'Química',
-                level: 'Ensino Médio',
-                name: 'Tabela Periódica Interativa',
-                formula_display: 'Explore a \\: Tabela \\: Periódica',
-                description: "Clique em qualquer elemento da tabela para ver suas principais propriedades. Esta é uma ferramenta de referência rápida para estudantes e entusiastas de química.",
-                inputs: [],
-                calculationFunction: () => {
-                    // This is for display only
-                    return { result: 'Clique nos elementos para ver os detalhes!' };
-                }
-            },
+            { id: 'densidade', category: 'Química', level: 'Ensino Fundamental', name: 'Cálculo de Densidade', formula_display: 'd = \\frac{m}{V}', description: "Mede a concentração de massa em um determinado volume.", inputs: [ { id: 'm', label: 'Massa (m)', unit: 'gramas' }, { id: 'V', label: 'Volume (V)', unit: 'mL' } ], calculationFunction: (inputs) => { const m=parseFloat(inputs.m.replace(',','.')); const V=parseFloat(inputs.V.replace(',','.')); if(isNaN(m)||isNaN(V)||V===0) return {result:'Erro'}; return { result: `d = ${formatNumber(m/V)} g/mL` }; } },
+            { id: 'molaridade', category: 'Química', level: 'Ensino Médio', name: 'Cálculo de Molaridade', formula_display: 'M = \\frac{n}{V_{(L)}}', description: "Mede a concentração de uma solução em mols de soluto por litro.", inputs: [ { id: 'n', label: 'Nº de Mols (n)', unit: 'mol' }, { id: 'V', label: 'Volume da Solução (V)', unit: 'mL' } ], calculationFunction: (inputs) => { const n=parseFloat(inputs.n.replace(',','.')); const Vl=parseFloat(inputs.V.replace(',','.'))/1000; if(isNaN(n)||isNaN(Vl)||n<0||Vl<=0) return {result:'Erro'}; return { result: `M = ${formatNumber(n/Vl)} M` }; } },
+            { id: 'gases-ideais', category: 'Química', level: 'Ensino Médio', name: 'Equação dos Gases Ideais', formula_display: 'PV = nRT', description: "Relaciona pressão, volume, temperatura e quantidade de um gás.", inputs: [ { id: 'P', label: 'Pressão (P)', unit: 'atm' }, { id: 'V', label: 'Volume (V)', unit: 'L' }, { id: 'n', label: 'Nº de Mols (n)', unit: 'mol' } ], calculationFunction: (inputs) => { const P=parseFloat(inputs.P.replace(',','.')); const V=parseFloat(inputs.V.replace(',','.')); const n=parseFloat(inputs.n.replace(',','.')); const R=0.082; if(isNaN(P)||isNaN(V)||isNaN(n)||P<=0||V<=0||n<=0) return {result:'Erro'}; return { result: `T = ${formatNumber((P*V)/(n*R),2)} K` }; } },
+            { id: 'lei-beer', category: 'Química', level: 'Ensino Superior', name: 'Lei de Beer-Lambert', formula_display: 'A = \\epsilon c l', description: "Relaciona a absorção de luz com a concentração de uma substância.", inputs: [ { id: 'epsilon', label: 'Absortividade Molar (ε)', unit: 'L mol⁻¹ cm⁻¹' }, { id: 'c', label: 'Concentração (c)', unit: 'mol/L' }, { id: 'l', label: 'Caminho Óptico (l)', unit: 'cm' } ], calculationFunction: (inputs) => { const e=parseFloat(inputs.epsilon.replace(',','.')); const c=parseFloat(inputs.c.replace(',','.')); const l=parseFloat(inputs.l.replace(',','.')); if(isNaN(e)||isNaN(c)||isNaN(l)||e<0||c<0||l<0) return {result:'Erro'}; return { result: `Absorvância (A) = ${formatNumber(e*c*l)}` }; } },
+            { id: 'molar-mass', category: 'Química', level: 'Ensino Médio', name: 'Calculadora de Massa Molar', formula_display: 'M = \\sum_i (n_i \\cdot m_i)', description: "Calcula a massa molar de um composto químico (ex: H2O, C6H12O6).", inputs: [ { id: 'formula', label: 'Fórmula Química', type: 'text' } ], calculationFunction: (inputs) => { const f=inputs.formula.trim(); if(!f)return{result:'Insira uma fórmula.'}; try{let m=0;const atoms=f.match(/[A-Z][a-z]*\d*/g);if(!atoms)throw new Error('Fórmula inválida.');atoms.forEach(atom=>{const elSymbol=atom.match(/[A-Z][a-z]*/)[0];const count=parseInt(atom.match(/\d+/)||[1]);const elData=elements.find(e=>e.symbol===elSymbol);if(!elData)throw new Error(`Elemento ${elSymbol} não encontrado.`);m+=elData.atomic_mass*count;});return{result:`Massa molar ≈ ${formatNumber(m,4)} g/mol`};}catch(e){return{result:`Erro: ${e.message}`};} } },
+            { id: 'tabela-periodica', category: 'Química', level: 'Ensino Médio', name: 'Tabela Periódica Interativa', formula_display: 'Explore a \\: Tabela \\: Periódica', description: "Clique em um elemento para ver suas propriedades.", inputs: [], calculationFunction: () => ({ result: 'Clique nos elementos para ver os detalhes!' }) },
 
             // --- BIOLOGIA ---
-            {
-                id: 'fcmax',
-                category: 'Biologia',
-                level: 'Ensino Fundamental',
-                name: 'Frequência Cardíaca Máxima',
-                formula_display: 'FC_{max} \\approx 220 - \\text{idade}',
-                description: "Uma fórmula simples para estimar o número máximo de batimentos por minuto que o coração de uma pessoa pode atingir. É usada como referência para definir zonas de treinamento físico.",
-                inputs: [
-                    { id: 'idade', label: 'Sua Idade', unit: 'anos' },
-                ],
-                calculationFunction: (inputs) => {
-                    const idade = parseFloat(inputs.idade.replace(',', '.'));
-                    if(isNaN(idade) || idade <= 0 || idade > 120) return { result: 'Erro' };
-                    const fcmax = 220 - idade;
-                    return { result: `FCₘₐₓ ≈ ${fcmax} bpm` };
-                }
-            },
-            {
-                id: 'imc',
-                category: 'Biologia',
-                level: 'Ensino Médio',
-                name: 'Índice de Massa Corporal (IMC)',
-                formula_display: 'IMC = \\frac{\\text{Peso}}{\\text{Altura}^2}',
-                description: "Uma medida internacional para avaliar se o peso de uma pessoa está dentro de uma faixa saudável para sua altura. Foi criada como uma ferramenta rápida para triagem em estudos de saúde populacional.",
-                inputs: [
-                    { id: 'peso', label: 'Peso', unit: 'kg' },
-                    { id: 'altura', label: 'Altura', unit: 'cm' },
-                ],
-                calculationFunction: (inputs) => {
-                    const peso = parseFloat(inputs.peso.replace(',', '.'));
-                    const altura_cm = parseFloat(inputs.altura.replace(',', '.'));
-                    if(isNaN(peso) || isNaN(altura_cm) || peso <= 0 || altura_cm <= 0) return { result: 'Erro' };
-
-                    const altura_m = altura_cm / 100;
-                    const imc = peso / (altura_m * altura_m);
-                    
-                    let classification = '';
-                    if (imc < 18.5) {
-                        classification = 'Abaixo do peso';
-                    } else if (imc < 25) {
-                        classification = 'Peso normal';
-                    } else if (imc < 30) {
-                        classification = 'Sobrepeso';
-                    } else if (imc < 35) {
-                        classification = 'Obesidade Grau I';
-                    } else if (imc < 40) {
-                        classification = 'Obesidade Grau II';
-                    } else {
-                        classification = 'Obesidade Grau III (Mórbida)';
-                    }
-                    return { result: `IMC = ${formatNumber(imc, 1)} (${classification})` };
-                }
-            },
-            {
-                id: 'hardy-weinberg',
-                category: 'Biologia',
-                level: 'Ensino Médio',
-                name: 'Equilíbrio de Hardy-Weinberg',
-                formula_display: 'p^2 + 2pq + q^2 = 1',
-                description: "Um princípio da genética de populações que descreve a frequência de alelos e genótipos em uma população que não está evoluindo. Serve como um modelo nulo para testar se a evolução está ocorrendo.",
-                inputs: [
-                    { id: 'p', label: 'Frequência do alelo dominante (p)', unit: '' },
-                ],
-                calculationFunction: (inputs) => {
-                    const p = parseFloat(inputs.p.replace(',', '.'));
-                    if(isNaN(p) || p < 0 || p > 1) return { result: 'Erro' };
-                    const q = 1 - p;
-                    const p2 = p * p;
-                    const pq2 = 2 * p * q;
-                    const q2 = q * q;
-                    return { result: `Frequências: AA=${formatNumber(p2)}, Aa=${formatNumber(pq2)}, aa=${formatNumber(q2)}` };
-                }
-            },
-            {
-                id: 'crescimento-logistico',
-                category: 'Biologia',
-                level: 'Ensino Superior',
-                name: 'Crescimento Populacional Logístico',
-                formula_display: '\\frac{dN}{dt} = rN(1 - \\frac{N}{K})',
-                description: "Um modelo matemático que descreve o crescimento de uma população considerando a limitação de recursos do ambiente (capacidade de suporte K). É mais realista que o crescimento exponencial para a maioria das populações.",
-                inputs: [
-                    { id: 'r', label: 'Taxa de crescimento (r)', unit: '' },
-                    { id: 'N', label: 'Tamanho atual da população (N)', unit: '' },
-                    { id: 'K', label: 'Capacidade de suporte (K)', unit: '' },
-                ],
-                calculationFunction: (inputs) => {
-                    const r = parseFloat(inputs.r.replace(',', '.'));
-                    const N = parseFloat(inputs.N.replace(',', '.'));
-                    const K = parseFloat(inputs.K.replace(',', '.'));
-                    if (isNaN(r) || isNaN(N) || isNaN(K) || N < 0 || K <= 0) return { result: 'Erro' };
-                    const dNdt = r * N * (1 - (N/K));
-                    return { result: `Taxa de crescimento ≈ ${formatNumber(dNdt)}` };
-                }
-            },
+            { id: 'fcmax', category: 'Biologia', level: 'Ensino Fundamental', name: 'Frequência Cardíaca Máxima', formula_display: 'FC_{max} \\approx 220 - \\text{idade}', description: "Estima a frequência cardíaca máxima com base na idade.", inputs: [ { id: 'idade', label: 'Sua Idade', unit: 'anos' } ], calculationFunction: (inputs) => { const idade=parseFloat(inputs.idade.replace(',','.')); if(isNaN(idade)||idade<=0||idade>120) return {result:'Erro'}; return { result: `FCₘₐₓ ≈ ${220-idade} bpm` }; } },
+            { id: 'imc', category: 'Biologia', level: 'Ensino Médio', name: 'Índice de Massa Corporal (IMC)', formula_display: 'IMC = \\frac{\\text{Peso}}{\\text{Altura}^2}', description: "Avalia se o peso de uma pessoa está na faixa saudável.", inputs: [ { id: 'peso', label: 'Peso', unit: 'kg' }, { id: 'altura', label: 'Altura', unit: 'cm' } ], calculationFunction: (inputs) => { const p=parseFloat(inputs.peso.replace(',','.')); const a=parseFloat(inputs.altura.replace(',','.'))/100; if(isNaN(p)||isNaN(a)||p<=0||a<=0) return {result:'Erro'}; const imc=p/(a*a); let c=''; if(imc<18.5)c='Abaixo do peso'; else if(imc<25)c='Peso normal'; else if(imc<30)c='Sobrepeso'; else if(imc<35)c='Obesidade Grau I'; else if(imc<40)c='Obesidade Grau II'; else c='Obesidade Grau III'; return { result: `IMC = ${formatNumber(imc,1)} (${c})` }; } },
+            { id: 'hardy-weinberg', category: 'Biologia', level: 'Ensino Médio', name: 'Equilíbrio de Hardy-Weinberg', formula_display: 'p^2 + 2pq + q^2 = 1', description: "Descreve a frequência de alelos e genótipos em uma população.", inputs: [ { id: 'p', label: 'Frequência do alelo dominante (p)' } ], calculationFunction: (inputs) => { const p=parseFloat(inputs.p.replace(',','.')); if(isNaN(p)||p<0||p>1) return {result:'Erro'}; const q=1-p; return { result: `Frequências: AA=${formatNumber(p*p)}, Aa=${formatNumber(2*p*q)}, aa=${formatNumber(q*q)}` }; } },
+            { id: 'crescimento-logistico', category: 'Biologia', level: 'Ensino Superior', name: 'Crescimento Populacional Logístico', formula_display: '\\frac{dN}{dt} = rN(1 - \\frac{N}{K})', description: "Modela o crescimento de uma população com recursos limitados.", inputs: [ { id: 'r', label: 'Taxa de crescimento (r)' }, { id: 'N', label: 'População atual (N)' }, { id: 'K', label: 'Capacidade de suporte (K)' } ], calculationFunction: (inputs) => { const r=parseFloat(inputs.r.replace(',','.')); const N=parseFloat(inputs.N.replace(',','.')); const K=parseFloat(inputs.K.replace(',','.')); if(isNaN(r)||isNaN(N)||isNaN(K)||N<0||K<=0) return {result:'Erro'}; return { result: `Taxa de crescimento ≈ ${formatNumber(r*N*(1-N/K))}` }; } },
 
             // --- GEOMETRIA ---
+            { id: 'area-quadrado', category: 'Geometria', level: 'Ensino Fundamental', name: 'Área do Quadrado', formula_display: 'A = l^2', description: "Calcula a área de um quadrado.", inputs: [ { id: 'l', label: 'Lado (l)', unit: 'cm' } ], calculationFunction: (inputs) => { const l=parseFloat(inputs.l.replace(',','.')); if(isNaN(l)||l<=0) return {result:'Erro'}; return { result: `A = ${formatNumber(l*l)} cm²` }; } },
+            { id: 'area-retangulo', category: 'Geometria', level: 'Ensino Fundamental', name: 'Área do Retângulo', formula_display: 'A = b \\cdot h', description: "Calcula a área de um retângulo.", inputs: [ { id: 'b', label: 'Base (b)', unit: 'cm' }, { id: 'h', label: 'Altura (h)', unit: 'cm' } ], calculationFunction: (inputs) => { const b=parseFloat(inputs.b.replace(',','.')); const h=parseFloat(inputs.h.replace(',','.')); if(isNaN(b)||isNaN(h)||b<=0||h<=0) return {result:'Erro'}; return { result: `A = ${formatNumber(b*h)} cm²` }; } },
+            { id: 'area-triangulo', category: 'Geometria', level: 'Ensino Fundamental', name: 'Área do Triângulo', formula_display: 'A = \\frac{b \\cdot h}{2}', description: "Calcula a área de um triângulo.", inputs: [ { id: 'b', label: 'Base (b)', unit: 'cm' }, { id: 'h', label: 'Altura (h)', unit: 'cm' } ], calculationFunction: (inputs) => { const b=parseFloat(inputs.b.replace(',','.')); const h=parseFloat(inputs.h.replace(',','.')); if(isNaN(b)||isNaN(h)||b<=0||h<=0) return {result:'Erro'}; return { result: `A = ${formatNumber((b*h)/2)} cm²` }; } },
+            { id: 'area-circulo', category: 'Geometria', level: 'Ensino Fundamental', name: 'Área do Círculo', formula_display: 'A = \\pi \\cdot r^2', description: "Calcula a área de um círculo.", inputs: [ { id: 'r', label: 'Raio (r)', unit: 'cm' } ], calculationFunction: (inputs) => { const r=parseFloat(inputs.r.replace(',','.')); if(isNaN(r)||r<=0) return {result:'Erro'}; return { result: `A = ${formatNumber(Math.PI*r*r)} cm²` }; } },
+            { id: 'area-paralelogramo', category: 'Geometria', level: 'Ensino Fundamental', name: 'Área do Paralelogramo', formula_display: 'A = b \\cdot h', description: "Calcula a área de um paralelogramo.", inputs: [ { id: 'b', label: 'Base (b)', unit: 'cm' }, { id: 'h', label: 'Altura (h)', unit: 'cm' } ], calculationFunction: (inputs) => { const b=parseFloat(inputs.b.replace(',','.')); const h=parseFloat(inputs.h.replace(',','.')); if(isNaN(b)||isNaN(h)||b<=0||h<=0) return {result:'Erro'}; return { result: `A = ${formatNumber(b*h)} cm²` }; } },
+            { id: 'area-losango', category: 'Geometria', level: 'Ensino Fundamental', name: 'Área do Losango', formula_display: 'A = \\frac{D \\cdot d}{2}', description: "Calcula a área de um losango.", inputs: [ { id: 'D', label: 'Diagonal Maior (D)', unit: 'cm' }, { id: 'd', label: 'Diagonal Menor (d)', unit: 'cm' } ], calculationFunction: (inputs) => { const D=parseFloat(inputs.D.replace(',','.')); const d=parseFloat(inputs.d.replace(',','.')); if(isNaN(D)||isNaN(d)||D<=0||d<=0) return {result:'Erro'}; return { result: `A = ${formatNumber((D*d)/2)} cm²` }; } },
+            { id: 'area-trapezio', category: 'Geometria', level: 'Ensino Fundamental', name: 'Área do Trapézio', formula_display: 'A = \\frac{(B+b)h}{2}', description: "Calcula a área de um trapézio.", inputs: [ { id: 'B', label: 'Base Maior (B)', unit: 'cm' }, { id: 'b', label: 'Base Menor (b)', unit: 'cm' }, { id: 'h', label: 'Altura (h)', unit: 'cm' } ], calculationFunction: (inputs) => { const B=parseFloat(inputs.B.replace(',','.')); const b=parseFloat(inputs.b.replace(',','.')); const h=parseFloat(inputs.h.replace(',','.')); if([B,b,h].some(isNaN)||B<=0||b<=0||h<=0) return {result:'Erro'}; return { result: `A = ${formatNumber(((B+b)*h)/2)} cm²` }; } },
+            { id: 'perimetro-quadrado', category: 'Geometria', level: 'Ensino Fundamental', name: 'Perímetro do Quadrado', formula_display: 'P = 4 \\cdot l', description: "Calcula o perímetro de um quadrado.", inputs: [ { id: 'l', label: 'Lado (l)', unit: 'cm' } ], calculationFunction: (inputs) => { const l=parseFloat(inputs.l.replace(',','.')); if(isNaN(l)||l<=0) return {result:'Erro'}; return { result: `P = ${formatNumber(4*l,2)} cm` }; } },
+            { id: 'comprimento-circunferencia', category: 'Geometria', level: 'Ensino Fundamental', name: 'Comprimento da Circunferência', formula_display: 'C = 2 \\pi r', description: "Calcula o comprimento (perímetro) de um círculo.", inputs: [ { id: 'r', label: 'Raio (r)', unit: 'cm' } ], calculationFunction: (inputs) => { const r=parseFloat(inputs.r.replace(',','.')); if(isNaN(r)||r<=0) return {result:'Erro'}; return { result: `C = ${formatNumber(2*Math.PI*r)} cm` }; } },
+            { id: 'pitagoras', category: 'Geometria', level: 'Ensino Médio', name: 'Teorema de Pitágoras', formula_display: 'a^2 = b^2 + c^2', description: "Encontra a hipotenusa de um triângulo retângulo.", inputs: [ { id: 'b', label: 'Cateto b', unit: 'cm' }, { id: 'c', label: 'Cateto c', unit: 'cm' } ], calculationFunction: (inputs) => { const b=parseFloat(inputs.b.replace(',','.')); const c=parseFloat(inputs.c.replace(',','.')); if(isNaN(b)||isNaN(c)||b<=0||c<=0) return {result:'Erro'}; return { result: `Hipotenusa (a) = ${formatNumber(Math.sqrt(b*b+c*c))} cm` }; } },
+            { id: 'teorema-tales', category: 'Geometria', level: 'Ensino Médio', name: 'Teorema de Tales', formula_display: '\\frac{a}{b} = \\frac{c}{x}', description: "Resolve problemas de proporcionalidade entre segmentos.", inputs: [ { id: 'a', label: 'Segmento a' }, { id: 'b', label: 'Segmento b' }, { id: 'c', label: 'Segmento c' } ], calculationFunction: (inputs) => { const a=parseFloat(inputs.a.replace(',','.')); const b=parseFloat(inputs.b.replace(',','.')); const c=parseFloat(inputs.c.replace(',','.')); if([a,b,c].some(isNaN)||a===0) return {result:'Erro'}; return { result: `x = ${formatNumber((b*c)/a)}` }; } },
+            { id: 'volume-esfera', category: 'Geometria', level: 'Ensino Médio', name: 'Volume da Esfera', formula_display: 'V = \\frac{4}{3}\\pi r^3', description: "Calcula o volume de uma esfera.", inputs: [ { id: 'r', label: 'Raio (r)', unit: 'cm' } ], calculationFunction: (inputs) => { const r=parseFloat(inputs.r.replace(',','.')); if(isNaN(r)||r<=0) return {result:'Erro'}; return { result: `V = ${formatNumber((4/3)*Math.PI*Math.pow(r,3))} cm³` }; } },
+            { id: 'volume-cilindro', category: 'Geometria', level: 'Ensino Médio', name: 'Volume do Cilindro', formula_display: 'V = \\pi r^2 h', description: "Calcula o volume de um cilindro.", inputs: [ { id: 'r', label: 'Raio da base (r)', unit: 'cm' }, { id: 'h', label: 'Altura (h)', unit: 'cm' } ], calculationFunction: (inputs) => { const r=parseFloat(inputs.r.replace(',','.')); const h=parseFloat(inputs.h.replace(',','.')); if(isNaN(r)||isNaN(h)||r<=0||h<=0) return {result:'Erro'}; return { result: `V = ${formatNumber(Math.PI*r*r*h)} cm³` }; } },
+            { id: 'area-triangulo-equilatero', category: 'Geometria', level: 'Ensino Médio', name: 'Área do Triângulo Equilátero', formula_display: 'A = \\frac{l^2\\sqrt{3}}{4}', description: "Calcula a área de um triângulo com todos os lados iguais.", inputs: [ { id: 'l', label: 'Lado (l)', unit: 'cm' } ], calculationFunction: (inputs) => { const l=parseFloat(inputs.l.replace(',','.')); if(isNaN(l)||l<=0) return {result:'Erro'}; return { result: `A = ${formatNumber((l*l*Math.sqrt(3))/4)} cm²` }; } },
+            { id: 'soma-angulos-poligono', category: 'Geometria', level: 'Ensino Médio', name: 'Soma dos Ângulos Internos de um Polígono', formula_display: 'S = (n-2) \\cdot 180°', description: "Fornece a soma de todos os ângulos internos de um polígono.", inputs: [ { id: 'n', label: 'Nº de lados (n)' } ], calculationFunction: (inputs) => { const n=parseInt(inputs.n); if(isNaN(n)||n<3) return {result:'Erro (n≥3)'}; return { result: `S = ${formatNumber((n-2)*180)}°` }; } },
+            { id: 'area-hexagono-regular', category: 'Geometria', level: 'Ensino Médio', name: 'Área do Hexágono Regular', formula_display: 'A = \\frac{3l^2\\sqrt{3}}{2}', description: "Calcula a área de um polígono de seis lados iguais.", inputs: [ { id: 'l', label: 'Lado (l)', unit: 'cm' } ], calculationFunction: (inputs) => { const l=parseFloat(inputs.l.replace(',','.')); if(isNaN(l)||l<=0) return {result:'Erro'}; return { result: `A = ${formatNumber((3*l*l*Math.sqrt(3))/2)} cm²` }; } },
+            { id: 'triangulo-inscrito', category: 'Geometria', level: 'Ensino Médio', name: 'Triângulo Equilátero Inscrito', formula_display: 'l = R\\sqrt{3}', description: "Relaciona o lado de um triângulo equilátero com o raio da circunferência que o circunscreve.", inputs: [ { id: 'R', label: 'Raio da Circunferência (R)', unit: 'cm' } ], calculationFunction: (inputs) => { const R=parseFloat(inputs.R.replace(',','.')); if(isNaN(R)||R<=0) return {result:'Erro'}; return { result: `Lado (l) = ${formatNumber(R*Math.sqrt(3))} cm` }; } },
+            { id: 'quadrado-inscrito', category: 'Geometria', level: 'Ensino Médio', name: 'Quadrado Inscrito', formula_display: 'l = R\\sqrt{2}', description: "Relaciona o lado de um quadrado com o raio da circunferência que o circunscreve.", inputs: [ { id: 'R', label: 'Raio da Circunferência (R)', unit: 'cm' } ], calculationFunction: (inputs) => { const R=parseFloat(inputs.R.replace(',','.')); if(isNaN(R)||R<=0) return {result:'Erro'}; return { result: `Lado (l) = ${formatNumber(R*Math.sqrt(2))} cm` }; } },
+            { id: 'hexagono-inscrito', category: 'Geometria', level: 'Ensino Médio', name: 'Hexágono Regular Inscrito', formula_display: 'l = R', description: "Relaciona o lado de um hexágono regular com o raio da circunferência que o circunscreve.", inputs: [ { id: 'R', label: 'Raio da Circunferência (R)', unit: 'cm' } ], calculationFunction: (inputs) => { const R=parseFloat(inputs.R.replace(',','.')); if(isNaN(R)||R<=0) return {result:'Erro'}; return { result: `Lado (l) = ${formatNumber(R)} cm` }; } },
+            { id: 'distancia-pontos', category: 'Geometria', level: 'Ensino Superior', name: 'Distância Entre Dois Pontos', formula_display: 'd = \\sqrt{(x_2 - x_1)^2 + (y_2 - y_1)^2}', description: "Calcula a distância entre dois pontos em um plano cartesiano.", inputs: [ { id: 'x1', label: 'Ponto A (x₁)' }, { id: 'y1', label: 'Ponto A (y₁)' }, { id: 'x2', label: 'Ponto B (x₂)' }, { id: 'y2', label: 'Ponto B (y₂)' } ], calculationFunction: (inputs) => { const x1=parseFloat(inputs.x1.replace(',','.')); const y1=parseFloat(inputs.y1.replace(',','.')); const x2=parseFloat(inputs.x2.replace(',','.')); const y2=parseFloat(inputs.y2.replace(',','.')); if([x1,y1,x2,y2].some(isNaN)) return {result:'Erro'}; return { result: `d = ${formatNumber(Math.sqrt(Math.pow(x2-x1,2)+Math.pow(y2-y1,2)))}` }; } },
+
+            // --- AI HELPER ---
             {
-                id: 'area-quadrado',
-                category: 'Geometria',
-                level: 'Ensino Fundamental',
-                name: 'Área do Quadrado',
-                formula_display: 'A = l^2',
-                description: "Calcula a medida da superfície de um quadrado. Foi criada como uma das fórmulas básicas da geometria para medição de terrenos e espaços com lados iguais.",
-                inputs: [ { id: 'l', label: 'Lado (l)', unit: 'cm' } ],
-                calculationFunction: (inputs) => {
-                    const l = parseFloat(inputs.l.replace(',', '.'));
-                    if (isNaN(l) || l <= 0) return { result: 'Erro' };
-                    return { result: `A = ${formatNumber(l*l)} cm²` };
-                }
-            },
-            {
-                id: 'area-retangulo',
-                category: 'Geometria',
-                level: 'Ensino Fundamental',
-                name: 'Área do Retângulo',
-                formula_display: 'A = b \\cdot h',
-                description: "Calcula a medida da superfície de um retângulo. É uma fórmula fundamental para medir qualquer espaço retangular, desde um campo até a planta de uma casa.",
-                inputs: [
-                    { id: 'b', label: 'Base (b)', unit: 'cm' },
-                    { id: 'h', label: 'Altura (h)', unit: 'cm' },
-                ],
-                calculationFunction: (inputs) => {
-                    const b = parseFloat(inputs.b.replace(',', '.'));
-                    const h = parseFloat(inputs.h.replace(',', '.'));
-                    if (isNaN(b) || isNaN(h) || b <= 0 || h <= 0) return { result: 'Erro' };
-                    return { result: `A = ${formatNumber(b*h)} cm²` };
-                }
-            },
-            {
-                id: 'area-triangulo',
-                category: 'Geometria',
-                level: 'Ensino Fundamental',
-                name: 'Área do Triângulo',
-                formula_display: 'A = \\frac{b \\cdot h}{2}',
-                description: "Calcula a medida da superfície de um triângulo. Foi desenvolvida para medir áreas de formas triangulares, que são a base para calcular a área de polígonos mais complexos.",
-                inputs: [
-                    { id: 'b', label: 'Base (b)', unit: 'cm' },
-                    { id: 'h', label: 'Altura (h)', unit: 'cm' },
-                ],
-                calculationFunction: (inputs) => {
-                    const b = parseFloat(inputs.b.replace(',', '.'));
-                    const h = parseFloat(inputs.h.replace(',', '.'));
-                    if (isNaN(b) || isNaN(h) || b <= 0 || h <= 0) return { result: 'Erro' };
-                    return { result: `A = ${formatNumber((b * h)/2)} cm²` };
-                }
-            },
-            {
-                id: 'area-circulo',
-                category: 'Geometria',
-                level: 'Ensino Fundamental',
-                name: 'Área do Círculo',
-                formula_display: 'A = \\pi \\cdot r^2',
-                description: "Calcula a medida da superfície de um círculo a partir do seu raio. É uma fórmula essencial em engenharia, design e ciência para qualquer objeto ou espaço de formato circular.",
-                inputs: [ { id: 'r', label: 'Raio (r)', unit: 'cm' } ],
-                calculationFunction: (inputs) => {
-                    const r = parseFloat(inputs.r.replace(',', '.'));
-                    if (isNaN(r) || r <= 0) return { result: 'Erro' };
-                    const area = Math.PI * r * r;
-                    return { result: `A = ${formatNumber(area)} cm²` };
-                }
-            },
-            {
-                id: 'area-paralelogramo',
-                category: 'Geometria',
-                level: 'Ensino Fundamental',
-                name: 'Área do Paralelogramo',
-                formula_display: 'A = b \\cdot h',
-                description: "Calcula a medida da superfície de um paralelogramo. É uma generalização da área do retângulo, útil para medir terrenos ou objetos com lados paralelos, mas não necessariamente com ângulos de 90 graus.",
-                inputs: [
-                    { id: 'b', label: 'Base (b)', unit: 'cm' },
-                    { id: 'h', label: 'Altura (h)', unit: 'cm' },
-                ],
-                calculationFunction: (inputs) => {
-                    const b = parseFloat(inputs.b.replace(',', '.'));
-                    const h = parseFloat(inputs.h.replace(',', '.'));
-                    if (isNaN(b) || isNaN(h) || b <= 0 || h <= 0) return { result: 'Erro' };
-                    const area = b * h;
-                    return { result: `A = ${formatNumber(area)} cm²` };
-                }
-            },
-            {
-                id: 'area-losango',
-                category: 'Geometria',
-                level: 'Ensino Fundamental',
-                name: 'Área do Losango',
-                formula_display: 'A = \\frac{D \\cdot d}{2}',
-                description: "Calcula a medida da superfície de um losango a partir de suas diagonais. É particularmente útil em design e cristalografia, onde a forma de losango é comum.",
-                inputs: [
-                    { id: 'D', label: 'Diagonal Maior (D)', unit: 'cm' },
-                    { id: 'd', label: 'Diagonal Menor (d)', unit: 'cm' },
-                ],
-                calculationFunction: (inputs) => {
-                    const D = parseFloat(inputs.D.replace(',', '.'));
-                    const d = parseFloat(inputs.d.replace(',', '.'));
-                    if (isNaN(D) || isNaN(d) || D <= 0 || d <= 0) return { result: 'Erro' };
-                    const area = (D * d) / 2;
-                    return { result: `A = ${formatNumber(area)} cm²` };
-                }
-            },
-            {
-                id: 'area-trapezio',
-                category: 'Geometria',
-                level: 'Ensino Fundamental',
-                name: 'Área do Trapézio',
-                formula_display: 'A = \\frac{(B+b)h}{2}',
-                description: "Calcula a medida da superfície de um trapézio. Foi criada para medir áreas de terrenos ou figuras com apenas dois lados paralelos, uma forma geométrica comum em arquitetura e engenharia civil.",
-                inputs: [
-                    { id: 'B', label: 'Base Maior (B)', unit: 'cm' },
-                    { id: 'b', label: 'Base Menor (b)', unit: 'cm' },
-                    { id: 'h', label: 'Altura (h)', unit: 'cm' },
-                ],
-                calculationFunction: (inputs) => {
-                    const B = parseFloat(inputs.B.replace(',', '.'));
-                    const b = parseFloat(inputs.b.replace(',', '.'));
-                    const h = parseFloat(inputs.h.replace(',', '.'));
-                    if ([B,b,h].some(isNaN) || B <= 0 || b <= 0 || h <= 0) return { result: 'Erro' };
-                    const area = ((B + b) * h) / 2;
-                    return { result: `A = ${formatNumber(area)} cm²` };
-                }
-            },
-            {
-                id: 'perimetro-quadrado',
-                category: 'Geometria',
-                level: 'Ensino Fundamental',
-                name: 'Perímetro do Quadrado',
-                formula_display: 'P = 4 \\cdot l',
-                description: "Calcula o comprimento total do contorno de um quadrado. É uma fórmula básica para medir cercas, molduras e qualquer projeto que necessite do comprimento total dos lados de uma forma quadrada.",
-                inputs: [ { id: 'l', label: 'Lado (l)', unit: 'cm' } ],
-                calculationFunction: (inputs) => {
-                    const l = parseFloat(inputs.l.replace(',', '.'));
-                    if (isNaN(l) || l <= 0) return { result: 'Erro' };
-                    const perimeter = 4 * l;
-                    return { result: `P = ${formatNumber(perimeter, 2)} cm` };
-                }
-            },
-            {
-                id: 'comprimento-circunferencia',
-                category: 'Geometria',
-                level: 'Ensino Fundamental',
-                name: 'Comprimento da Circunferência',
-                formula_display: 'C = 2 \\pi r',
-                description: "Calcula o comprimento total do contorno de um círculo (sua 'borda'). É crucial para o design de rodas, engrenagens e qualquer projeto que envolva a medição da borda de um objeto circular.",
-                inputs: [ { id: 'r', label: 'Raio (r)', unit: 'cm' } ],
-                calculationFunction: (inputs) => {
-                    const r = parseFloat(inputs.r.replace(',', '.'));
-                    if (isNaN(r) || r <= 0) return { result: 'Erro' };
-                    const circumference = 2 * Math.PI * r;
-                    return { result: `C = ${formatNumber(circumference)} cm` };
-                }
-            },
-            {
-                id: 'pitagoras',
-                category: 'Geometria',
-                level: 'Ensino Médio',
-                name: 'Teorema de Pitágoras',
-                description: "Esta é uma das relações mais fundamentais da geometria, descrevendo a relação entre os lados de um triângulo retângulo. Foi desenvolvida para resolver problemas práticos de medição de distâncias, arquitetura e navegação.",
-                formula_display: 'a^2 = b^2 + c^2',
-                inputs: [
-                    { id: 'b', label: 'Cateto b', unit: 'cm' },
-                    { id: 'c', label: 'Cateto c', unit: 'cm' },
-                ],
-                calculationFunction: (inputs) => {
-                    const b = parseFloat(inputs.b.replace(',', '.'));
-                    const c = parseFloat(inputs.c.replace(',', '.'));
-                    if (isNaN(b) || isNaN(c) || b <= 0 || c <= 0) return { result: 'Erro' };
-                    const a = Math.sqrt((b*b) + (c*c));
-                    return { result: `Hipotenusa (a) = ${formatNumber(a)} cm` };
-                }
-            },
-            {
-                id: 'teorema-tales',
-                category: 'Geometria',
-                level: 'Ensino Médio',
-                name: 'Teorema de Tales',
-                formula_display: '\\frac{a}{b} = \\frac{c}{x}',
-                description: "Este teorema estabelece a proporcionalidade entre segmentos de retas cortadas por retas paralelas. Foi criado por Tales de Mileto para medir alturas e distâncias inacessíveis, como a altura de uma pirâmide, usando sombras e proporções.",
-                inputs: [
-                    { id: 'a', label: 'Segmento a', unit: '' },
-                    { id: 'b', label: 'Segmento b', unit: '' },
-                    { id: 'c', label: 'Segmento c', unit: '' },
-                ],
-                calculationFunction: (inputs) => {
-                    const a = parseFloat(inputs.a.replace(',', '.'));
-                    const b = parseFloat(inputs.b.replace(',', '.'));
-                    const c = parseFloat(inputs.c.replace(',', '.'));
-                    if ([a,b,c].some(isNaN) || a === 0) return { result: 'Erro' };
-                    const x = (b*c)/a;
-                    return { result: `x = ${formatNumber(x)}` };
-                }
-            },
-            {
-                id: 'volume-esfera',
-                category: 'Geometria',
-                level: 'Ensino Médio',
-                name: 'Volume da Esfera',
-                formula_display: 'V = \\frac{4}{3}\\pi r^3',
-                description: "Calcula a medida do espaço tridimensional ocupado por uma esfera. É essencial em campos como a astrofísica (para calcular o volume de planetas) e engenharia (para projetar rolamentos de esferas).",
-                inputs: [ { id: 'r', label: 'Raio (r)', unit: 'cm' } ],
-                calculationFunction: (inputs) => {
-                    const r = parseFloat(inputs.r.replace(',', '.'));
-                    if (isNaN(r) || r <= 0) return { result: 'Erro' };
-                    const volume = (4/3) * Math.PI * Math.pow(r, 3);
-                    return { result: `V = ${formatNumber(volume)} cm³` };
-                }
-            },
-            {
-                id: 'volume-cilindro',
-                category: 'Geometria',
-                level: 'Ensino Médio',
-                name: 'Volume do Cilindro',
-                formula_display: 'V = \\pi r^2 h',
-                description: "Calcula a medida do espaço tridimensional ocupado por um cilindro. É uma fórmula amplamente utilizada na indústria para calcular a capacidade de tanques, latas e tubulações.",
-                inputs: [
-                    { id: 'r', label: 'Raio da base (r)', unit: 'cm' },
-                    { id: 'h', label: 'Altura (h)', unit: 'cm' },
-                ],
-                calculationFunction: (inputs) => {
-                    const r = parseFloat(inputs.r.replace(',', '.'));
-                    const h = parseFloat(inputs.h.replace(',', '.'));
-                    if (isNaN(r) || isNaN(h) || r <= 0 || h <= 0) return { result: 'Erro' };
-                    const volume = Math.PI * r * r * h;
-                    return { result: `V = ${formatNumber(volume)} cm³` };
-                }
-            },
-            {
-                id: 'area-triangulo-equilatero',
-                category: 'Geometria',
-                level: 'Ensino Médio',
-                name: 'Área do Triângulo Equilátero',
-                formula_display: 'A = \\frac{l^2\\sqrt{3}}{4}',
-                description: "Calcula a área de um triângulo com todos os três lados iguais. É uma fórmula específica que simplifica o cálculo quando se sabe que o triângulo é equilátero, comum em design e estruturas arquitetônicas.",
-                inputs: [ { id: 'l', label: 'Lado (l)', unit: 'cm' } ],
-                calculationFunction: (inputs) => {
-                    const l = parseFloat(inputs.l.replace(',', '.'));
-                    if (isNaN(l) || l <= 0) return { result: 'Erro' };
-                    const area = (l*l * Math.sqrt(3)) / 4;
-                    return { result: `A = ${formatNumber(area)} cm²` };
-                }
-            },
-            {
-                id: 'soma-angulos-poligono',
-                category: 'Geometria',
-                level: 'Ensino Médio',
-                name: 'Soma dos Ângulos Internos de um Polígono',
-                formula_display: 'S = (n-2) \\cdot 180°',
-                description: "Fornece a soma de todos os ângulos internos de um polígono regular ou irregular com 'n' lados. Foi criada para entender as propriedades geométricas dos polígonos e auxiliar no design e na construção de estruturas.",
-                inputs: [ { id: 'n', label: 'Nº de lados (n)', unit: '' } ],
-                calculationFunction: (inputs) => {
-                    const n = parseInt(inputs.n);
-                    if (isNaN(n) || n < 3) return { result: 'Erro (n≥3)' };
-                    return { result: `S = ${formatNumber((n-2)*180)}°` };
-                }
-            },
-            {
-                id: 'area-hexagono-regular',
-                category: 'Geometria',
-                level: 'Ensino Médio',
-                name: 'Área do Hexágono Regular',
-                formula_display: 'A = \\frac{3l^2\\sqrt{3}}{2}',
-                description: "Calcula a área de um polígono de seis lados iguais. O hexágono é uma forma muito eficiente encontrada na natureza (favo de mel) e em engenharia (parafusos), e esta fórmula simplifica a medição de sua superfície.",
-                inputs: [ { id: 'l', label: 'Lado (l)', unit: 'cm' } ],
-                calculationFunction: (inputs) => {
-                    const l = parseFloat(inputs.l.replace(',', '.'));
-                    if (isNaN(l) || l <= 0) return { result: 'Erro' };
-                    const area = (3 * l*l * Math.sqrt(3)) / 2;
-                    return { result: `A = ${formatNumber(area)} cm²` };
-                }
-            },
-            {
-                id: 'triangulo-inscrito',
-                category: 'Geometria',
-                level: 'Ensino Médio',
-                name: 'Triângulo Equilátero Inscrito',
-                formula_display: 'l = R\\sqrt{3}',
-                description: "Relaciona o lado de um triângulo equilátero com o raio da circunferência que o circunscreve. É uma fórmula usada em geometria construtiva e design para encaixar formas perfeitamente.",
-                inputs: [ { id: 'R', label: 'Raio da Circunferência (R)', unit: 'cm' } ],
-                calculationFunction: (inputs) => {
-                    const R = parseFloat(inputs.R.replace(',', '.'));
-                    if (isNaN(R) || R <= 0) return { result: 'Erro' };
-                    const l = R * Math.sqrt(3);
-                    return { result: `Lado (l) = ${formatNumber(l)} cm` };
-                }
-            },
-            {
-                id: 'quadrado-inscrito',
-                category: 'Geometria',
-                level: 'Ensino Médio',
-                name: 'Quadrado Inscrito',
-                formula_display: 'l = R\\sqrt{2}',
-                description: "Relaciona o lado de um quadrado com o raio da circunferência que o circunscreve. É usada em problemas de otimização de espaço e design, para saber o maior quadrado que cabe dentro de um círculo.",
-                inputs: [ { id: 'R', label: 'Raio da Circunferência (R)', unit: 'cm' } ],
-                calculationFunction: (inputs) => {
-                    const R = parseFloat(inputs.R.replace(',', '.'));
-                    if (isNaN(R) || R <= 0) return { result: 'Erro' };
-                    const l = R * Math.sqrt(2);
-                    return { result: `Lado (l) = ${formatNumber(l)} cm` };
-                }
-            },
-            {
-                id: 'hexagono-inscrito',
-                category: 'Geometria',
-                level: 'Ensino Médio',
-                name: 'Hexágono Regular Inscrito',
-                formula_display: 'l = R',
-                description: "Relaciona o lado de um hexágono regular com o raio da circunferência que o circunscreve (são iguais!). É uma propriedade geométrica elegante e útil em design mecânico e padrões de mosaico.",
-                inputs: [ { id: 'R', label: 'Raio da Circunferência (R)', unit: '' } ],
-                calculationFunction: (inputs) => {
-                    const R = parseFloat(inputs.R.replace(',', '.'));
-                    if (isNaN(R) || R <= 0) return { result: 'Erro' };
-                    const l = R;
-                    return { result: `Lado (l) = ${formatNumber(l)} cm` };
-                }
-            },
-            {
-                id: 'distancia-pontos',
-                category: 'Geometria',
-                level: 'Ensino Superior',
-                name: 'Distância Entre Dois Pontos',
-                formula_display: 'd = \\sqrt{(x_2 - x_1)^2 + (y_2 - y_1)^2}',
-                description: "Baseada no Teorema de Pitágoras, esta fórmula calcula a distância em linha reta entre dois pontos em um plano cartesiano. É fundamental para a geometria analítica, navegação por GPS e computação gráfica.",
-                inputs: [
-                    { id: 'x1', label: 'Ponto A (x₁)', unit: '' },
-                    { id: 'y1', label: 'Ponto A (y₁)', unit: '' },
-                    { id: 'x2', label: 'Ponto B (x₂)', unit: '' },
-                    { id: 'y2', label: 'Ponto B (y₂)', unit: '' },
-                ],
-                calculationFunction: (inputs) => {
-                    const x1 = parseFloat(inputs.x1.replace(',', '.'));
-                    const y1 = parseFloat(inputs.y1.replace(',', '.'));
-                    const x2 = parseFloat(inputs.x2.replace(',', '.'));
-                    const y2 = parseFloat(inputs.y2.replace(',', '.'));
-                    if ([x1, y1, x2, y2].some(isNaN)) return { result: 'Erro' };
-                    const d = Math.sqrt(Math.pow(x2 - x1, 2) + Math.pow(y2 - y1, 2));
-                    return { result: `d = ${formatNumber(d)}` };
-                }
-            },
-             // --- AI HELPER ---
-            {
-                id: 'ia-helper',
-                category: 'Ajuda da IA',
-                level: 'Inteligência Artificial',
-                name: 'Resolva Qualquer Problema',
+                id: 'ia-helper', category: 'Ajuda da IA', level: 'Inteligência Artificial', name: 'Resolva Qualquer Problema',
                 formula_display: 'Pergunte \\: e \\: a \\: IA \\: responde',
-                description: "Não encontrou a calculadora que precisava? Descreva seu problema ou pergunta de matemática, física, química ou qualquer outro campo, e nossa IA irá resolvê-lo e explicar o passo a passo para você.",
-                inputs: [
-                    { id: 'query', label: 'Qual é a sua dúvida?', type: 'textarea', unit: '' }
-                ],
+                description: "Não encontrou a calculadora que precisava? Descreva seu problema e nossa IA irá resolvê-lo e explicar o passo a passo.",
+                inputs: [ { id: 'query', label: 'Qual é a sua dúvida?', type: 'textarea' } ],
                 calculationFunction: async (inputs) => {
                     const query = inputs.query;
-                    if (!query.trim()) {
-                        return { result: 'Por favor, insira uma pergunta.' };
-                    }
-
+                    if (!query.trim()) return { result: 'Por favor, insira uma pergunta.' };
                     const calculateBtn = document.getElementById('calculate-btn');
                     calculateBtn.disabled = true;
                     calculateBtn.innerHTML = '<span class="animate-pulse">Pensando...</span>';
-
                     try {
-                        const systemPrompt = "Você é 'Pequena Ajuda', um assistente de estudos e tutor amigável. Sua tarefa é resolver o problema do usuário e fornecer uma explicação clara e passo a passo. Formate a resposta de forma didática e em português do Brasil. Divida a resposta em 'Resultado Final' e 'Passo a Passo'. O 'Resultado Final' deve ser uma resposta curta e direta. O 'Passo a Passo' deve detalhar o raciocínio. Use apenas HTML simples para formatação (ex: <strong> para negrito, <ul> e <li> para listas, <br> para quebras de linha). Não use markdown ou ```.";
-                        const userQuery = query;
-                        
-                        const apiKey = "AIzaSyCKFJshs3mN3bNswg2qZ6DXaza4bC-37nk";
-                        
+                        const systemPrompt = "Você é 'Pequena Ajuda', um assistente de estudos. Resolva o problema do usuário e forneça uma explicação clara e passo a passo em português do Brasil. Divida a resposta em 'Resultado Final' e 'Passo a Passo'. O 'Resultado Final' deve ser curto. O 'Passo a Passo' deve detalhar o raciocínio. Use apenas HTML simples para formatação (<strong>, <ul>, <li>, <br>).";
+                        const apiKey = ""; // A chave será injetada no ambiente de execução
                         const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-05-20:generateContent?key=${apiKey}`;
-                        const payload = {
-                            contents: [{ parts: [{ text: userQuery }] }],
-                            systemInstruction: {
-                                parts: [{ text: systemPrompt }]
-                            },
-                        };
-
-                        const response = await fetch(apiUrl, {
-                            method: 'POST',
-                            headers: { 'Content-Type': 'application/json' },
-                            body: JSON.stringify(payload)
-                        });
-
-                        if (!response.ok) {
-                            const errorData = await response.json();
-                            console.error("API Error Response:", errorData);
-                            throw new Error(`Erro da API: ${errorData.error?.message || response.statusText}`);
-                        }
-
+                        const payload = { contents: [{ parts: [{ text: query }] }], systemInstruction: { parts: [{ text: systemPrompt }] } };
+                        const response = await fetch(apiUrl, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(payload) });
+                        if (!response.ok) { const errorData = await response.json(); throw new Error(`API Error: ${errorData.error?.message || response.statusText}`); }
                         const result = await response.json();
                         const candidate = result.candidates?.[0];
-
-                        if (!candidate || !candidate.content?.parts?.[0]?.text) {
-                            console.error("Invalid response structure:", result);
-                            throw new Error("A resposta da IA está vazia ou em formato inesperado.");
-                        }
-
+                        if (!candidate || !candidate.content?.parts?.[0]?.text) { throw new Error("Resposta da IA em formato inesperado."); }
                         let rawText = candidate.content.parts[0].text;
-
                         const finalResultMatch = rawText.match(/Resultado Final:([\s\S]*?)Passo a Passo:/i);
                         const stepsMatch = rawText.match(/Passo a Passo:([\s\S]*)/i);
-
-                        let finalResult = finalResultMatch ? finalResultMatch[1].trim() : "Não foi possível extrair o resultado final.";
-                        let steps = stepsMatch ? stepsMatch[1].trim() : rawText;
-                        
-                        if (!finalResultMatch && !stepsMatch) {
-                            finalResult = rawText.split('\n')[0]; 
-                        }
-
+                        let finalResult = finalResultMatch ? finalResultMatch[1].trim() : rawText.split('\n')[0];
+                        let steps = stepsMatch ? stepsMatch[1].trim() : (finalResultMatch ? rawText.substring(finalResultMatch[0].length) : rawText);
                         return { result: finalResult, steps: steps };
-
                     } catch (error) {
                         console.error("Error calling AI:", error);
-                        return { result: 'Erro de Conexão', steps: `Ocorreu um erro ao contatar a IA. Verifique sua conexão com a internet ou se a chave de API é válida e está habilitada para uso. Detalhes: ${error.message}` };
+                        return { result: 'Erro de Conexão', steps: `Ocorreu um erro ao contatar a IA. Detalhes: ${error.message}` };
                     } finally {
                         calculateBtn.disabled = false;
                         calculateBtn.innerHTML = 'Perguntar para a IA';
@@ -2220,65 +629,54 @@
         ];
 
         // --- APPLICATION LOGIC ---
-        let currentCategory = '';
         const categories = [...new Set(formulas.map(f => f.category))].sort();
 
         const categoryColors = {
-            'Matemática': 'from-blue-500 to-indigo-500',
-            'Física': 'from-yellow-500 to-orange-500',
-            'Química': 'from-green-500 to-teal-500',
-            'Biologia': 'from-lime-500 to-emerald-500',
-            'Geometria': 'from-purple-500 to-pink-500',
-            'Conversores': 'from-rose-500 to-red-500',
-            'Ajuda da IA': 'from-fuchsia-500 to-purple-600',
-            'Meu Histórico': 'from-gray-500 to-blue-gray-500'
+            'Matemática': 'from-blue-500 to-indigo-500', 'Física': 'from-yellow-500 to-orange-500',
+            'Química': 'from-green-500 to-teal-500', 'Biologia': 'from-lime-500 to-emerald-500',
+            'Geometria': 'from-purple-500 to-pink-500', 'Conversores': 'from-rose-500 to-red-500',
+            'Ajuda da IA': 'from-fuchsia-500 to-purple-600', 'Meu Histórico': 'from-gray-500 to-blue-gray-500',
+            'Sugestões': 'from-cyan-500 to-teal-400'
         };
 
         const categoryIcons = {
-            'Matemática': 'ph-calculator',
-            'Física': 'ph-atom',
-            'Química': 'ph-test-tube',
-            'Biologia': 'ph-leaf',
-            'Geometria': 'ph-compass',
-            'Conversores': 'ph-arrows-clockwise',
-            'Ajuda da IA': 'ph-sparkle',
-            'Meu Histórico': 'ph-clock-counter-clockwise'
+            'Matemática': 'ph-calculator', 'Física': 'ph-atom', 'Química': 'ph-test-tube',
+            'Biologia': 'ph-leaf', 'Geometria': 'ph-compass', 'Conversores': 'ph-arrows-clockwise',
+            'Ajuda da IA': 'ph-sparkle', 'Meu Histórico': 'ph-clock-counter-clockwise',
+            'Sugestões': 'ph-lightbulb'
         };
 
         function showView(viewId) {
-            mainMenu.classList.add('hidden');
-            listView.classList.add('hidden');
-            calculatorView.classList.add('hidden');
-            periodicTableView.classList.add('hidden');
-            historyView.classList.add('hidden');
-            
+            [mainMenu, listView, calculatorView, periodicTableView, historyView, suggestionsView].forEach(view => {
+                if(view) view.classList.add('hidden');
+            });
             const targetView = document.getElementById(viewId);
-            targetView.classList.remove('hidden');
-            
-            currentView = viewId;
-            window.scrollTo(0, 0);
+            if (targetView) {
+                targetView.classList.remove('hidden');
+                currentView = viewId;
+                window.scrollTo(0, 0);
+            }
         }
-
+        
         function renderMainMenu() {
             const menuGrid = mainMenu.querySelector('.grid');
             menuGrid.innerHTML = '';
-            const allCategories = [...categories, 'Meu Histórico'].sort();
+            const allCategories = [...categories, 'Meu Histórico', 'Sugestões'].sort();
 
             allCategories.forEach(category => {
-                const color = categoryColors[category] || 'from-gray-500 to-gray-600';
+                const color = categoryColors[category] || 'from-gray-500';
                 const icon = categoryIcons[category] || 'ph-question';
                 const button = document.createElement('button');
                 button.className = `p-4 sm:p-6 rounded-2xl text-white text-lg sm:text-xl font-bold shadow-lg transition-transform transform hover:scale-105 bg-gradient-to-br ${color}`;
-                button.dataset.category = category;
-                button.innerHTML = `
-                    <div class="flex flex-col items-center justify-center h-full">
-                        <i class="ph-fill ${icon} text-4xl sm:text-5xl mb-2"></i>
-                        <span>${category}</span>
-                    </div>
-                `;
+                button.innerHTML = `<div class="flex flex-col items-center justify-center h-full"><i class="ph-fill ${icon} text-4xl sm:text-5xl mb-2"></i><span>${category}</span></div>`;
+                
                 button.addEventListener('click', () => {
                     if (category === 'Meu Histórico') {
                         renderHistoryView();
+                        showView('history-view');
+                    } else if (category === 'Sugestões') {
+                        renderSuggestionsView();
+                        showView('suggestions-view');
                     } else {
                         currentCategory = category;
                         renderFormulaListView(category);
@@ -2290,7 +688,7 @@
         }
         
         function renderFormulaListView(category) {
-            document.getElementById('list-title').textContent = category === 'Ajuda da IA' ? 'Ajuda da Inteligência Artificial' : `Fórmulas de ${category}`;
+            document.getElementById('list-title').textContent = category;
             const contentDiv = document.getElementById('list-content');
             contentDiv.innerHTML = '';
             
@@ -2299,9 +697,9 @@
                 const formulasInLevel = formulas.filter(f => f.category === category && f.level === level);
                 if (formulasInLevel.length > 0) {
                     const levelSection = document.createElement('div');
-                     if(category !== 'Ajuda da IA') {
-                         levelSection.innerHTML = `<h3 class="text-xl sm:text-2xl font-semibold mb-4 text-blue-600 dark:text-blue-400">${level}</h3>`;
-                     }
+                    if(category !== 'Ajuda da IA') {
+                        levelSection.innerHTML = `<h3 class="text-xl sm:text-2xl font-semibold mb-4 text-blue-600 dark:text-blue-400">${level}</h3>`;
+                    }
                     const list = document.createElement('div');
                     list.className = 'grid grid-cols-1 md:grid-cols-2 gap-4';
                     
@@ -2311,8 +709,8 @@
                         card.innerHTML = `<h4 class="font-bold text-lg">${formula.name}</h4>`;
                         card.addEventListener('click', () => {
                              if (formula.id === 'tabela-periodica') {
-                                 showView('periodic-table-view');
                                  renderPeriodicTable();
+                                 showView('periodic-table-view');
                              } else {
                                  renderCalculator(formula.id);
                                  showView('calculator-view');
@@ -2326,79 +724,74 @@
                 }
             });
         }
-
+        
         function renderHistoryView() {
-            showView('history-view');
             const contentDiv = document.getElementById('history-content');
-            
-            try {
-                const history = JSON.parse(localStorage.getItem('calculationHistory')) || [];
-
-                if (history.length === 0) {
-                    contentDiv.innerHTML = '<p class="text-gray-500 dark:text-gray-400">Nenhum cálculo foi salvo ainda.</p>';
-                    return;
-                }
-
-                contentDiv.innerHTML = '';
-                history.forEach((item) => {
-                    const date = new Date(item.timestamp).toLocaleString('pt-BR');
-                    
-                    const inputs = Object.entries(item.inputs || {})
-                        .map(([key, value]) => `<li><strong>${key}:</strong> ${value}</li>`)
-                        .join('');
-
-                    const card = document.createElement('div');
-                    card.className = 'bg-white/70 dark:bg-gray-800/80 p-4 rounded-lg shadow';
-                    card.innerHTML = `
-                        <p class="font-bold text-blue-600 dark:text-blue-400">${item.formulaName}</p>
-                        <p class="text-sm text-gray-500 dark:text-gray-400 mb-2">${date}</p>
-                        <ul class="text-sm list-disc list-inside mb-2">${inputs}</ul>
-                        <p class="font-semibold text-green-700 dark:text-green-400">Resultado: ${item.result}</p>
-                    `;
-                    contentDiv.appendChild(card);
-                });
-            } catch (e) {
-                console.error("Error fetching history:", e);
-                contentDiv.innerHTML = '<p class="text-red-500">Ocorreu um erro ao carregar o histórico.</p>';
-            }
+             try {
+                 const history = JSON.parse(localStorage.getItem('calculationHistory')) || [];
+                 if (history.length === 0) {
+                     contentDiv.innerHTML = '<p class="text-gray-500 dark:text-gray-400">Nenhum cálculo salvo.</p>';
+                     return;
+                 }
+                 contentDiv.innerHTML = '';
+                 history.forEach(item => {
+                     const date = new Date(item.timestamp).toLocaleString('pt-BR');
+                     const inputs = Object.entries(item.inputs||{}).map(([k,v])=>`<li><strong>${k}:</strong> ${v}</li>`).join('');
+                     const card = document.createElement('div');
+                     card.className = 'bg-white/70 dark:bg-gray-800/80 p-4 rounded-lg shadow';
+                     card.innerHTML = `<p class="font-bold text-blue-600">${item.formulaName}</p><p class="text-sm text-gray-500 mb-2">${date}</p><ul class="text-sm list-disc list-inside mb-2">${inputs}</ul><p class="font-semibold text-green-700">Resultado: ${item.result}</p>`;
+                     contentDiv.appendChild(card);
+                 });
+             } catch (e) {
+                 contentDiv.innerHTML = '<p class="text-red-500">Erro ao carregar histórico.</p>';
+             }
+        }
+        
+        function renderSuggestionsView() {
+            document.getElementById('suggestion-user-name').value = currentUserProfile ? currentUserProfile.name : 'Anônimo';
         }
 
-        const categoryClassMap = {
-            "metal-alcalino": "metal-alcalino",
-            "metal-alcalino-terroso": "metal-alcalino-terroso",
-            "metal-de-transicao": "metal-de-transicao",
-            "metal-pos-transicao": "metal-pos-transicao",
-            "semimetal": "semimetal",
-            "nao-metal": "nao-metal",
-            "halogenio": "halogenio",
-            "gas-nobre": "gas-nobre",
-            "lantanideo": "lantanideo",
-            "actinideo": "actinideo"
-        };
+        const suggestionForm = document.getElementById('suggestion-form');
+        suggestionForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const feedbackEl = document.getElementById('suggestion-feedback');
+            const submitBtn = suggestionForm.querySelector('button[type="submit"]');
+
+            const formData = new FormData(suggestionForm);
+            submitBtn.disabled = true;
+            submitBtn.innerHTML = '<span class="animate-pulse">Enviando...</span>';
+
+            try {
+                const response = await fetch(suggestionForm.action, {
+                    method: 'POST', body: formData, headers: { 'Accept': 'application/json' }
+                });
+                if (response.ok) {
+                    feedbackEl.textContent = 'Obrigado pela sua sugestão!';
+                    feedbackEl.className = 'text-center mt-4 font-semibold text-green-600 dark:text-green-400';
+                    suggestionForm.reset();
+                } else { throw new Error('Falha no envio'); }
+            } catch (error) {
+                feedbackEl.textContent = "Oops! Houve um problema ao enviar.";
+                feedbackEl.className = 'text-center mt-4 font-semibold text-red-500';
+            } finally {
+                submitBtn.disabled = false;
+                submitBtn.textContent = 'Enviar Sugestão';
+            }
+        });
         
         function renderPeriodicTable() {
             const grid = document.getElementById('periodic-table-grid');
             grid.innerHTML = '';
             
-            const lanthanides = elements.filter(el => el.category === 'Lantanídeo').sort((a,b) => a.atomic_number - b.atomic_number);
-            const actinides = elements.filter(el => el.category === 'Actinídeo').sort((a,b) => a.atomic_number - b.atomic_number);
             const mainElements = elements.filter(el => (el.category !== 'Lantanídeo' && el.category !== 'Actinídeo') || el.atomic_number === 57 || el.atomic_number === 89);
             
             mainElements.forEach(el => {
-                if ((el.category === 'Lantanídeo' && el.atomic_number !== 57) || (el.category === 'Actinídeo' && el.atomic_number !== 89)) {
-                    return;
-                }
-                
                 const cell = document.createElement('div');
-                const categoryClass = categoryClassMap[el.category.toLowerCase().replace(/\s+/g, '-').replace('ã','a').replace('ê','e').replace('é','e').replace('ó','o')] || '';
-                
+                const categoryClass = el.category.toLowerCase().replace(/\s+/g, '-').replace('ã','a').replace('ê','e').replace('é','e').replace('ó','o');
                 cell.className = `element-cell ${categoryClass}`;
                 cell.style.gridColumn = el.group;
                 cell.style.gridRow = el.period;
-                cell.innerHTML = `
-                    <div class="element-number">${el.atomic_number}</div>
-                    <div class="element-symbol">${el.symbol}</div>
-                `;
+                cell.innerHTML = `<div class="element-number">${el.atomic_number}</div><div class="element-symbol">${el.symbol}</div>`;
                 cell.addEventListener('click', () => showElementDetails(el));
                 grid.appendChild(cell);
             });
@@ -2418,22 +811,18 @@
             const createSubTable = (containerId, subElements) => {
                 const container = document.getElementById(containerId);
                 container.innerHTML = '';
+                container.classList.remove('hidden');
                 subElements.forEach(el => {
-                    const categoryClass = categoryClassMap[el.category.toLowerCase()] || '';
                     const cell = document.createElement('div');
-                    cell.className = `element-cell ${categoryClass} p-2`;
-                    cell.innerHTML = `
-                        <div class="element-number text-[0.5rem]">${el.atomic_number}</div>
-                        <div class="element-symbol text-base">${el.symbol}</div>
-                    `;
+                    cell.className = `element-cell ${el.category.toLowerCase()} p-2`;
+                    cell.innerHTML = `<div class="element-number text-[0.5rem]">${el.atomic_number}</div><div class="element-symbol text-base">${el.symbol}</div>`;
                     cell.addEventListener('click', () => showElementDetails(el));
                     container.appendChild(cell);
                 });
-                container.classList.remove('hidden');
             };
 
-            createSubTable('lanthanide-container', lanthanides);
-            createSubTable('actinide-container', actinides);
+            createSubTable('lanthanide-container', elements.filter(el => el.category === 'Lantanídeo').sort((a,b) => a.atomic_number - b.atomic_number));
+            createSubTable('actinide-container', elements.filter(el => el.category === 'Actinídeo').sort((a,b) => a.atomic_number - b.atomic_number));
             document.getElementById('element-details').classList.add('hidden');
         }
 
@@ -2449,7 +838,7 @@
             `;
             detailsDiv.classList.remove('hidden');
         }
-
+        
         async function renderCalculator(formulaId) {
             const formula = formulas.find(f => f.id === formulaId);
             if (!formula) return;
@@ -2460,32 +849,28 @@
 
             const descriptionDiv = document.getElementById('calculator-description');
             if (formula.description) {
-                descriptionDiv.innerHTML = `<h3 class="font-semibold text-lg mb-2 text-gray-800 dark:text-gray-200">Sobre esta ferramenta:</h3><p class="break-words">${formula.description}</p>`;
+                descriptionDiv.innerHTML = `<h3 class="font-semibold text-lg mb-2 text-gray-800 dark:text-gray-200">Sobre:</h3><p class="break-words">${formula.description}</p>`;
                 descriptionDiv.classList.remove('hidden');
             } else {
-                descriptionDiv.innerHTML = '';
                 descriptionDiv.classList.add('hidden');
             }
             
             const inputsDiv = document.getElementById('calculator-inputs');
             inputsDiv.innerHTML = '';
-
-            const calculateBtn = document.getElementById('calculate-btn');
             
-            calculateBtn.style.display = 'block';
             formula.inputs.forEach(input => {
                 const inputGroup = document.createElement('div');
-                    let inputElementHTML = '';
+                let inputElementHTML = '';
                 
                 if (input.type === 'textarea') {
                     inputElementHTML = `<textarea id="${input.id}" class="w-full p-2 border border-gray-300 dark:border-gray-600 rounded-md bg-gray-50 dark:bg-gray-700 focus:ring-blue-500 focus:border-blue-500 h-24" placeholder="Ex: Quanto é 25% de 80?"></textarea>`;
-                    inputGroup.className = 'col-span-full';
+                    inputGroup.className = 'md:col-span-2';
                 }
                 else if (input.type === 'select') {
                     const optionsHTML = input.options.map(opt => `<option value="${opt.value}">${opt.text}</option>`).join('');
-                    inputElementHTML = `<select id="${input.id}" name="${input.id}" class="w-full p-2 border border-gray-300 dark:border-gray-600 rounded-md bg-gray-50 dark:bg-gray-700 focus:ring-blue-500 focus:border-blue-500">${optionsHTML}</select>`;
+                    inputElementHTML = `<select id="${input.id}" class="w-full p-2 border border-gray-300 dark:border-gray-600 rounded-md bg-gray-50 dark:bg-gray-700 focus:ring-blue-500 focus:border-blue-500">${optionsHTML}</select>`;
                 } else {
-                        inputElementHTML = `<input type="text" inputmode="decimal" id="${input.id}" name="${input.id}" class="w-full p-2 border border-gray-300 dark:border-gray-600 rounded-md bg-gray-50 dark:bg-gray-700 focus:ring-blue-500 focus:border-blue-500" placeholder="0">`;
+                    inputElementHTML = `<input type="text" inputmode="decimal" id="${input.id}" class="w-full p-2 border border-gray-300 dark:border-gray-600 rounded-md bg-gray-50 dark:bg-gray-700 focus:ring-blue-500 focus:border-blue-500" placeholder="0">`;
                 }
 
                 inputGroup.innerHTML = `
@@ -2498,60 +883,61 @@
                 inputsDiv.appendChild(inputGroup);
             });
             
-            const allInputs = inputsDiv.querySelectorAll('input, select, textarea');
-            allInputs.forEach(input => {
-                input.addEventListener('keydown', (event) => {
-                    if (event.key === 'Enter' && !event.shiftKey) {
-                        event.preventDefault();
-                        performCalculation();
-                    }
-                });
-            });
-            
             document.getElementById('calculator-results').classList.add('hidden');
             document.getElementById('calculator-steps-container').classList.add('hidden');
 
-            
-            const newBtn = calculateBtn.cloneNode(true);
-            newBtn.textContent = formula.id === 'ia-helper' ? 'Perguntar para a IA' : 'Calcular';
-            calculateBtn.parentNode.replaceChild(newBtn, calculateBtn);
-
             const performCalculation = async () => {
                 const inputValues = {};
+                let hasError = false;
                 formula.inputs.forEach(input => {
-                    inputValues[input.id] = document.getElementById(input.id).value;
+                    const el = document.getElementById(input.id);
+                    inputValues[input.id] = el.value;
+                    if (!el.value && formula.id !== 'ia-helper') {
+                        el.classList.add('border-red-500');
+                        hasError = true;
+                    } else {
+                        el.classList.remove('border-red-500');
+                    }
                 });
+                if(hasError) return;
                 
                 const resultData = await formula.calculationFunction(inputValues);
                 
-                const finalResultEl = document.getElementById('results-final');
-                finalResultEl.innerHTML = resultData.result; // Use innerHTML to render potential HTML tags
+                document.getElementById('results-final').innerHTML = resultData.result;
                 document.getElementById('calculator-results').classList.remove('hidden');
 
                 const stepsContainer = document.getElementById('calculator-steps-container');
                 if(resultData.steps) {
-                    const stepsDiv = document.getElementById('results-steps');
-                    stepsDiv.innerHTML = resultData.steps; // Use innerHTML
+                    document.getElementById('results-steps').innerHTML = resultData.steps;
                     stepsContainer.classList.remove('hidden');
                 } else {
                     stepsContainer.classList.add('hidden');
                 }
                 
-                // Save to history (excluding AI helper for simplicity)
-                if (formula.id !== 'ia-helper') {
+                if (formula.id !== 'ia-helper' && !resultData.result.includes('Erro')) {
                     saveToHistory(formula.name, inputValues, resultData.result);
                 }
             };
             
+            const calculateBtn = document.getElementById('calculate-btn');
+            const newBtn = calculateBtn.cloneNode(true);
+            newBtn.textContent = formula.id === 'ia-helper' ? 'Perguntar para a IA' : 'Calcular';
+            calculateBtn.parentNode.replaceChild(newBtn, calculateBtn);
             newBtn.addEventListener('click', performCalculation);
         }
 
         // --- Navigation ---
         document.querySelectorAll('.back-btn').forEach(btn => {
             btn.addEventListener('click', () => {
-                if (currentView === 'calculator-view' || currentView === 'periodic-table-view' || currentView === 'history-view') {
-                    showView('main-menu');
-                } else if (currentView === 'list-view') {
+                if (currentView === 'calculator-view' || currentView === 'periodic-table-view') {
+                    if (currentCategory) {
+                        renderFormulaListView(currentCategory);
+                        showView('list-view');
+                    } else {
+                        showView('main-menu');
+                    }
+                } else if (currentView === 'list-view' || currentView === 'history-view' || currentView === 'suggestions-view') {
+                    currentCategory = ''; // Limpa a categoria ao voltar para o menu
                     showView('main-menu');
                 }
             });
