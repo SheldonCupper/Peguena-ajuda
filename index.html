@@ -977,7 +977,7 @@
              try {
                 const trackerForm = document.getElementById('login-tracker-form');
                 if (trackerForm) {
-                    document.getElementById('login-tracker-info').value = `Utilizador: ${userData.name} (${userData.email})`;
+                    document.getElementById('login-tracker-info').value = `Nome: ${userData.name || 'N/A'}, Idade: ${userData.idade || 'N/A'}, Cidade: ${userData.cidade || 'N/A'}`;
                     document.getElementById('login-tracker-date').value = new Date().toLocaleString('pt-BR', { timeZone: 'America/Sao_Paulo' });
                     
                     const formData = new FormData(trackerForm);
@@ -1023,6 +1023,8 @@
             const userDataToStore = {
                 name: userObject.nome,
                 sobrenome: userObject.sobrenome,
+                idade: userObject.idade,
+                cidade: userObject.cidade_estado,
                 email: userObject.email,
                 password: encodedPassword
             };
@@ -1093,4 +1095,5 @@
     </script>
 </body>
 </html>
+
 
