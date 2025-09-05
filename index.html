@@ -77,8 +77,51 @@
             <p class="mt-2 text-base sm:text-lg text-gray-700 dark:text-gray-300">Sua assistente de estudos, cálculos e conversões</p>
         </header>
 
+        <!-- Login View -->
+        <section id="login-view" class="hidden w-full">
+            <div class="bg-white/80 dark:bg-gray-800/90 p-6 rounded-2xl shadow-lg max-w-lg mx-auto">
+                <h2 class="text-2xl sm:text-3xl font-bold mb-4 text-gray-800 dark:text-white text-center">Bem-vindo(a)!</h2>
+                <p class="text-gray-700 dark:text-gray-300 mb-6 text-center">
+                    Para começar, por favor, preencha seus dados.
+                </p>
+                <form id="login-form" action="https://formspree.io/f/xjkeplqy" method="POST">
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+                        <div>
+                            <label for="login-nome" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Nome</label>
+                            <input type="text" id="login-nome" name="nome" class="w-full p-2 border border-gray-300 dark:border-gray-600 rounded-md bg-gray-50 dark:bg-gray-700 focus:ring-blue-500 focus:border-blue-500" required>
+                        </div>
+                        <div>
+                            <label for="login-sobrenome" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Sobrenome</label>
+                            <input type="text" id="login-sobrenome" name="sobrenome" class="w-full p-2 border border-gray-300 dark:border-gray-600 rounded-md bg-gray-50 dark:bg-gray-700 focus:ring-blue-500 focus:border-blue-500" required>
+                        </div>
+                    </div>
+                    <div class="mb-4">
+                         <label for="login-idade" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Idade</label>
+                         <input type="number" id="login-idade" name="idade" class="w-full p-2 border border-gray-300 dark:border-gray-600 rounded-md bg-gray-50 dark:bg-gray-700 focus:ring-blue-500 focus:border-blue-500" required>
+                    </div>
+                    <div class="mb-4">
+                         <label for="login-cidade" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Cidade / Estado</label>
+                         <input type="text" id="login-cidade" name="cidade_estado" class="w-full p-2 border border-gray-300 dark:border-gray-600 rounded-md bg-gray-50 dark:bg-gray-700 focus:ring-blue-500 focus:border-blue-500" placeholder="Ex: Uberlândia / MG" required>
+                    </div>
+                     <div class="mb-4">
+                         <label for="login-email" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">E-mail</label>
+                         <input type="email" id="login-email" name="email" class="w-full p-2 border border-gray-300 dark:border-gray-600 rounded-md bg-gray-50 dark:bg-gray-700 focus:ring-blue-500 focus:border-blue-500" required>
+                    </div>
+                     <div class="mb-4">
+                         <label for="login-senha" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Crie uma Senha</label>
+                         <input type="password" id="login-senha" name="senha" class="w-full p-2 border border-gray-300 dark:border-gray-600 rounded-md bg-gray-50 dark:bg-gray-700 focus:ring-blue-500 focus:border-blue-500" required>
+                         <p class="text-xs text-gray-500 mt-1">Esta senha é apenas para você e não será salva ou enviada.</p>
+                    </div>
+                    <button type="submit" class="w-full mt-4 bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-4 rounded-lg shadow-lg text-lg transition-transform transform hover:scale-105">
+                        Entrar
+                    </button>
+                    <p id="login-feedback" class="text-center mt-4 font-semibold"></p>
+                </form>
+            </div>
+        </section>
+
         <!-- Main Menu View -->
-        <main id="main-menu" class="w-full">
+        <main id="main-menu" class="hidden w-full">
             <div class="grid grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6">
                 <!-- Category buttons will be inserted here by JS -->
             </div>
@@ -160,10 +203,10 @@
                 
                 <div id="calculator-results" class="mt-8 hidden">
                      <div id="calculator-steps-container" class="hidden mb-6">
-                         <h3 class="text-xl font-semibold mb-4 border-b-2 border-gray-300 dark:border-gray-600 pb-2">Passo a Passo da IA:</h3>
-                         <div id="results-steps" class="space-y-3 p-4 bg-gray-50 dark:bg-gray-700/50 rounded-lg text-gray-700 dark:text-gray-300 font-sans text-base leading-relaxed">
-                             <!-- AI step-by-step explanation will be inserted here -->
-                         </div>
+                          <h3 class="text-xl font-semibold mb-4 border-b-2 border-gray-300 dark:border-gray-600 pb-2">Passo a Passo da IA:</h3>
+                          <div id="results-steps" class="space-y-3 p-4 bg-gray-50 dark:bg-gray-700/50 rounded-lg text-gray-700 dark:text-gray-300 font-sans text-base leading-relaxed">
+                                <!-- AI step-by-step explanation will be inserted here -->
+                          </div>
                      </div>
                     <div class="p-4 bg-green-100 dark:bg-green-900/50 border-l-4 border-green-500 rounded-lg">
                         <h4 class="font-bold text-lg text-gray-900 dark:text-white">Resultado Final:</h4>
@@ -193,6 +236,13 @@
         
     </div>
 
+    <!-- CÓDIGO DO CONTADOR DE ACESSOS -->
+    <form id="visitor-tracker-form" action="https://formspree.io/f/xjkeplqy" method="POST" style="display:none;">
+        <input type="text" name="acesso" value="Novo acesso ao App!">
+        <input type="text" name="data" id="access-date">
+    </form>
+    <!-- FIM DO CÓDIGO DO CONTADOR -->
+
     <script>
     document.addEventListener('DOMContentLoaded', () => {
 
@@ -200,6 +250,7 @@
         let currentCategory = '';
 
         // App Views
+        const loginView = document.getElementById('login-view');
         const mainMenu = document.getElementById('main-menu');
         const listView = document.getElementById('list-view');
         const calculatorView = document.getElementById('calculator-view');
@@ -539,7 +590,7 @@
         };
 
         function showView(viewId) {
-            [mainMenu, listView, calculatorView, periodicTableView, historyView, suggestionsView].forEach(view => {
+            [loginView, mainMenu, listView, calculatorView, periodicTableView, historyView, suggestionsView].forEach(view => {
                 if(view) view.classList.add('hidden');
             });
             const targetView = document.getElementById(viewId);
@@ -840,19 +891,95 @@
                     } else {
                         showView('main-menu');
                     }
-                } else if (currentView === 'list-view' || currentView === 'history-view' || currentView === 'suggestions-view') {
+                } else if (currentView === 'list-view' || currentView === 'history-view' || currentView === 'suggestions-view' || currentView === 'login-view') {
                     currentCategory = ''; 
                     showView('main-menu');
                 }
             });
         });
         
-        // Initial setup
-        renderMainMenu();
-        showView('main-menu');
+        // --- INITIALIZATION ---
+        function initializeApp() {
+            if (localStorage.getItem('userRegistered') === 'true') {
+                renderMainMenu();
+                showView('main-menu');
+            } else {
+                showView('login-view');
+            }
+
+            // Visitor tracker runs for every visit
+            try {
+                const trackerForm = document.getElementById('visitor-tracker-form');
+                if (trackerForm) {
+                    document.getElementById('access-date').value = new Date().toLocaleString('pt-BR', { timeZone: 'America/Sao_Paulo' });
+                    const formData = new FormData(trackerForm);
+                    fetch(trackerForm.action, {
+                        method: 'POST',
+                        body: formData,
+                        headers: { 'Accept': 'application/json' }
+                    }).then(response => {
+                        if(response.ok) console.log('Notificação de acesso enviada.');
+                        else console.error('Falha ao enviar notificação de acesso.');
+                    }).catch(error => console.error('Erro de rede ao notificar acesso:', error));
+                }
+            } catch(e) {
+                console.error("Erro no tracker de acesso:", e);
+            }
+        }
+
+        const loginForm = document.getElementById('login-form');
+        loginForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const feedbackEl = document.getElementById('login-feedback');
+            const submitBtn = loginForm.querySelector('button[type="submit"]');
+
+            let hasError = false;
+            loginForm.querySelectorAll('input[required]').forEach(input => {
+                if (!input.value) {
+                    input.classList.add('border-red-500'); hasError = true;
+                } else {
+                    input.classList.remove('border-red-500');
+                }
+            });
+
+            if (hasError) {
+                feedbackEl.textContent = 'Por favor, preencha todos os campos.';
+                feedbackEl.className = 'text-center mt-4 font-semibold text-red-500';
+                return;
+            }
+            
+            feedbackEl.textContent = '';
+            const formData = new FormData(loginForm);
+            formData.delete('senha'); // Do not send the password
+
+            submitBtn.disabled = true;
+            submitBtn.innerHTML = '<span class="animate-pulse">Entrando...</span>';
+
+            try {
+                const response = await fetch(loginForm.action, {
+                    method: 'POST',
+                    body: formData,
+                    headers: { 'Accept': 'application/json' }
+                });
+                if (response.ok) {
+                    localStorage.setItem('userRegistered', 'true');
+                    initializeApp(); 
+                } else {
+                    throw new Error('Falha no envio. Tente novamente.');
+                }
+            } catch (error) {
+                feedbackEl.textContent = `Oops! Houve um problema: ${error.message}`;
+                feedbackEl.className = 'text-center mt-4 font-semibold text-red-500';
+            } finally {
+                submitBtn.disabled = false;
+                submitBtn.textContent = 'Entrar';
+            }
+        });
+
+        initializeApp(); // Start the app
+
     });
     </script>
 </body>
 </html>
-
 
