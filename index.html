@@ -67,58 +67,14 @@
 </head>
 <body class="text-gray-800 dark:text-gray-200 transition-colors duration-300 flex items-center justify-center min-h-screen">
 
-    <div id="auth-container" class="container mx-auto p-4 md:p-8 max-w-md">
-        <!-- Login View -->
-        <div id="login-view" class="hidden bg-white/80 dark:bg-gray-900/90 backdrop-blur-sm rounded-2xl shadow-2xl p-8">
-            <h2 class="text-2xl font-bold text-center mb-6 text-gray-800 dark:text-white">Crie seu Perfil de Estudante</h2>
-            <div class="space-y-4">
-                 <div>
-                    <label for="name-first" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Nome</label>
-                    <input type="text" id="name-first" class="mt-1 block w-full px-3 py-2 bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-blue-500 focus:border-blue-500" placeholder="Seu primeiro nome">
-                </div>
-                 <div>
-                    <label for="name-last" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Sobrenome</label>
-                    <input type="text" id="name-last" class="mt-1 block w-full px-3 py-2 bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-blue-500 focus:border-blue-500" placeholder="Seu sobrenome">
-                </div>
-                <div>
-                    <label for="grade" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Série</label>
-                    <input type="text" id="grade" class="mt-1 block w-full px-3 py-2 bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-blue-500 focus:border-blue-500" placeholder="Ex: 9º Ano, 3º Médio">
-                </div>
-                <div>
-                    <label for="age" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Idade</label>
-                    <input type="number" id="age" class="mt-1 block w-full px-3 py-2 bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-blue-500 focus:border-blue-500" placeholder="Sua idade">
-                </div>
-            </div>
-            <p id="login-error" class="text-red-500 text-sm mt-4 text-center hidden"></p>
-            <button id="login-btn" class="w-full mt-6 bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-lg shadow-md transition-transform transform hover:scale-105">
-                Começar a Usar
-            </button>
-        </div>
-
-        <!-- Inspirational Message View -->
-        <div id="inspirational-message-view" class="hidden bg-white/80 dark:bg-gray-900/90 backdrop-blur-sm rounded-2xl shadow-2xl p-8 text-center">
-            <h2 class="text-2xl font-bold mb-4 text-gray-800 dark:text-white">Uma Dica Importante!</h2>
-            <p class="text-gray-700 dark:text-gray-300 mb-6">
-                Esta ferramenta é um poderoso aliado para seus estudos, mas lembre-se: o objetivo é aprender. Use-a para verificar suas respostas, entender o passo a passo e tirar dúvidas, mas sempre tente resolver os problemas por conta própria primeiro. O verdadeiro conhecimento vem do esforço e da prática. Bons estudos!
-            </p>
-            <button id="continue-to-login-btn" class="w-full mt-6 bg-green-600 hover:bg-green-700 text-white font-bold py-2 px-4 rounded-lg shadow-md transition-transform transform hover:scale-105">
-                Entendi, vamos lá!
-            </button>
-        </div>
-    </div>
-
-    <div id="app" class="hidden container mx-auto p-4 md:p-8 max-w-4xl bg-white/80 dark:bg-gray-900/90 backdrop-blur-sm rounded-2xl shadow-2xl my-8">
+    <div id="app" class="container mx-auto p-4 md:p-8 max-w-4xl bg-white/80 dark:bg-gray-900/90 backdrop-blur-sm rounded-2xl shadow-2xl my-8">
         
         <!-- Header -->
         <header class="text-center mb-8 relative">
-            <div id="welcome-message" class="text-lg text-gray-700 dark:text-gray-300 mb-2"></div>
             <h1 class="text-3xl sm:text-4xl md:text-5xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-blue-500 to-teal-400">
                 Pequena Ajuda
             </h1>
             <p class="mt-2 text-base sm:text-lg text-gray-700 dark:text-gray-300">Sua assistente de estudos, cálculos e conversões</p>
-            <button id="logout-btn" class="absolute top-0 right-0 bg-red-500 hover:bg-red-600 text-white text-xs font-bold py-1 px-3 rounded-lg shadow-md transition-transform transform hover:scale-105">
-                Trocar Usuário
-            </button>
         </header>
 
         <!-- Main Menu View -->
@@ -161,11 +117,20 @@
                     Sua opinião é muito importante para nós! Use este espaço para enviar sugestões de novas calculadoras, relatar um problema ou simplesmente deixar um comentário. Agradecemos sua colaboração para melhorar esta ferramenta.
                 </p>
                 <form id="suggestion-form" action="https://formspree.io/f/xkgvppvy" method="POST">
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+                        <div>
+                            <label for="suggestion-name" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Seu Nome</label>
+                            <input type="text" id="suggestion-name" name="nome" class="w-full p-2 border border-gray-300 dark:border-gray-600 rounded-md bg-gray-50 dark:bg-gray-700 focus:ring-blue-500 focus:border-blue-500" placeholder="Nome Completo" required>
+                        </div>
+                        <div>
+                            <label for="suggestion-email" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Seu E-mail</label>
+                            <input type="email" id="suggestion-email" name="email" class="w-full p-2 border border-gray-300 dark:border-gray-600 rounded-md bg-gray-50 dark:bg-gray-700 focus:ring-blue-500 focus:border-blue-500" placeholder="seu.email@exemplo.com" required>
+                        </div>
+                    </div>
+
                     <label for="suggestion-text" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Sua Mensagem:</label>
                     <textarea id="suggestion-text" name="sugestao" rows="5" class="w-full p-2 border border-gray-300 dark:border-gray-600 rounded-md bg-gray-50 dark:bg-gray-700 focus:ring-blue-500 focus:border-blue-500" placeholder="Digite sua sugestão aqui..." required></textarea>
                     
-                    <input type="hidden" name="usuario" id="suggestion-user-name">
-
                     <button type="submit" class="w-full mt-4 bg-green-600 hover:bg-green-700 text-white font-bold py-3 px-4 rounded-lg shadow-lg text-lg transition-transform transform hover:scale-105">
                         Enviar Sugestão
                     </button>
@@ -231,15 +196,10 @@
     <script>
     document.addEventListener('DOMContentLoaded', () => {
 
-        let currentUserProfile = null;
-        let currentView = 'login-view';
+        let currentView = 'main-menu';
         let currentCategory = '';
 
         // App Views
-        const authContainer = document.getElementById('auth-container');
-        const appContainer = document.getElementById('app');
-        const loginView = document.getElementById('login-view');
-        const inspirationalMessageView = document.getElementById('inspirational-message-view');
         const mainMenu = document.getElementById('main-menu');
         const listView = document.getElementById('list-view');
         const calculatorView = document.getElementById('calculator-view');
@@ -247,80 +207,6 @@
         const historyView = document.getElementById('history-view');
         const suggestionsView = document.getElementById('suggestions-view');
         
-        // --- LOCAL STORAGE AUTHENTICATION ---
-        function checkUserProfile() {
-            const profile = localStorage.getItem('userProfile');
-            if (profile) {
-                currentUserProfile = JSON.parse(profile);
-                showApp();
-            } else {
-                // For new users, show the inspirational message first.
-                showAuthView('inspirational-message-view');
-            }
-        }
-        
-        document.getElementById('login-btn').addEventListener('click', () => {
-            const firstName = document.getElementById('name-first').value.trim();
-            const lastName = document.getElementById('name-last').value.trim();
-            const grade = document.getElementById('grade').value.trim();
-            const age = document.getElementById('age').value.trim();
-            const errorEl = document.getElementById('login-error');
-
-            if (!firstName || !lastName || !grade || !age) {
-                errorEl.textContent = 'Por favor, preencha todos os campos.';
-                errorEl.classList.remove('hidden');
-                return;
-            }
-            errorEl.classList.add('hidden');
-            
-            const fullName = `${firstName} ${lastName}`;
-            const userProfile = { name: fullName, grade, age };
-
-            try {
-                localStorage.setItem('userProfile', JSON.stringify(userProfile));
-                currentUserProfile = userProfile;
-                // After successful login, go straight to the app.
-                showApp();
-            } catch(e) {
-                console.error("Error saving profile to local storage:", e);
-                errorEl.textContent = 'Erro ao salvar perfil. Tente novamente.';
-                errorEl.classList.remove('hidden');
-            }
-        });
-
-        // This button is now seen by new users. After reading, they go to the login form.
-        document.getElementById('continue-to-login-btn').addEventListener('click', () => {
-            showAuthView('login-view');
-        });
-
-
-        document.getElementById('logout-btn').addEventListener('click', () => {
-            localStorage.removeItem('userProfile');
-            currentUserProfile = null;
-            // Go back to the initial screen for new users.
-            showAuthView('inspirational-message-view');
-        });
-
-        function showAuthView(viewId) {
-            appContainer.classList.add('hidden');
-            authContainer.classList.remove('hidden');
-            loginView.classList.add('hidden');
-            inspirationalMessageView.classList.add('hidden');
-            document.getElementById(viewId).classList.remove('hidden');
-            currentView = viewId;
-        }
-
-        function showApp() {
-            authContainer.classList.add('hidden');
-            appContainer.classList.remove('hidden');
-            document.getElementById('welcome-message').textContent = `Olá, ${currentUserProfile.name}!`;
-            renderMainMenu();
-            showView('main-menu');
-        }
-
-        checkUserProfile();
-
-
         // --- UTILITY FUNCTIONS ---
         const formatNumber = (num, places = 2) => {
             if (typeof num !== 'number' || isNaN(num)) return num;
@@ -557,7 +443,7 @@
             { id: 'teorema-tales', category: 'Geometria', level: 'Ensino Médio', name: 'Teorema de Tales', formula_display: '\\frac{a}{b} = \\frac{c}{x}', description: "Resolve problemas de proporcionalidade entre segmentos.", inputs: [ { id: 'a', label: 'Segmento a' }, { id: 'b', label: 'Segmento b' }, { id: 'c', label: 'Segmento c' } ], calculationFunction: (inputs) => { const a=parseFloat(inputs.a.replace(',','.')); const b=parseFloat(inputs.b.replace(',','.')); const c=parseFloat(inputs.c.replace(',','.')); if([a,b,c].some(isNaN)||a===0) return {result:'Erro'}; return { result: `x = ${formatNumber((b*c)/a)}` }; } },
             { id: 'volume-esfera', category: 'Geometria', level: 'Ensino Médio', name: 'Volume da Esfera', formula_display: 'V = \\frac{4}{3}\\pi r^3', description: "Calcula o volume de uma esfera.", inputs: [ { id: 'r', label: 'Raio (r)', unit: 'cm' } ], calculationFunction: (inputs) => { const r=parseFloat(inputs.r.replace(',','.')); if(isNaN(r)||r<=0) return {result:'Erro'}; return { result: `V = ${formatNumber((4/3)*Math.PI*Math.pow(r,3))} cm³` }; } },
             { id: 'volume-cilindro', category: 'Geometria', level: 'Ensino Médio', name: 'Volume do Cilindro', formula_display: 'V = \\pi r^2 h', description: "Calcula o volume de um cilindro.", inputs: [ { id: 'r', label: 'Raio da base (r)', unit: 'cm' }, { id: 'h', label: 'Altura (h)', unit: 'cm' } ], calculationFunction: (inputs) => { const r=parseFloat(inputs.r.replace(',','.')); const h=parseFloat(inputs.h.replace(',','.')); if(isNaN(r)||isNaN(h)||r<=0||h<=0) return {result:'Erro'}; return { result: `V = ${formatNumber(Math.PI*r*r*h)} cm³` }; } },
-            { id: 'area-triangulo-equilatero', category: 'Geometria', level: 'Ensino Médio', name: 'Área do Triângulo Equilátero', formula_display: 'A = \\frac{l^2\\sqrt{3}}{4}', description: "Calcula a área de um triângulo com todos os lados iguais.", inputs: [ { id: 'l', label: 'Lado (l)', unit: 'cm' } ], calculationFunction: (inputs) => { const l=parseFloat(inputs.l.replace(',','.')); if(isNaN(l)||l<=0) return {result:'Erro'}; return { result: `A = ${formatNumber((l*l*Math.sqrt(3))/4)} cm²` }; } },
+            { id: 'area-triangulo-equilatero', category: 'Geometria', level: 'Ensino Médio', name: 'Área do Triângulo Equilátero', formula_display: 'A = \\frac{l^2\\sqrt{3}}{4}', description: "Calcula a área de um triângulo com todos os três lados iguais.", inputs: [ { id: 'l', label: 'Lado (l)', unit: 'cm' } ], calculationFunction: (inputs) => { const l=parseFloat(inputs.l.replace(',','.')); if(isNaN(l)||l<=0) return {result:'Erro'}; return { result: `A = ${formatNumber((l*l*Math.sqrt(3))/4)} cm²` }; } },
             { id: 'soma-angulos-poligono', category: 'Geometria', level: 'Ensino Médio', name: 'Soma dos Ângulos Internos de um Polígono', formula_display: 'S = (n-2) \\cdot 180°', description: "Fornece a soma de todos os ângulos internos de um polígono.", inputs: [ { id: 'n', label: 'Nº de lados (n)' } ], calculationFunction: (inputs) => { const n=parseInt(inputs.n); if(isNaN(n)||n<3) return {result:'Erro (n≥3)'}; return { result: `S = ${formatNumber((n-2)*180)}°` }; } },
             { id: 'area-hexagono-regular', category: 'Geometria', level: 'Ensino Médio', name: 'Área do Hexágono Regular', formula_display: 'A = \\frac{3l^2\\sqrt{3}}{2}', description: "Calcula a área de um polígono de seis lados iguais.", inputs: [ { id: 'l', label: 'Lado (l)', unit: 'cm' } ], calculationFunction: (inputs) => { const l=parseFloat(inputs.l.replace(',','.')); if(isNaN(l)||l<=0) return {result:'Erro'}; return { result: `A = ${formatNumber((3*l*l*Math.sqrt(3))/2)} cm²` }; } },
             { id: 'triangulo-inscrito', category: 'Geometria', level: 'Ensino Médio', name: 'Triângulo Equilátero Inscrito', formula_display: 'l = R\\sqrt{3}', description: "Relaciona o lado de um triângulo equilátero com o raio da circunferência que o circunscreve.", inputs: [ { id: 'R', label: 'Raio da Circunferência (R)', unit: 'cm' } ], calculationFunction: (inputs) => { const R=parseFloat(inputs.R.replace(',','.')); if(isNaN(R)||R<=0) return {result:'Erro'}; return { result: `Lado (l) = ${formatNumber(R*Math.sqrt(3))} cm` }; } },
@@ -565,10 +451,10 @@
             { id: 'hexagono-inscrito', category: 'Geometria', level: 'Ensino Médio', name: 'Hexágono Regular Inscrito', formula_display: 'l = R', description: "Relaciona o lado de um hexágono regular com o raio da circunferência que o circunscreve.", inputs: [ { id: 'R', label: 'Raio da Circunferência (R)', unit: 'cm' } ], calculationFunction: (inputs) => { const R=parseFloat(inputs.R.replace(',','.')); if(isNaN(R)||R<=0) return {result:'Erro'}; return { result: `Lado (l) = ${formatNumber(R)} cm` }; } },
             { id: 'distancia-pontos', category: 'Geometria', level: 'Ensino Superior', name: 'Distância Entre Dois Pontos', formula_display: 'd = \\sqrt{(x_2 - x_1)^2 + (y_2 - y_1)^2}', description: "Calcula a distância entre dois pontos em um plano cartesiano.", inputs: [ { id: 'x1', label: 'Ponto A (x₁)' }, { id: 'y1', label: 'Ponto A (y₁)' }, { id: 'x2', label: 'Ponto B (x₂)' }, { id: 'y2', label: 'Ponto B (y₂)' } ], calculationFunction: (inputs) => { const x1=parseFloat(inputs.x1.replace(',','.')); const y1=parseFloat(inputs.y1.replace(',','.')); const x2=parseFloat(inputs.x2.replace(',','.')); const y2=parseFloat(inputs.y2.replace(',','.')); if([x1,y1,x2,y2].some(isNaN)) return {result:'Erro'}; return { result: `d = ${formatNumber(Math.sqrt(Math.pow(x2-x1,2)+Math.pow(y2-y1,2)))}` }; } },
 
-            // --- AI HELPER ---
+            // --- IA HELPER ---
             {
-                id: 'ia-helper', category: 'Ajuda da IA', level: 'Inteligência Artificial', name: 'Resolva Qualquer Problema',
-                formula_display: 'Pergunte \\: e \\: a \\: IA \\: responde',
+                id: 'ia-helper', category: 'IA', level: 'Inteligência Artificial', name: 'IA Resolve',
+                formula_display: 'Pergunte para a IA',
                 description: "Não encontrou a calculadora que precisava? Descreva seu problema e nossa IA irá resolvê-lo e explicar o passo a passo.",
                 inputs: [ { id: 'query', label: 'Qual é a sua dúvida?', type: 'textarea' } ],
                 calculationFunction: async (inputs) => {
@@ -579,7 +465,7 @@
                     calculateBtn.innerHTML = '<span class="animate-pulse">Pensando...</span>';
                     try {
                         const systemPrompt = "Você é 'Pequena Ajuda', um assistente de estudos. Resolva o problema do usuário e forneça uma explicação clara e passo a passo em português do Brasil. Divida a resposta em 'Resultado Final' e 'Passo a Passo'. O 'Resultado Final' deve ser curto. O 'Passo a Passo' deve detalhar o raciocínio. Use apenas HTML simples para formatação (<strong>, <ul>, <li>, <br>).";
-                        const apiKey = ""; // A chave será injetada no ambiente de execução
+                        const apiKey = "AIzaSyBj3Psc99slZeVq1IVIIZG89fp5g1rl5l4"; 
                         const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-05-20:generateContent?key=${apiKey}`;
                         const payload = { contents: [{ parts: [{ text: query }] }], systemInstruction: { parts: [{ text: systemPrompt }] } };
                         const response = await fetch(apiUrl, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(payload) });
@@ -611,14 +497,14 @@
             'Matemática': 'from-blue-500 to-indigo-500', 'Física': 'from-yellow-500 to-orange-500',
             'Química': 'from-green-500 to-teal-500', 'Biologia': 'from-lime-500 to-emerald-500',
             'Geometria': 'from-purple-500 to-pink-500', 'Conversores': 'from-rose-500 to-red-500',
-            'Ajuda da IA': 'from-fuchsia-500 to-purple-600', 'Meu Histórico': 'from-gray-500 to-blue-gray-500',
+            'IA': 'from-fuchsia-500 to-purple-600', 'Meu Histórico': 'from-gray-500 to-blue-gray-500',
             'Sugestões': 'from-cyan-500 to-teal-400'
         };
 
         const categoryIcons = {
             'Matemática': 'ph-calculator', 'Física': 'ph-atom', 'Química': 'ph-test-tube',
             'Biologia': 'ph-leaf', 'Geometria': 'ph-compass', 'Conversores': 'ph-arrows-clockwise',
-            'Ajuda da IA': 'ph-sparkle', 'Meu Histórico': 'ph-clock-counter-clockwise',
+            'IA': 'ph-sparkle', 'Meu Histórico': 'ph-clock-counter-clockwise',
             'Sugestões': 'ph-lightbulb'
         };
 
@@ -651,7 +537,6 @@
                         renderHistoryView();
                         showView('history-view');
                     } else if (category === 'Sugestões') {
-                        renderSuggestionsView();
                         showView('suggestions-view');
                     } else {
                         currentCategory = category;
@@ -673,7 +558,7 @@
                 const formulasInLevel = formulas.filter(f => f.category === category && f.level === level);
                 if (formulasInLevel.length > 0) {
                     const levelSection = document.createElement('div');
-                    if(category !== 'Ajuda da IA') {
+                    if(category !== 'IA') {
                         levelSection.innerHTML = `<h3 class="text-xl sm:text-2xl font-semibold mb-4 text-blue-600 dark:text-blue-400">${level}</h3>`;
                     }
                     const list = document.createElement('div');
@@ -721,10 +606,6 @@
              } catch (e) {
                  contentDiv.innerHTML = '<p class="text-red-500">Erro ao carregar histórico.</p>';
              }
-        }
-        
-        function renderSuggestionsView() {
-            document.getElementById('suggestion-user-name').value = currentUserProfile ? currentUserProfile.name : 'Anônimo';
         }
 
         const suggestionForm = document.getElementById('suggestion-form');
@@ -917,6 +798,10 @@
                 }
             });
         });
+        
+        // Initial setup
+        renderMainMenu();
+        showView('main-menu');
     });
     </script>
 </body>
